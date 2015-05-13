@@ -1,0 +1,26 @@
+/*
+org.eclipse.epsilon.modelSynthesis
+*/
+/*@lazy
+operation EPackage create(){
+	self.name.println();
+}*/
+
+$instances size * 10
+operation Student create(){
+	self.name.println();
+	self.name= "studentA";
+}
+
+$instances size
+operation Prize create(){
+	self.student= Student.all.random();
+	Student.all.deterministicRandom();
+	self.student.name.println();
+}
+/*
+operation Prize create(){
+	self.student= Student.all.random();
+	self.student.name.println();
+}
+*/

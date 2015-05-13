@@ -1,0 +1,18 @@
+/*
+org.eclipse.epsilon.modelSynthesis
+*/
+
+/*@lazy
+operation EPackage create(){
+	self.name.println();
+}*/
+var student: new std !Student;
+//var student: Student!EClass;
+//var prize: new Prize!EClass;
+//var Teacher:EClass;
+//var Prize:EClass;
+student.name="Student";
+create(student);
+operation create(clas:Any){
+	clas.name.println();
+}

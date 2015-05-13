@@ -1,0 +1,14 @@
+/*
+org.eclipse.epsilon.modelSynthesis
+*/
+import "operations.eol";
+//create();
+var classes = EClass.all;
+
+for(class in classes)
+{
+	create(class);
+}
+
+
+//EolModule module = new EolModule();
