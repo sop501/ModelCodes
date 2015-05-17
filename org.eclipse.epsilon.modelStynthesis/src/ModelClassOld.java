@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.eclipse.epsilon.emc.emf.EmfMetaModel;
 import org.eclipse.epsilon.emc.emf.EmfModel;
@@ -13,7 +12,6 @@ import org.eclipse.epsilon.emc.emf.EmfUtil;
 //import org.eclipse.emf.common.util.URI;
 import org.eclipse.epsilon.eol.models.IModel;
 import org.eclipse.epsilon.eol.models.IRelativePathResolver;
-import org.eclipse.epsilon.eol.types.EolType;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EModelElement;
@@ -29,10 +27,9 @@ import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 import org.eclipse.epsilon.eol.exceptions.models.EolModelLoadingException;
 import org.eclipse.epsilon.eol.execute.context.EolContext;
 import org.eclipse.epsilon.eol.execute.context.Variable;
-import org.eclipse.epsilon.eol.execute.operations.contributors.IterableOperationContributor;
 import org.eclipse.epsilon.eol.execute.operations.contributors.OperationContributor;
 
-public class ModelClass {
+public class ModelClassOld {
 	public static void main(String [] args) throws Exception{
 		EolContext context = new EolContext();
 		EolModule module = new EolModule();
@@ -65,80 +62,14 @@ public class ModelClass {
 			
 			@Override
 			public boolean contributesTo(Object target) {
-				return target instanceof Collection<?>;
-				//return true;
+				//return target instanceof Collection<?>;
+				return true;
 			}
 			
-			public Collection<?> deterministicRandom() throws EolRuntimeException {
+			public Object deterministicRandom() {
 				//target <- Student.all
-				/*
-				 * *this method generates a deterministic collection as output
-				 * the limit is used in case new things has been added to the collection
-				 * so we stop at the previous size of the collection
-				 */
-				Collection targetCollection;
-				if(target instanceof Collection<?>){
-					targetCollection = (Collection) target;// change the target to a collection
-				}
-				else{
-					return null;
-				}
-				
-				IterableOperationContributor contributor= new IterableOperationContributor(targetCollection);
-				Collection<Object> out = contributor.createCollection(); // the output collection
-				Variable seed ;//seed
-				Variable limit;//limit of the search in the target collection
-				Variable size;// size of the return collection
-				int seedValue,limitValue,sizeValue;//values of the variables
-
-				Random random= new Random();
-				
-				//check if there is a seed
-				if(context.getFrameStack().contains("seed")){
-					seed = context.getFrameStack().get("seed");
-					seedValue=(int) seed.getValue();
-				}
-				else{
-					//we create a new seed and add it to the context
-					seedValue=(int) System.currentTimeMillis();
-					seed= new Variable("seed",seedValue,null);
-					context.getFrameStack().put(seed);
-				}
-				
-				//check if there is a limit
-				if(context.getFrameStack().contains("limit")){
-					limit = context.getFrameStack().get("limit");
-					limitValue=(int) limit.getValue();
-				}
-				else{
-					limitValue=targetCollection.size();
-					limit= new Variable("limit",limitValue,null);
-					context.getFrameStack().put(limit);
-				}
-				
-				//check if there is a required size for the output collection
-				if(context.getFrameStack().contains("size")){
-					size = context.getFrameStack().get("size");
-					sizeValue = (int) size.getValue();
-				}
-				else{
-					sizeValue = random.nextInt(limitValue);
-					size= new Variable("limit",sizeValue,null);
-					context.getFrameStack().put(size);
-				}		
-				
-				//set the random generator with the given seed
-				random.setSeed(seedValue);
-				
-				//the if statement ensures the limit is less than the size of the input
-				//its a criteria to see if no deletion has occur
-				if(limitValue<=targetCollection.size()){
-					out.add(contributor.at(random.nextInt(limitValue-1)));
-					//System.out.println(contributor.at(random.nextInt(limitValue-1)));
-				}
-				return out;
-				
-				
+				context.getFrameStack().get("seed");
+				return 5;
 			}
 			
 			
@@ -147,7 +78,6 @@ public class ModelClass {
 		//System.out.println(ast.hasChildren());
 		
 		context.getFrameStack().put(Variable.createReadOnlyVariable("size", 10));
-		//context.getFrameStack().put(Variable.createReadOnlyVariable("seed", 10));
 		
 		//get the operations
 		Operation op = module.getOperations().get(0);
@@ -231,7 +161,7 @@ public class ModelClass {
 	}
 	protected static File getFile(String fileName) throws URISyntaxException {
 		
-		URI binUri = ModelClass.class.
+		URI binUri = ModelClassOld.class.
 				getResource(fileName).toURI();
 		URI uri = null;
 		

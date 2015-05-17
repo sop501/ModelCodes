@@ -6,16 +6,16 @@ operation EPackage create(){
 	self.name.println();
 }*/
 
-$instances size * 10
+$instances size * 2
 operation Student create(){
-	self.name.println();
-	self.name= "studentA";
+	//self.name.println();
+	self.name= "Student B";
 }
 
 $instances size
 operation Prize create(){
-	self.student= Student.all.random();
-	Student.all.deterministicRandom();
+	//self.student= Student.all.random();
+	self.student=Student.all.deterministicRandom().random();
 	self.student.name.println();
 }
 /*
