@@ -87,7 +87,7 @@ public class ModelClass {
 			}*/
 			//global random or local random; performance or high predictability
 			//context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-			Random random= new Random(123456);
+			Random random= new Random(16758904);
 			
 			
 			
@@ -99,14 +99,7 @@ public class ModelClass {
 				return target instanceof Collection<?>;
 				//return true;
 			}
-			public void setSeed(int seed){
-				if(!context.getFrameStack().contains("seed")){
-					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-					//System.out.println("dfnf");
-				}
-				//System.out.println("dfnfsdd");
-				random.setSeed(seed);
-			}
+			
 			public Object deterministicRandom() throws EolRuntimeException {
 				//target <- Student.all
 				Collection targetCollection;
@@ -117,6 +110,7 @@ public class ModelClass {
 					System.err.println("only collections are allowed!");
 					return null;
 				}
+				int cSize=targetCollection.size();
 				
 				//IterableOperationContributor contributor= new IterableOperationContributor(targetCollection);
 				//Collection<Object> out = contributor.createCollection(); // the output collection
@@ -146,7 +140,7 @@ public class ModelClass {
 					limitValue=(int) context.getFrameStack().get("limit").getValue();
 				}
 				else{
-					limitValue=targetCollection.size();
+					limitValue=cSize;
 					//context.getFrameStack().put(Variable.createReadOnlyVariable("limit", limitValue));
 					//limit= new Variable("limit",limitValue,null);
 					//context.getFrameStack().put(limit);
@@ -172,7 +166,6 @@ public class ModelClass {
 				
 				//the if statement ensures the limit is less than the size of the input
 				//its a criteria to see if no deletion has occur
-				int cSize=targetCollection.size();
 				if(limitValue<=cSize){
 					return contributor.at(random.nextInt(limitValue));
 				}
@@ -215,7 +208,7 @@ public class ModelClass {
 					//limit= new Variable("limit",limitValue,null);
 					//context.getFrameStack().put(limit);
 				}	
-				//check if there is a general size
+				/*//check if there is a general size
 				if(context.getFrameStack().contains("seed")){
 					//seed = context.getFrameStack().get("seed").getValue();
 					seed=(int) context.getFrameStack().get("seed").getValue();
@@ -225,11 +218,11 @@ public class ModelClass {
 					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
 					//seed= new Variable("seed",seedValue,null);
 					//context.getFrameStack().put(seed);
-				}
+				}*/
 				
 				
 				
-				return deterministicRandomBase(size,seed,limitValue);				
+				return deterministicRandomBase(size,limitValue);				
 				
 			}
 			public Collection<?> deterministicRandom(int minSize,int maxSize) throws EolRuntimeException {
@@ -288,15 +281,15 @@ public class ModelClass {
 					
 				}	
 				int size;
-				Random random= new Random(seed);
+				//Random random= new Random(seed);
 				if(maxSize==-1) size=random.nextInt()+minSize;
 				else size=random.nextInt(maxSize-minSize)+minSize;
 								
 				
-				return deterministicRandomBase(size,seed,limit);		
+				return deterministicRandomBase(size,limit);		
 				
 			}
-			protected Collection<?> deterministicRandomBase(int size,int seed,int limit) throws EolRuntimeException {
+			protected Collection<?> deterministicRandomBase(int size,int limit) throws EolRuntimeException {
 				//target <- Student.all
 				/*
 				 * *this method generates a deterministic collection as output
@@ -314,17 +307,17 @@ public class ModelClass {
 				contributor.setTarget(targetCollection);
 				Collection<Object> out = contributor.createCollection(); // the output collection
 				
-				Random random=new Random(seed);
+				//Random random=new Random(seed);
 				//the if statement ensures the limit is less than the size of the input
 				//its a criteria to see if no deletion has occur
 				if(limit<=targetCollection.size()){
 					for(int i=0;i<size;i++)
 						out.add(contributor.at(random.nextInt(limit)));
-					System.out.println(out.toString());
+					//System.out.println(out.toString());
 				}
 				else{
 					//E.g when items have been deleted
-					Random rand = new Random(seed);
+					Random rand = new Random();
 					int temp;
 					int cSize=targetCollection.size();
 					for(int i=0;i<size;i++){
