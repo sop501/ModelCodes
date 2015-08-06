@@ -96,7 +96,7 @@ public class ModelClass {
 			public EClass annotated(String annotation) {
 				DynamicEObjectImpl obj = (DynamicEObjectImpl) target;
 				EClass clas = obj.eClass();
-				System.out.println(obj.eClass());
+				//System.out.println(obj.eClass());
 				EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
 				eAnnotation.setSource(annotation);
 				return annotated(clas,annotation, new HashMap<Object, Object>());
@@ -163,10 +163,10 @@ public class ModelClass {
 										
 										if (!annotationValues.isEmpty()) {
 											ann=(String) annotationValues.get(0);
-											System.out.println(eclass.getEAnnotations().size());
+											System.out.println("annotaions before execution: "+eclass.getEAnnotations().size());
 											annotate(eclass,ann);
-											annotateRef(eclass,ann);
-											System.out.println(eclass.getEAnnotations().size());
+											//annotateRef(eclass,ann);
+											System.out.println("annotaions after execution: "+eclass.getEAnnotations().size());
 										//eclass.
 										}
 									}
@@ -174,11 +174,11 @@ public class ModelClass {
 										
 										if (!annotationValues.isEmpty()) {
 											ann=(String) annotationValues.get(0);
-											System.out.println(eclass.getEAnnotations().size());
+											//System.out.println("annotated Ref Classes before execution: "+eclass.getEAnnotations().size());
 											//annotate(eclass,ann);
 											annotateRefClass(eclass,ann);
-											System.out.println(eclass.getEAnnotations().size());
-										//eclass.
+											//System.out.println("annotated Ref Classes after execution: "+eclass.getEAnnotations().size());
+											
 										}
 									}
 									
@@ -187,7 +187,7 @@ public class ModelClass {
 								
 								for (int i = 0; i<instances; i++) {
 									//System.out.println("found create method for: " + eclass.getName()+i);
-									System.out.println(eclass.getEAnnotations().size());
+									//System.out.println(eclass.getEAnnotations().size());
 									
 									Object modelObject = model.createInstance(eclass.getName());
 									//System.out.println(po.toString());
@@ -236,36 +236,43 @@ public class ModelClass {
 		EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
 		eAnnotation.setSource(source);
 		clas.getEAnnotations().add(eAnnotation);
-		//System.out.println("successful "+clas.getEAnnotations().size());
+		System.out.println("successfully annotated class: "+ clas.getName() );
 		return clas;
 		//annotation.setSource(source);
 		//clas.
 	}
 	protected static void annotateRef(EClass clas, String source){
-		int i=0;
+		//int i=0;
 		for(EReference refClass: clas.getEAllReferences()){
 			//System.out.println(refClass.getEReferenceType());
-			System.out.println(refClass.isContainment());
+			//System.out.println(refClass.isContainment());
 			//if(refClass instanceof EClass){
 				EClass refClas= refClass.eClass();
 				EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
 				eAnnotation.setSource(source);
 				refClas.getEAnnotations().add(eAnnotation);
-				i++;
+				//i++;
 			//}
 		}
-		System.out.println("successful "+i);
+		//System.out.println("successful "+i);
 		//clas.
 		//annotation.setSource(source);
 		//clas.
 	}
+	static List<EClassifier> refclasses= new ArrayList<EClassifier>();
 	protected static void annotateRefClass(EClass clas, String source){
-		int i=0;
+		refclasses.clear();
 		for(EReference refClass: clas.getEAllReferences()){
-			EClass refClas= refClass.eClass();
+			//System.out.println(refClass.getEType());
+			EClassifier refClas= refClass.getEType();
+			if(refclasses.contains(refClas))
+				continue;
+			refclasses.add(refClas);
+			//refClas.
 			EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
 			eAnnotation.setSource(source);
 			refClas.getEAnnotations().add(eAnnotation);
+			System.out.println("successfully annotated reference class: "+ refClas.getName() );
 			
 		}
 	}
