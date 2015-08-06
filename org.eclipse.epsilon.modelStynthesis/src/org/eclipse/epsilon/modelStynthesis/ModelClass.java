@@ -5,24 +5,24 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-import org.eclipse.epsilon.emc.emf.EmfMetaModel;
-import org.eclipse.epsilon.emc.emf.EmfModel;
-import org.eclipse.epsilon.emc.emf.EmfUtil;
-//import org.eclipse.emf.common.util.URI;
-import org.eclipse.epsilon.eol.models.IModel;
-import org.eclipse.epsilon.eol.models.IRelativePathResolver;
-import org.eclipse.epsilon.eol.types.EolType;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EModelElement;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.epsilon.common.parse.AST;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 import org.eclipse.epsilon.common.parse.problem.ParseProblem;
 import org.eclipse.epsilon.common.util.StringProperties;
+import org.eclipse.epsilon.emc.emf.EmfModel;
+import org.eclipse.epsilon.emc.emf.EmfUtil;
 import org.eclipse.epsilon.eol.EolModule;
 import org.eclipse.epsilon.eol.dom.Annotation;
 import org.eclipse.epsilon.eol.dom.AnnotationBlock;
@@ -33,12 +33,16 @@ import org.eclipse.epsilon.eol.execute.context.EolContext;
 import org.eclipse.epsilon.eol.execute.context.Variable;
 import org.eclipse.epsilon.eol.execute.operations.contributors.IterableOperationContributor;
 import org.eclipse.epsilon.eol.execute.operations.contributors.OperationContributor;
+//import org.eclipse.emf.common.util.URI;
+import org.eclipse.epsilon.eol.models.IModel;
+import org.eclipse.epsilon.eol.models.IRelativePathResolver;
+import org.eclipse.epsilon.eugenia.operationcontributors.EModelElementOperationContributor;
 
 public class ModelClass {
 	public static void main(String [] args) throws Exception{
 		EolContext context = new EolContext();
 		EolModule module = new EolModule();
-		File file= new File("operations.eol");
+		File file= new File("src/org/eclipse/epsilon/modelStynthesis/operations.eol");
 		ArrayList<Operation> operationNames= new ArrayList<Operation>(); //all the operation to be executed
 		AnnotationBlock annotationBlock;
 		boolean me = module.parse(file);
@@ -65,369 +69,49 @@ public class ModelClass {
 		//meta.load();
 		
 		//create a new model
-		IModel model= createEmfModel("Model", "student.model","student.ecore", false, true);
+		IModel model= createEmfModel("Model", "student.model","student.ecore", true, true);
+		//model.store();
 		context.getModelRepository().addModel(model);
 		module.setContext(context);
+		//EModelElementOperationContributor modelContributor = new EModelElementOperationContributor();
+		//contrib.annotate(metamodel);
 		//OperationContributor ade;
-		context.getOperationContributorRegistry().add(new OperationContributor() {
+		//context.getOperationContributorRegistry().add(new CollectionOperationContributor());
+		context.getOperationContributorRegistry().add(new OperationContributor(){
 			IterableOperationContributor contributor= new IterableOperationContributor();
-			
-			
-			//check if there is a seed
-			/*if(context.getFrameStack().contains("seed")){
-				//seed = context.getFrameStack().get("seed").getValue();
-				seed=(int) context.getFrameStack().get("seed").getValue();
-			}/*
-			else{
-				//we create a new seed and add it to the context
-				seed=(int) System.currentTimeMillis();
-				context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-				//seed= new Variable("seed",seedValue,null);
-				//context.getFrameStack().put(seed);
-			}*/
-			//global random or local random; performance or high predictability
-			//context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-			Random random= new Random(16758904);
-			
-			
-			
-			//IterableOperationContributor
-			
-			
 			@Override
 			public boolean contributesTo(Object target) {
-				return target instanceof Collection<?>;
-				//return true;
+				//return target instanceof EClass;
+				return true;
 			}
-			
-			public Object deterministicRandom() throws EolRuntimeException {
-				//target <- Student.all
-				Collection targetCollection;
-				if(target instanceof Collection<?>){
-					targetCollection = (Collection) target;// change the target to a collection
+			public EClass annotated(EClass clas,String annotation, Map<?,?> details) {
+				EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+				eAnnotation.setSource(annotation);
+				clas.getEAnnotations().add(eAnnotation);
+				for (Object key : details.keySet()) {
+					eAnnotation.getDetails().put(key + "", details.get(key) + "");
 				}
-				else{
-					System.err.println("only collections are allowed!");
-					return null;
-				}
-				int cSize=targetCollection.size();
-				
-				//IterableOperationContributor contributor= new IterableOperationContributor(targetCollection);
-				//Collection<Object> out = contributor.createCollection(); // the output collection
-				//Variable seed ;//seed
-				//Variable limit;//limit of the search in the target collection
-				//Variable size;// size of the return collection
-				int seedValue,limitValue,sizeValue;//values of the variables
-
-				
-				
-				//check if there is a seed
-				if(context.getFrameStack().contains("seed")){
-					//seed = context.getFrameStack().get("seed").getValue();
-					seedValue=(int) context.getFrameStack().get("seed").getValue();
-				}
-				else{
-					//we create a new seed and add it to the context
-					seedValue=(int) System.currentTimeMillis();
-					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seedValue));
-					//seed= new Variable("seed",seedValue,null);
-					//context.getFrameStack().put(seed);
-				}
-				
-				//check if there is a limit
-				if(context.getFrameStack().contains("limit")){
-					//limit = context.getFrameStack().get("limit");
-					limitValue=(int) context.getFrameStack().get("limit").getValue();
-				}
-				else{
-					limitValue=cSize;
-					//context.getFrameStack().put(Variable.createReadOnlyVariable("limit", limitValue));
-					//limit= new Variable("limit",limitValue,null);
-					//context.getFrameStack().put(limit);
-				}
-				
-				/*//check if there is a required size for the output collection
-				if(context.getFrameStack().contains("sizes")){
-					//size = context.getFrameStack().get("sizes");
-					sizeValue = (int) context.getFrameStack().get("sizes").getValue();
-				}
-				else{
-					Random random= new Random(seedValue);
-					sizeValue = random.nextInt(limitValue);
-					//sizeValue =1;
-					//context.getFrameStack().put(Variable.createReadOnlyVariable("sizes", sizeValue));
-					//size= new Variable("limit",sizeValue,null);
-					//context.getFrameStack().put(size);
-				}	*/	
-				
-				contributor.setTarget(targetCollection);
-				//Collection<Object> out = contributor.createCollection(); // the output collection
-				
-				
-				//the if statement ensures the limit is less than the size of the input
-				//its a criteria to see if no deletion has occur
-				if(limitValue<=cSize){
-					return contributor.at(random.nextInt(limitValue));
-				}
-				else{
-					//E.g when items have been deleted
-					Random rand = new Random(seedValue);
-					return contributor.at(rand.nextInt(cSize));
-				}
-						
-				//return deterministicRandomBase(sizeValue,seedValue,limitValue);	
-				//return deterministicRandomBase(3,1000,5);	
-				
+				return clas;
 			}
-			
-			public Collection<?> deterministicRandom(int size) throws EolRuntimeException {
-				//target <- Student.all
-				Collection targetCollection;
-				if(target instanceof Collection<?>){
-					targetCollection = (Collection) target;// change the target to a collection
-				}
-				else{
-					System.err.println("only collections are allowed!");
-					return null;
-				}
-				if(size<0){
-					System.err.println("size must not be less than 0");
-					return null;
-				}
-				int  seed,limitValue;//values of the variables
-
-				//check if there is a limit
-				if(context.getFrameStack().contains("limit")){
-					//limit = context.getFrameStack().get("limit");
-					limitValue=(int) context.getFrameStack().get("limit").getValue();
-				}
-				else{
-					limitValue=targetCollection.size();
-					//limit different for each collections
-					//context.getFrameStack().put(Variable.createReadOnlyVariable("limit", limitValue));
-					//limit= new Variable("limit",limitValue,null);
-					//context.getFrameStack().put(limit);
-				}	
-				/*//check if there is a general size
-				if(context.getFrameStack().contains("seed")){
-					//seed = context.getFrameStack().get("seed").getValue();
-					seed=(int) context.getFrameStack().get("seed").getValue();
-				}
-				else{
-					seed= (int) System.currentTimeMillis();
-					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-					//seed= new Variable("seed",seedValue,null);
-					//context.getFrameStack().put(seed);
-				}*/
+			public EClass annotated(String annotation) {
+				DynamicEObjectImpl obj = (DynamicEObjectImpl) target;
+				EClass clas = obj.eClass();
+				System.out.println(obj.eClass());
+				EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+				eAnnotation.setSource(annotation);
+				return annotated(clas,annotation, new HashMap<Object, Object>());
+				//EClass eModelElement = (EClass) target;
+				//System.out.println(target.getClass());
 				
-				
-				
-				return deterministicRandomBase(size,limitValue);				
-				
-			}
-			public Collection<?> deterministicRandom(int minSize,int maxSize) throws EolRuntimeException {
-				//target <- Student.all
-				Collection targetCollection;
-				if(target instanceof Collection<?>){
-					targetCollection = (Collection) target;// change the target to a collection
-				}
-				else{
-					System.err.println("only collections are allowed!");
-					return null;
-				}
-				
-				int seed,limit;
-				//check if there is a seed
-				if(context.getFrameStack().contains("seed")){
-					seed = (int) context.getFrameStack().get("seed").getValue();
-				}
-				else{
-					//Random random = new Random(seed);
-					//we create a new seed and add it to the context
-					seed = (int) System.currentTimeMillis();
-					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-					//seed= new Variable("seed",seedValue,null);
-					//context.getFrameStack().put(seed);
-				}
-				if(maxSize-minSize<0 && maxSize!= -1){
-					System.err.println("maximum size must not be less than minimum size");
-					return null;
-				}
-				if(minSize<0){
-					System.err.println("minimum size must not be less than 0");
-					return null;
-				}
-				
-				//check if there is a seed
-				if(context.getFrameStack().contains("seed")){
-					//seed = context.getFrameStack().get("seed").getValue();
-					seed=(int) context.getFrameStack().get("seed").getValue();
-				}
-				else{
-					//we create a new seed and add it to the context
-					seed=(int) System.currentTimeMillis();
-					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-					//seed= new Variable("seed",seedValue,null);
-					//context.getFrameStack().put(seed);
-				}
-				
-				//check if there is a limit
-				if(context.getFrameStack().contains("limit")){
-					//limit = context.getFrameStack().get("limit");
-					limit=(int) context.getFrameStack().get("limit").getValue();
-				}
-				else{
-					limit=targetCollection.size();
-					
-				}	
-				int size;
-				//Random random= new Random(seed);
-				if(maxSize==-1) size=random.nextInt()+minSize;
-				else size=random.nextInt(maxSize-minSize)+minSize;
-								
-				
-				return deterministicRandomBase(size,limit);		
-				
-			}
-			protected Collection<?> deterministicRandomBase(int size,int limit) throws EolRuntimeException {
-				//target <- Student.all
-				/*
-				 * *this method generates a deterministic collection as output
-				 * the limit is used in case new things has been added to the collection
-				 * so we stop at the previous size of the collection
-				 */
-				Collection targetCollection;
-				if(target instanceof Collection<?>){
-					targetCollection = (Collection) target;// change the target to a collection
-				}
-				else{
-					System.err.println("only collections are allowed!");
-					return null;
-				}
-				contributor.setTarget(targetCollection);
-				Collection<Object> out = contributor.createCollection(); // the output collection
-				
-				//Random random=new Random(seed);
-				//the if statement ensures the limit is less than the size of the input
-				//its a criteria to see if no deletion has occur
-				if(limit<=targetCollection.size()){
-					for(int i=0;i<size;i++)
-						out.add(contributor.at(random.nextInt(limit)));
-					//System.out.println(out.toString());
-				}
-				else{
-					//E.g when items have been deleted
-					Random rand = new Random();
-					int temp;
-					int cSize=targetCollection.size();
-					for(int i=0;i<size;i++){
-						temp =random.nextInt(limit);
-						if(temp<=cSize)
-							out.add(contributor.at(temp));
-						else
-							out.add(contributor.at(rand.nextInt(cSize)));
-					}
-						
-					
-				}
-				return out;
+				//contributor.setTarget(eModelElement);
+				//EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+				//eAnnotation.setSource(annotation);
+				//eModelElement.getEAnnotations().add(eAnnotation);
 				
 				
 			}
-			 
-			/*public Collection<?> deterministicRandomSize(int minSize,int maxSize) throws EolRuntimeException {
-				//target <- Student.all
-				Collection targetCollection;
-				if(target instanceof Collection<?>){
-					targetCollection = (Collection) target;// change the target to a collection
-				}
-				else{
-					System.err.println("only collections are allowed!");
-					return null;
-				}
-				if(maxSize-minSize<0 && maxSize!= -1){
-					System.err.println("maximum size must not be less than minimum size");
-					return null;
-				}
-				int seedValue,limitValue;//values of the variables
-				
-				//check if there is a seed
-				if(context.getFrameStack().contains("seed")){
-					//seed = context.getFrameStack().get("seed").getValue();
-					seedValue=(int) context.getFrameStack().get("seed").getValue();
-				}
-				else{
-					//we create a new seed and add it to the context
-					seedValue=(int) System.currentTimeMillis();
-					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seedValue));
-					//seed= new Variable("seed",seedValue,null);
-					//context.getFrameStack().put(seed);
-				}
-				
-				//check if there is a limit
-				if(context.getFrameStack().contains("limit")){
-					//limit = context.getFrameStack().get("limit");
-					limitValue=(int) context.getFrameStack().get("limit").getValue();
-				}
-				else{
-					limitValue=targetCollection.size();
-					
-				}	
-				Random random= new Random(seedValue);
-				int size;
-				if(maxSize==-1) size=random.nextInt()+minSize;
-				else size=random.nextInt(maxSize-minSize)+minSize;
-				
-				return deterministicRandomBase(size,seedValue,limitValue);				
-				
-			}
-			
-			public Collection<?> deterministicRandomSize(int size) throws EolRuntimeException {
-				//target <- Student.all
-				Collection targetCollection;
-				if(target instanceof Collection<?>){
-					targetCollection = (Collection) target;// change the target to a collection
-				}
-				else{
-					System.err.println("only collections are allowed!");
-					return null;
-				}
-				if(size<0){
-					System.err.println("size must not be less than 0");
-					return null;
-				}
-				int seedValue,limitValue;//values of the variables
-				
-				//check if there is a seed
-				if(context.getFrameStack().contains("seed")){
-					//seed = context.getFrameStack().get("seed").getValue();
-					seedValue=(int) context.getFrameStack().get("seed").getValue();
-				}
-				else{
-					//we create a new seed and add it to the context
-					seedValue=(int) System.currentTimeMillis();
-					context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seedValue));
-					//seed= new Variable("seed",seedValue,null);
-					//context.getFrameStack().put(seed);
-				}
-				
-				//check if there is a limit
-				if(context.getFrameStack().contains("limit")){
-					//limit = context.getFrameStack().get("limit");
-					limitValue=(int) context.getFrameStack().get("limit").getValue();
-				}
-				else{
-					limitValue=targetCollection.size();
-					
-				}	
-				
-				return deterministicRandomBase(size,seedValue,limitValue);				
-				
-			}*/
-			
 			
 		});
-		
 		//System.out.println(ast.hasChildren());
 		
 		
@@ -447,31 +131,66 @@ public class ModelClass {
 		}
 
 		//check for classes in the metamodel and execute the method
+		String name="";
 		for(EPackage po:metaPackage ){
 			for(EClassifier clas:po.getEClassifiers() ){
 				if(clas instanceof EClass){
 					EClass eclass= (EClass) clas;
 					if(!(eclass.isAbstract())){
 						for (Operation operation: operationNames){
-							if(operation.getContextType(context).getName().equals(eclass.getName())){
+							if(operation.getContextType(context).getName().equals(eclass.getName())){					
 								annotationBlock = operation.getAnnotationBlock();
+								if(annotationBlock==null)
+									continue;
 								List<Object> annotationValues;
-								for(Annotation annotation:annotationBlock.getAnnotations()){
-									//annotationValues.addAll()
-								}
-								Annotation annotation= annotationBlock.getAnnotations().get(0);
-								if(!(annotation.hasValue()))
-									continue;									
-								annotationValues = operation.getAnnotationsValues(annotation.getName(), context);
 								int instances = 1;
-								if (!annotationValues.isEmpty()) {
-									instances = (Integer) annotationValues.get(0);
+								//System.out.println("size"+annotationBlock.getAnnotations().size());
+								for(Annotation annotation:annotationBlock.getAnnotations()){
+									//Annotation annotation= annotationBlock.getAnnotations().get(0);
+									if(!(annotation.hasValue()))
+										continue;	
+									name= annotation.getName();
+									//System.out.println(name);
+									annotationValues = operation.getAnnotationsValues(name, context);
+									
+									String ann;
+									if(name.equals("instances")){
+										if (!annotationValues.isEmpty()) {
+										instances = (Integer) annotationValues.get(0);
+										}
+									}
+									if(name.equals("annotate")){
+										
+										if (!annotationValues.isEmpty()) {
+											ann=(String) annotationValues.get(0);
+											System.out.println(eclass.getEAnnotations().size());
+											annotate(eclass,ann);
+											annotateRef(eclass,ann);
+											System.out.println(eclass.getEAnnotations().size());
+										//eclass.
+										}
+									}
+									if(name.equals("annotateRefClass")){
+										
+										if (!annotationValues.isEmpty()) {
+											ann=(String) annotationValues.get(0);
+											System.out.println(eclass.getEAnnotations().size());
+											//annotate(eclass,ann);
+											annotateRefClass(eclass,ann);
+											System.out.println(eclass.getEAnnotations().size());
+										//eclass.
+										}
+									}
+									
 								}
 								
+								
 								for (int i = 0; i<instances; i++) {
-									//System.out.println("found create method for: " + eclass.getName());
+									//System.out.println("found create method for: " + eclass.getName()+i);
+									System.out.println(eclass.getEAnnotations().size());
 									
 									Object modelObject = model.createInstance(eclass.getName());
+									//System.out.println(po.toString());
 									operation.execute(modelObject, null, context);
 								}
 							}
@@ -513,7 +232,61 @@ public class ModelClass {
 		}
 		return eClass;
 	}
-	
+	protected static EClass annotate(EClass clas, String source){
+		EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+		eAnnotation.setSource(source);
+		clas.getEAnnotations().add(eAnnotation);
+		//System.out.println("successful "+clas.getEAnnotations().size());
+		return clas;
+		//annotation.setSource(source);
+		//clas.
+	}
+	protected static void annotateRef(EClass clas, String source){
+		int i=0;
+		for(EReference refClass: clas.getEAllReferences()){
+			//System.out.println(refClass.getEReferenceType());
+			System.out.println(refClass.isContainment());
+			//if(refClass instanceof EClass){
+				EClass refClas= refClass.eClass();
+				EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+				eAnnotation.setSource(source);
+				refClas.getEAnnotations().add(eAnnotation);
+				i++;
+			//}
+		}
+		System.out.println("successful "+i);
+		//clas.
+		//annotation.setSource(source);
+		//clas.
+	}
+	protected static void annotateRefClass(EClass clas, String source){
+		int i=0;
+		for(EReference refClass: clas.getEAllReferences()){
+			EClass refClas= refClass.eClass();
+			EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+			eAnnotation.setSource(source);
+			refClas.getEAnnotations().add(eAnnotation);
+			
+		}
+	}
+	protected static List<EReference> getReferences(EClass clas){
+		int i=0;
+		List<EReference> references = Collections.emptyList();
+		for(EReference ref: clas.getEAllReferences()){
+			if(!(references.contains(ref)))
+				references.add(ref);
+		}
+		return references;
+	}
+	protected static List<EReference> getContainmentReferences(EClass clas){
+		int i=0;
+		List<EReference> references = Collections.emptyList();
+		for(EReference ref: clas.getEAllReferences()){
+			if(!(references.contains(ref)) && ref.isContainment())
+				references.add(ref);
+		}
+		return references;
+	}
 	
 	//get unassigned annotations
 	protected static List<Annotation> unAssignedAnnotations(EolModule module,EolContext context) throws EolRuntimeException{

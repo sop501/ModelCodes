@@ -1,18 +1,11 @@
-/*
-org.eclipse.epsilon.modelSynthesis
-*/
 
-/*@lazy
-operation EPackage create(){
-	self.name.println();
-}*/
-var student: new std !Student;
-//var student: Student!EClass;
-//var prize: new Prize!EClass;
-//var Teacher:EClass;
-//var Prize:EClass;
-student.name="Student";
-create(student);
-operation create(clas:Any){
-	clas.name.println();
+@annotate gmf.diagram
+@annotateRefClass gmf.node
+operation Student create(){
+
 }
+
+//@annotate gmf.node
+operation Prize create(){
+}
+
