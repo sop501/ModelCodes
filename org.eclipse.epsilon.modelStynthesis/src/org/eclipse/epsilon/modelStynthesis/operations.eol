@@ -1,11 +1,12 @@
 
 @annotate gmf.diagram
-@annotateRefClass gmf.node
-operation Student create(){
-
+//@annotateRefClass gmf.node
+operation EClass create(){
+ 
 }
 
-//@annotate gmf.node
-operation Prize create(){
+@annotate gmf.node
+operation EAnnotation create(){
+	
 }
 
