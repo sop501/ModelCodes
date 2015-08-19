@@ -34,12 +34,12 @@ public class CollectionOperationContributor extends OperationContributor{
 		}*/
 		//global random or local random; performance or high predictability
 		//context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-		Random random= new Random(16758904);
-		String letter = new String("abcdefghijklmnopqrstuvwxyz");
+		RandomGenerator random= new RandomGenerator();
+		/*String letter = new String("abcdefghijklmnopqrstuvwxyz");
 		String capitalLetter = new String("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 		String alphabet = 
 		        new String("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-		
+		*/
 		//IterableOperationContributor
 		
 		
@@ -324,8 +324,8 @@ public class CollectionOperationContributor extends OperationContributor{
 			return contributor.at(index);
 			
 		}
-		public String generateString(int min,int max) throws EolRuntimeException {
-			if(max<min) return null;
+		/*public String generateString(int min,int max) throws EolRuntimeException {
+			if(max<min) return "";
 			String result="";
 			int ind= random.nextInt(max-min)+min;
 			for (int i=0; i<ind; i++) //12
@@ -333,7 +333,7 @@ public class CollectionOperationContributor extends OperationContributor{
 			return result;		
 		}
 		public String generateCapitalString(int min,int max) throws EolRuntimeException {
-			if(max<min) return null;
+			if(max<min) return "";
 			String result="";
 			int ind= random.nextInt(max-min)+min;
 			for (int i=0; i<ind; i++) //12
@@ -411,7 +411,7 @@ public class CollectionOperationContributor extends OperationContributor{
 				return true;	
 			return false;
 			
-		}
+		}*/
 		 
 		/*public Collection<?> deterministicRandomSize(int minSize,int maxSize) throws EolRuntimeException {
 			//target <- Student.all

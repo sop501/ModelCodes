@@ -1,11 +1,12 @@
 
-@annotate gmf.diagram
-//@annotateRefClass gmf.node
+@annotate gmf.diagram(source=go,target=me)
+@name Student
 operation EClass create(){
- 
+ self.name="afg";
 }
 
 @annotate gmf.node
+@create EClass(type=value)
 operation EAnnotation create(){
 	
 }
