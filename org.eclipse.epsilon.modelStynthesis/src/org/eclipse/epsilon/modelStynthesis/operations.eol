@@ -1,13 +1,100 @@
-
-@annotate gmf.diagram(source=go,target=me)
-@name Student
+//$instances 2
+var i:new ecore!EClass;
+i.create();
+//i.isAnnotatedAs("gmf.diagr").println();
+//var ann: new EAnnotation;
+//ann=annotate("gmf.diagram");
+$instances 1
+@name root
 operation EClass create(){
- self.name="afg";
+//var ann: new EAnnotation;
+self.annotate("gmf.diagram(source=key,target=svg.uri)");
+//ann.source="gmf.diagram";
+self.name=randomString();
+//self.eAnnotations.add(ann);
+//println(instances);
+//annotate("gmf.diagram(source=key)");
+//self.eAnnotations.println("successful");
+//self. reference = EClass.all.select
+}
+$instances 5
+@name node
+operation EClass create(){
+self.annotate("gmf.node");
+//ann.source="gmf.diagram";
+self.name=randomString();
+}
+//names the classes created and we selected from the group
+operation EClass link(root,node){
+	root.random().link(node.random());
 }
 
-@annotate gmf.node
-@create EClass(type=value)
-operation EAnnotation create(){
-	
+//we select form the model
+operation EClass link(){
+	var c:EClass=EClass.all.selectOne(t|t.isAnnotatedAs("gmf.diagram"));
+	var d:EClass=EClass.all.select(t|t.isAnnotatedAs("gmf.node")).random();
+	if(c.isDefined() and d.isDefined()){
+		c.link(d);
+	}
+	//self.link(nod);
+	//class1.isAnnotatedAs("gmf.diagram");
+}
+operation EClass isAnnotatedAs(string:String){
+	if(self.getEAnnotation(string).isDefined())
+		return true;
+	else
+		return false;
+}
+/*$instances size
+operation EClass create(){
+self.annotate("gmf.node");
+
+}*/
+operation EClass annotate(string:String){
+var ann: new EAnnotation;
+//var details: new EStringToStringMapEntry;
+var stSequence: new Sequence(String);
+var stSequence2: new Sequence(String);
+var temp:String;
+//string.println();
+if("(".isSubstringOf(string)){
+	stSequence=string.split("\\(");
+	ann.source= stSequence[0];
+	temp=stSequence[1].trim;
+	temp= temp.substring(0,temp.length-1);
+	if(",".isSubstringOf(temp)){
+		stSequence= temp.split("\\,");
+		for(st:String in stSequence){
+			if("=".isSubstringOf(st)){
+				stSequence2= st.split("\\=");
+				var details: new EStringToStringMapEntry;
+				details.key=stSequence2[0];
+				details.value=stSequence2[1];
+				ann.details.add(details);
+				//ann.details.println();
+			}
+		}	
+	}
+	else{
+		if("=".isSubstringOf(temp)){
+			var details: new EStringToStringMapEntry;
+			stSequence2= temp.split("\\=");	
+			details.key=stSequence2[0];
+			details.value=stSequence2[1];
+			ann.details.add(details);
+			//ann.details.println();
+		}
+	}
+	//self.println(stSequence.size());
+}
+else{
+	ann.source=string;
+	//self.println("not found");
+}
+//ann.println("success");
+self.eAnnotations.add(ann);
+//self.eAnnotations.details.println();
+//self.abstract=false;
+//return self;
 }
 
