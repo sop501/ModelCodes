@@ -27,6 +27,9 @@ public class ObjectOperationContributor extends OperationContributor {
 	public String randomString() throws EolRuntimeException{
 			return random.generateString();
 	}
+	public int randomInteger(int num) throws EolRuntimeException{
+		return random.nextInt(num);
+	}
 	public Object link(Object objects) throws EolRuntimeException
 	{
 		return link(objects,false);

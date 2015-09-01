@@ -1,0 +1,56 @@
+//$instances 2
+var i:new ecore!EClass;
+i.create();
+
+$instances 1
+@name root
+operation School create(){
+
+self.name=randomString();
+}
+
+$instances 3
+operation SchoolRoom create(){
+self.name=randomString();
+}
+
+operation Clock create(){
+self.name=randomString();
+}
+
+$instances 3
+operation Buzzer create(){
+self.name=randomString();
+}
+
+
+//we select form the model
+operation School link(){
+	var c:Clock = Clock.all.random();
+	self.first.room.addAll(SchoolRoom.all);
+	self.first.clock=c;
+	//self.first.room.first.name = randomString();
+	
+	//self.room.addAll(SchoolRool.all);
+}
+operation SchoolRoom link(){
+var i:Integer = 0;
+	for(n in self){
+		n.buzzer= Buzzer.all.at(i);
+		i=i+1;
+	}
+}
+
+operation Clock link(){
+	for(n in self){
+	n.alarm.addAll(Buzzer.all);
+	}
+}
+/*
+operation Buzzer link(){
+for(n in self){
+		n.ring= Clock.all.random();
+	}
+
+}
+*/

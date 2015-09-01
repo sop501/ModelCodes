@@ -73,7 +73,7 @@ public class ModelClass {
 		//URI test = URI.createPlatformResourceURI("C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore",true);
 		
 		String ecoreU= ecoreUri.toString();
-		String ecoreN= ecoreNew.toString()+"fnew.ecore";
+		String ecoreN= ecoreNew.toString()+"new.ecore";
 		//String te = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore";
 		//String te2 = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/std.ecore";
 		
@@ -210,49 +210,17 @@ public class ModelClass {
 					//System.out.println(model2.toString());
 					Object modelObject = model2.createInstance(operation.getContextType(context).getName());
 					operation.execute(modelObject, null, context);
-					classes.add(modelObject);
+					//classes.add(modelObject);
 					
 				}
-				if(operationName.isEmpty()){
-					operationName=random.generateString();
-				}
-				classGroup.put(operationName, classes);
 			}
 			if(operation.getName().equals("link")){
-				List<Parameter> parameter= operation.getFormalParameters();
-				List<Collection> parameterList=new ArrayList<>();
-				if(parameter.size()>1){
-					String pName;
-					Parameter pa= parameter.get(0);
-					pName= pa.getName();
-					Object rootClass = null;
-					if(classGroup.containsKey(pName)){
-						//rootClass= classGroup.get(pa.getName());
-						parameterList.add(classGroup.get(pa.getName()));
-					}
-					else
-						return null;
-					for(int i=1;i<parameter.size();i++){
-						//EReference ref= EcoreFactory.eINSTANCE.createEReference();
-						//ref.setName(random.generateString());
-						pName=parameter.get(i).getName();
-					
-						if(classGroup.containsKey(pName)){
-							parameterList.add(classGroup.get(pName));
-							//EClass cla2= (EClass) classGroup.get(pName).get(0);
-							//ref.setEType(cla2);
-							//rootClass.getEStructuralFeatures().add(ref);
-						}
-						
-					}
-					operation.execute(rootClass, parameterList, context);
+				
+				operation.execute(model2.getAllOfType(operation.getContextType(context).getName()), null, context);
 					//cla.
 					//cla.getEStructuralFeatures().add((EStructuralFeature) cla2);
 					//ref.
-				}
-				else{
-					operation.execute(null, null, context);
-				}
+				
 				
 				
 				//System.out.println("size "+operation.getFormalParameters().size());
@@ -260,15 +228,6 @@ public class ModelClass {
 				
 		}//end for loop (operations)
 		
-		//add the packages to the model
-		
-		/*for (Entry<String, EPackage> entry : packages.entrySet())
-		{
-			//System.out.println(entry.getValue().getName()+"test");
-			p= entry.getValue();
-			if(p.getEClassifiers().size()>0)
-				model2.getResource().getContents().add(p);		
-		}*/
 		model2.store(ne.substring(1));
 		return model2;
 	}
@@ -295,7 +254,7 @@ public class ModelClass {
 	public static void main(String[] args){
 		ModelClass model= new ModelClass();
 		File ecoreFile = new File("src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore");
-		File eolFile= new File("src/org/eclipse/epsilon/modelStynthesis/test2.eol");
+		File eolFile= new File("src/org/eclipse/epsilon/modelStynthesis/operations.eol");
 		try {
 			model.executeModule(ecoreFile, eolFile);
 		} catch (Exception e) {

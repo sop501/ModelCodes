@@ -1,6 +1,7 @@
 //$instances 2
 var i:new ecore!EClass;
 i.create();
+i.getAnnotation("gmf.diagram","source").println;
 //i.isAnnotatedAs("gmf.diagr").println();
 //var ann: new EAnnotation;
 //ann=annotate("gmf.diagram");
@@ -17,6 +18,7 @@ self.name=randomString();
 //self.eAnnotations.println("successful");
 //self. reference = EClass.all.select
 }
+
 $instances 5
 @name node
 operation EClass create(){
@@ -25,11 +27,20 @@ self.annotate("gmf.node");
 self.name=randomString();
 }
 //names the classes created and we selected from the group
-operation EClass link(root,node){
-	root.random().link(node.random());
+operation EClass link(){
+	var c:EClass=self.selectOne(t|t.isAnnotatedAs("gmf.diagram"));
+	for(n in self){
+		if (n.isAnnotatedAs("gmf.node")){
+			var r:EReference = new EReference;
+			r.name=randomString();
+			r.containment=true;
+			r.eType=n;
+			c.eStructuralFeatures.add(r);
+		}
+	}
 }
 
-//we select form the model
+/*//we select form the model
 operation EClass link(){
 	var c:EClass=EClass.all.selectOne(t|t.isAnnotatedAs("gmf.diagram"));
 	var d:EClass=EClass.all.select(t|t.isAnnotatedAs("gmf.node")).random();
@@ -39,11 +50,19 @@ operation EClass link(){
 	//self.link(nod);
 	//class1.isAnnotatedAs("gmf.diagram");
 }
-operation EClass isAnnotatedAs(string:String){
-	if(self.getEAnnotation(string).isDefined())
-		return true;
-	else
-		return false;
+*/
+operation EClass isAnnotatedAs(source:String){
+	return self.getEAnnotation(source).isDefined();
+}
+operation EClass getAnnotation(source:String,key:String){
+	var detail:EStringToStringMapEntry= self.getEAnnotation(source).details.selectOne(k|k.key=key);
+	if(detail.isDefined()){
+		var value:String = detail.value;
+		if(value.isDefined()){
+			return value;
+		}
+	}
+	return null;
 }
 /*$instances size
 operation EClass create(){
