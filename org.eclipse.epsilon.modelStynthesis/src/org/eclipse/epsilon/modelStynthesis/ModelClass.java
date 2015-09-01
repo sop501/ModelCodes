@@ -101,10 +101,23 @@ public class ModelClass {
 		module.getContext().getModelRepository().addModel(model1);
 		context=module.getContext();
 		context.setModule(module);
+		//Map operationMap=new HashMap<String,ArrayList<Operation>>();
+		ArrayList create= new ArrayList<Operation>();
+		ArrayList link= new ArrayList<Operation>();
+		ArrayList operate= new ArrayList<>();
 		//operator.generateString(5, 5);
 		//context.getOperationContributorRegistry().add(new EModelElementOperationContributor());
 		context.getOperationContributorRegistry().add(new ObjectOperationContributor(random));
-		EmfModel model2= executeOperations(module.getOperations(),model1,ecoreN);
+		
+		for (Operation operation: module.getOperations()){
+			String name = operation.getName();
+			if(name.equals("create"))
+				create.add(operation);
+			else if(name.equals("link"))
+				link.add(operation);
+		}
+		create.addAll(link);
+		EmfModel model2= executeOperations(create,model1,ecoreN);
 		//model2.store(ecoreN.substring(1));
 		//System.out.println(model2.hasType("String"));
 		/*EClassifier eobject;
