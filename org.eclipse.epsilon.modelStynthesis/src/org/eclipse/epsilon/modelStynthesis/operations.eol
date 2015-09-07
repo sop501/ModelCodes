@@ -1,43 +1,178 @@
 //$instances 2
-var i:new ecore!EClass;
-i.create();
-i.getAnnotation("gmf.diagram","source").println;
+//var i:new ecore!EClass;
+//i.create();
+//i.getAnnotation("gmf.diagram","source").println;
 //i.isAnnotatedAs("gmf.diagr").println();
 //var ann: new EAnnotation;
 //ann=annotate("gmf.diagram");
-$instances 1
 @name root
 operation EClass create(){
 //var ann: new EAnnotation;
 self.annotate("gmf.diagram(source=key,target=svg.uri)");
-//ann.source="gmf.diagram";
 self.name=randomString();
-//self.eAnnotations.add(ann);
-//println(instances);
-//annotate("gmf.diagram(source=key)");
-//self.eAnnotations.println("successful");
-//self. reference = EClass.all.select
 }
 
-$instances 5
 @name node
 operation EClass create(){
 self.annotate("gmf.node");
-//ann.source="gmf.diagram";
 self.name=randomString();
 }
+
+// gmf.node label
+@name node
+operation EClass create(){
+	var sequence= Sequence{'internal', 'external', 'none'};
+	var string:String = sequence.randomD();	
+	if(string=='none'){
+		self.annotate("gmf.node(label.placement=none)");
+	}
+	else{
+		var label:String= "";
+		for(n in Sequence{1..randomInteger(1,4)}){
+			var r:EAttribute = new EAttribute;
+			r.name=randomString();
+			//r.eAttributeType= String;
+			label=label+","+ r.name;	
+			self.eStructuralFeatures.add(r);
+		}
+		self.annotate("gmf.node(label.placement="+string+",label="+label.subString(1)+")");
+	}
+	
+	self.name=randomString();
+}
+//gmf.link source and target
+$instances 2
+@name link
+operation EClass create(){
+var type = Sequence{'source','target'};
+var sequence= Sequence{'none', 'arrow', 'rhomb', 'filledrhomb','square', 'filledsquare', 'closedarrow', 'filledclosedarrow'};
+if(randomBoolean()==true){
+self.annotate("gmf.link(source="+randomString()+",target="+randomString()+",source.decoration="+sequence.randomD()+",target.decoration="+sequence.randomD()+")");
+}
+else{
+self.annotate("gmf.link(source="+randomString()+",target="+randomString()+")");
+}
+self.name=randomString();
+}
+
+//gmf.node figure
+$instances 2
+@name node
+operation EClass create(){
+var sequence= Sequence{'rectangle', 'ellipse', 'rounded', 'svg','polygon'};
+var string:String =sequence.randomD();
+if(string='polygon'){
+	self.annotate("gmf.node(figure=polygon,polygon.x="+randomInteger(20)+",polygon.y="+randomInteger(20)+")");	
+}
+else if(string='svg'){
+	self.annotate("gmf.node(figure=svg,svg.uri="+randomString()+")");
+}
+else{
+	self.annotate("gmf.node(figure="+sequence.randomD()+")");
+}
+
+self.name=randomString();
+}
+
 //names the classes created and we selected from the group
+/*
+@guard root
 operation EClass link(){
-	var c:EClass=self.selectOne(t|t.isAnnotatedAs("gmf.diagram"));
-	for(n in self){
-		if (n.isAnnotatedAs("gmf.node")){
+	//var c:EClass=self.selectOne(t|t.isAnnotatedAs("gmf.diagram"));
+	//c.addAll(root)
+	if (self.isAnnotatedAs("gmf.diagram")){
+		for(n in EClass.all.select(t|t.isAnnotatedAs("gmf.node") or t.isAnnotatedAs("gmf.link"))){
 			var r:EReference = new EReference;
 			r.name=randomString();
 			r.containment=true;
 			r.eType=n;
-			c.eStructuralFeatures.add(r);
+			self.eStructuralFeatures.add(r);
 		}
 	}
+	
+}
+*/
+
+//@guard self.setAsContext(root)
+@guard root,link
+operation EClass link(node,link){
+		for(n in node.randomD(2)){
+			var r:EReference = new EReference;
+			r.name=randomString();
+			r.containment=true;
+			r.eType=n;
+			if(r.randomBoolean==true){
+				r.eAnnotations.add(createAnnotation("gmf.compartment"));
+			}
+			self.eStructuralFeatures.add(r);
+		}	
+		/*
+		for(n in link){
+			var r:EReference = new EReference;
+			r.name=randomString();
+			r.containment=true;
+			r.eType=n;
+			self.eStructuralFeatures.add(r);
+		}	
+*/	
+}
+@guard node
+operation EClass link(){
+	if(self.getAnnotationValue('gmf.node', 'label').isDefined()){
+		var label:String = self.getAnnotationValue('gmf.node', 'label');
+		for(name in label.split(',').collect(s|s.trim())){
+			var a:EAttribute = new EAttribute;
+			a.name=name;
+			self.eStructuralFeatures.add(a);
+		}
+	}
+}
+@guard link
+operation EClass link(){
+	if(self.getAnnotationValue('gmf.link', 'label').isDefined()){
+		var label:String = self.getAnnotationValue('gmf.link', 'label');
+		for(name in label.split(',').collect(s|s.trim())){
+			var a:EAttribute = new EAttribute;
+			a.name=name;
+			self.eStructuralFeatures.add(a);
+		}
+	}
+	if(self.getAnnotationValue('gmf.link', 'source').isDefined()){
+		var name:String = self.getAnnotationValue('gmf.link', 'source');
+		var r:EReference = new EReference;
+		r.name=name;
+		r.containment=true;
+		r.eType=EClass.all.randomD();
+		self.eStructuralFeatures.add(r);
+	}
+	if(self.getAnnotationValue('gmf.link', 'target').isDefined()){
+		var name:String = self.getAnnotationValue('gmf.link', 'target');
+		var r:EReference = new EReference;
+		r.name=name;
+		r.containment=true;
+		r.eType=EClass.all.randomD();
+		self.eStructuralFeatures.add(r);
+	}
+	/*
+	var sequence= Sequence{'source', 'target'};
+	var name= new Sequence;
+	for(n in EClass.all.randomD(2)){
+		var r:EReference = new EReference;
+		r.name=randomString();
+		r.containment=true;
+		r.eType=n;
+		name.add(r.name);
+		self.eStructuralFeatures.add(r);
+	}
+	for(n in Sequence{0..(sequence.size()-1)}){
+		var details: new EStringToStringMapEntry;
+		details.key=sequence.at(n);
+		details.value=name.at(n);
+		self.getEAnnotation("gmf.link").details.add(details);
+	}
+*/
+				
+			
 }
 
 /*//we select form the model
@@ -54,7 +189,7 @@ operation EClass link(){
 operation EClass isAnnotatedAs(source:String){
 	return self.getEAnnotation(source).isDefined();
 }
-operation EClass getAnnotation(source:String,key:String){
+operation EClass getAnnotationValue(source:String,key:String){
 	var detail:EStringToStringMapEntry= self.getEAnnotation(source).details.selectOne(k|k.key=key);
 	if(detail.isDefined()){
 		var value:String = detail.value;
@@ -70,6 +205,13 @@ self.annotate("gmf.node");
 
 }*/
 operation EClass annotate(string:String){
+
+self.eAnnotations.add(createAnnotation(string));
+//self.eAnnotations.details.println();
+//self.abstract=false;
+//return self;
+}
+operation createAnnotation(string:String){
 var ann: new EAnnotation;
 //var details: new EStringToStringMapEntry;
 var stSequence: new Sequence(String);
@@ -110,10 +252,37 @@ else{
 	ann.source=string;
 	//self.println("not found");
 }
+return ann;
 //ann.println("success");
-self.eAnnotations.add(ann);
-//self.eAnnotations.details.println();
-//self.abstract=false;
-//return self;
+}
+operation EAnnotation addDetails(string:String){
+	if("=".isSubstringOf(string)){
+		var details: new EStringToStringMapEntry;
+		var sequence:Sequence= string.split("\\=");	
+		details.key=sequence[0];
+		details.value=sequence[1];
+		self.details.add(details);
+	}
+	return self;
+	
 }
 
+operation createReference(type:Classifier){
+	var r:EReference = new EReference;
+	r.name=randomString();
+	r.containment=true;
+	r.eType=n;
+	return r;
+}
+operation createAttribute(){
+	var r:EAttribute = new EAttribute;
+	r.name=randomString();
+	r.eType=n;
+	return r;
+}
+operation getDatatypes(){
+
+}
+operation createLink(){
+
+}
