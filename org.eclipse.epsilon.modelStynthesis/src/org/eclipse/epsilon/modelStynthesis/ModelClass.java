@@ -4,32 +4,17 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EModelElement;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
-import org.eclipse.emf.ecore.impl.EClassImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.epsilon.common.parse.AST;
 import org.eclipse.epsilon.common.parse.problem.ParseProblem;
 import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.emc.emf.EmfModel;
-import org.eclipse.epsilon.emc.emf.EmfUtil;
-import org.eclipse.epsilon.eol.EolModule;
 import org.eclipse.epsilon.eol.dom.Annotation;
 import org.eclipse.epsilon.eol.dom.AnnotationBlock;
 import org.eclipse.epsilon.eol.dom.Operation;
@@ -37,28 +22,29 @@ import org.eclipse.epsilon.eol.dom.Parameter;
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 import org.eclipse.epsilon.eol.exceptions.models.EolModelElementTypeNotFoundException;
 import org.eclipse.epsilon.eol.exceptions.models.EolModelLoadingException;
-import org.eclipse.epsilon.eol.execute.context.EolContext;
+import org.eclipse.epsilon.eol.execute.ExecutorFactory;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
-import org.eclipse.epsilon.eol.execute.context.Variable;
-import org.eclipse.epsilon.eol.execute.operations.contributors.IterableOperationContributor;
-import org.eclipse.epsilon.eol.execute.operations.contributors.OperationContributor;
-//import org.eclipse.emf.common.util.URI;
-import org.eclipse.epsilon.eol.models.IModel;
 import org.eclipse.epsilon.eol.models.IRelativePathResolver;
-import org.eclipse.epsilon.eugenia.operationcontributors.EModelElementOperationContributor;
+import org.eclipse.epsilon.epl.EplModule;
+//import org.eclipse.emf.common.util.URI;
+import org.eclipse.epsilon.epl.dom.Pattern;
+import org.eclipse.epsilon.epl.parse.EplParser;
 
 //import Eclass;
 
 public class ModelClass {
 	static RandomGenerator random;
 	IEolContext context;
-	EolModule module;
+	EplModule module;
 	EmfModel model;
-	Map<String,EClassifier> classes = new HashMap<String,EClassifier>();//maps created class names to their classifiers
-	
+	int nu=0; // for number annotations in pattern
+	int value=1; // for number annotations in pattern
+	Pattern pat=null;
+	//Map<String,EClassifier> classes = new HashMap<String,EClassifier>();//maps created class names to their classifiers
+	Map<String,Collection> classGroup= new HashMap<String,Collection>();//maps create names to collection of models
 	public ModelClass(){
 		//context = new EolContext();
-		module = new EolModule();
+		module = new EplModule();
 		random= new RandomGenerator();
 	}
 	
@@ -73,7 +59,7 @@ public class ModelClass {
 		//URI test = URI.createPlatformResourceURI("C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore",true);
 		
 		String ecoreU= ecoreUri.toString();
-		String ecoreN= ecoreNew.toString()+"new.ecore";
+		String ecoreN= ecoreNew.toString()+"epl.ecore";
 		//String te = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore";
 		//String te2 = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/std.ecore";
 		
@@ -101,14 +87,73 @@ public class ModelClass {
 		module.getContext().getModelRepository().addModel(model1);
 		context=module.getContext();
 		context.setModule(module);
+		//module.
 		//Map operationMap=new HashMap<String,ArrayList<Operation>>();
 		ArrayList create= new ArrayList<Operation>();
 		ArrayList link= new ArrayList<Operation>();
 		ArrayList operate= new ArrayList<>();
 		//operator.generateString(5, 5);
 		//context.getOperationContributorRegistry().add(new EModelElementOperationContributor());
-		context.getOperationContributorRegistry().add(new ObjectOperationContributor(random));
-		
+		context.getOperationContributorRegistry().add(new CollectionOperationContributor(random));
+		context.getOperationContributorRegistry().add(new ObjectOperationContributor(random,model1,classGroup));
+		module.getContext().setExecutorFactory(new ExecutorFactory() {
+			@Override
+			public Object executeAST(AST ast, IEolContext context)
+					throws EolRuntimeException {
+				
+				if (ast != null && ast.getParent() != null && ast.getParent().getType() == EplParser.MATCH) {
+					Pattern pattern = (Pattern) ast.getParent().getParent();
+					//context.
+					Boolean result = (Boolean) super.executeAST(ast, context);
+					if(result){
+						if (pattern.hasAnnotation("number")) {
+							if(!pattern.equals(pat)){
+								nu=0;
+								pat=pattern;
+								value=1;
+								List vals=pattern.getAnnotationsValues("number", context);
+								if(vals.size()>1){
+									Object val= vals.get(0);
+									Object val2= vals.get(1);
+									if(!(val.equals(null) || (val2.equals(null)))){
+										value = random.generateInteger(Integer.parseInt((String) val),Integer.parseInt((String) val2));									
+									}
+								}
+								else if(vals.size()>0){
+									Object val= vals.get(0);
+									if(!(val.equals(null))){
+										value=Integer.parseInt((String) val);
+									}
+								}
+								
+								//pattern.getAnnotationsValues("", context).get(0);
+								//pattern.g
+								//Object val2= pattern.getAnnotationsValues("number", context).get(1);
+								//Object val2=null;
+								//System.out.println(val.);
+								
+							}//end if !pattern	
+							//if(result){
+							if(value>nu){
+								//System.out.println(""+value+"  "+pattern.getName());
+								nu++;
+								return result;
+							}
+							else return !result;
+							
+						}//end annotation number
+						if (pattern.hasAnnotation("probability")) {
+							Object val= pattern.getAnnotationsValues("probability", context).get(0);
+							float value=1;
+							if((!val.equals(null)) && (val instanceof Float)) value=(float) val;
+							if(random.generateBoolean(value)==false) return !result;
+						}//end annotation probability
+					}//enf if result
+				}
+				
+				return super.executeAST(ast, context);
+			}
+		});
 		for (Operation operation: module.getOperations()){
 			String name = operation.getName();
 			if(name.equals("create"))
@@ -118,6 +163,7 @@ public class ModelClass {
 		}
 		create.addAll(link);
 		EmfModel model2= executeOperations(create,model1,ecoreN);
+		module.execute();
 		//model2.store(ecoreN.substring(1));
 		//System.out.println(model2.hasType("String"));
 		/*EClassifier eobject;
@@ -145,12 +191,11 @@ public class ModelClass {
 	protected EmfModel executeOperations(ArrayList<Operation> operationNames,EmfModel model2, String ne) throws EolModelElementTypeNotFoundException, EolRuntimeException{
 		//ArrayList<Operation> operationNames= new ArrayList<Operation>(); //all the operation to be executed
 		AnnotationBlock annotationBlock;
-		Map<String,Collection> classGroup= new HashMap<String,Collection>();
 		//Map<String,EStructuralFeature> referenceMap=new HashMap<String,EStructuralFeature>();//links references to their types
 		//EPackage for new and general
 		//EPackage pack,p;
 		//pack= EcoreFactory.eINSTANCE.createEPackage();
-		String name,operationName = "";
+		String name,operationName,guard;
 		//pack = EcoreFactory.eINSTANCE.createEPackage();
 		//map the original package to the new package
 		/*Map<String,EPackage> packages=new HashMap<String,EPackage>();
@@ -188,6 +233,7 @@ public class ModelClass {
 			//System.out.println(random.generateString());
 			
 			int instances = 1;
+			operationName="";guard="";
 			//get the annotations
 			annotationBlock = operation.getAnnotationBlock();
 			if(!(annotationBlock==null)){
@@ -205,9 +251,14 @@ public class ModelClass {
 						instances = (Integer) annotationValues.get(0);
 						}
 					}
-					if(name.equals("name")){
+					else if(name.equals("name")){
 						if (!annotationValues.isEmpty()) {
 							operationName = (String) annotationValues.get(0);
+						}
+					}
+					else if(name.equals("guard")){
+						if (!annotationValues.isEmpty()) {
+							guard = (String) annotationValues.get(0);
 						}
 					}
 					
@@ -223,13 +274,66 @@ public class ModelClass {
 					//System.out.println(model2.toString());
 					Object modelObject = model2.createInstance(operation.getContextType(context).getName());
 					operation.execute(modelObject, null, context);
-					//classes.add(modelObject);
+					classes.add(modelObject);
 					
 				}
+				if(!operationName.isEmpty()){
+					if(classGroup.containsKey(operationName)){
+						classGroup.get(operationName).addAll(classes);
+					}
+					else
+						classGroup.put(operationName, classes);
+				}
+					
 			}
 			if(operation.getName().equals("link")){
+				Collection type;
+				ArrayList parameters= new ArrayList<>();
+				//System.out.println("guard"+ guard);
+				if(!guard.isEmpty()){
+					if(guard.contains(",")){
+						Boolean found=false;
+						type=new ArrayList<>();
+						for(String p:guard.split("\\,")){
+							if(classGroup.containsKey(p)){
+								type.addAll(classGroup.get(p));
+								found=true;
+							}
+								
+							else
+								System.err.println("no operation create was named: "+p);
+						}
+						if(!found)
+							type= model2.getAllOfType(operation.getContextType(context).getName());	
+					}
+					else if(classGroup.containsKey(guard))
+						type=classGroup.get(guard);
+					else
+						type= model2.getAllOfType(operation.getContextType(context).getName());	
+				}			
+				else
+					type= model2.getAllOfType(operation.getContextType(context).getName());
+				String pName;
+				for(Parameter p:operation.getFormalParameters() ){
+					pName=p.getName();
+					if(classGroup.containsKey(pName)){
+						parameters.add(classGroup.get(pName));
+					}
+					else{
+						System.out.println("ERROR: no operation was named:  " + pName);
+						parameters.add(null);
+					}
+						
+				}
+				if(parameters.size()>0){
+					for(Object t: type)
+						operation.execute(t, parameters, context);
+				}
+				else{
+					for(Object t: type)
+						operation.execute(t, null, context);
+				}
 				
-				operation.execute(model2.getAllOfType(operation.getContextType(context).getName()), null, context);
 					//cla.
 					//cla.getEStructuralFeatures().add((EStructuralFeature) cla2);
 					//ref.
@@ -240,9 +344,10 @@ public class ModelClass {
 			}
 				
 		}//end for loop (operations)
-		
+		//model2.
 		model2.store(ne.substring(1));
 		return model2;
+		
 	}
 	
 	
@@ -267,7 +372,7 @@ public class ModelClass {
 	public static void main(String[] args){
 		ModelClass model= new ModelClass();
 		File ecoreFile = new File("src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore");
-		File eolFile= new File("src/org/eclipse/epsilon/modelStynthesis/operations.eol");
+		File eolFile= new File("src/org/eclipse/epsilon/modelStynthesis/operations.epl");
 		try {
 			model.executeModule(ecoreFile, eolFile);
 		} catch (Exception e) {
