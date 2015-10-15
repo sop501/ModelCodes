@@ -25,8 +25,8 @@ operation EReference create(){
 self.name=randomString();
 }
 */
-@name node
-$instances 5
+$name randomString()
+$instances Sequence{5,10}
 operation EClass create(){
 	self.name=randomString();
 	var detail:Map= new Map;
@@ -380,7 +380,7 @@ pack.eClassifiers.add(clas);
 //pack.linkFeature("eClassifiers",class);
 }
 }
-//@number 1
+$number Sequence{1,EClass.all.select(t|t.isAnnotatedAs("gmf.node")).size()}
 pattern node
 root:EClass,node:EClass {
 	match : root.isAnnotatedAs("gmf.diagram") and

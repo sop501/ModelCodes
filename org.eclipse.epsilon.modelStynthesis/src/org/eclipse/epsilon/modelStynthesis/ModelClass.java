@@ -112,19 +112,31 @@ public class ModelClass {
 								pat=pattern;
 								value=1;
 								List vals=pattern.getAnnotationsValues("number", context);
+								//System.out.println(vals.get(0)+"");
 								if(vals.size()>1){
 									Object val= vals.get(0);
 									Object val2= vals.get(1);
 									if(!(val.equals(null) || (val2.equals(null)))){
-										value = random.generateInteger(Integer.parseInt((String) val),Integer.parseInt((String) val2));									
+										value = random.generateInteger(getInt( val),getInt( val2));									
 									}
 								}
 								else if(vals.size()>0){
 									Object val= vals.get(0);
+									
 									if(!(val.equals(null))){
-										value=Integer.parseInt((String) val);
+										if(val instanceof Collection){
+											List valC= (List)val;
+											if(valC.size()>1)
+												value = random.generateInteger(getInt(valC.get(0)),getInt(valC.get(1)));
+											else
+												value = getInt(valC.get(0));
+										}
+										else
+											value=getInt(val);
+										//value=Integer.parseInt((String) val);
 									}
 								}
+								//System.out.println(value);
 								
 								//pattern.getAnnotationsValues("", context).get(0);
 								//pattern.g
@@ -149,9 +161,16 @@ public class ModelClass {
 							if(random.generateBoolean(value)==false) return !result;
 						}//end annotation probability
 					}//enf if result
-				}
+				}				
 				
 				return super.executeAST(ast, context);
+			}
+			private int getInt(Object object){
+				if(object instanceof Integer)
+					return (int)object;
+				else
+					return Integer.parseInt((String) object);
+				
 			}
 		});
 		for (Operation operation: module.getOperations()){
@@ -248,12 +267,24 @@ public class ModelClass {
 					String ann;
 					if(name.equals("instances")){
 						if (!annotationValues.isEmpty()) {
-						instances = (Integer) annotationValues.get(0);
+							System.out.println(annotationValues.size());
+							Object val=annotationValues.get(0);
+							if(val instanceof List){
+								List valC = (List)val;
+								if(valC.size()>1)
+									instances = random.generateInteger((int)valC.get(0), (int) valC.get(1));
+								else
+									instances= (int) valC.get(0);
+							}
+							else
+								instances = (int) annotationValues.get(0);
+							//System.out.println(instances);
 						}
 					}
 					else if(name.equals("name")){
 						if (!annotationValues.isEmpty()) {
 							operationName = (String) annotationValues.get(0);
+							//System.out.println(operationName);
 						}
 					}
 					else if(name.equals("guard")){
