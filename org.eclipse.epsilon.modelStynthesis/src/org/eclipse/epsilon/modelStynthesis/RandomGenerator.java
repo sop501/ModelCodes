@@ -26,7 +26,7 @@ public class RandomGenerator extends Random {
 	public String generateString(int min,int max) {
 		if(max<min) return "";
 		String result="";
-		int ind= nextInt(max-min)+min;
+		int ind= nextInt((max-min)+1)+min;
 		for (int i=0; i<ind; i++) //12
 		    result = result + letter.charAt(nextInt(26));
 		return result;		
@@ -34,7 +34,7 @@ public class RandomGenerator extends Random {
 	public String generateCapitalString(int min,int max){
 		if(max<min) return "";
 		String result="";
-		int ind= nextInt(max-min)+min;
+		int ind= nextInt((max-min)+1)+min;
 		for (int i=0; i<ind; i++) //12
 		    result = result + capitalLetter.charAt(nextInt(26));
 		return result;		
@@ -43,15 +43,15 @@ public class RandomGenerator extends Random {
 		
 			if(max<min) return null;
 			String result="";
-			int ind= nextInt(max-min)+min;
+			int ind= nextInt((max-min)+1)+min;
 			for (int i=0; i<ind; i++)
 			    result = result + alphabet.charAt(nextInt(26));
 			return result;				
 	}
 	public int generateInteger(int min, int max) {
-		if(max<=min)
+		if(max <= min)
 			return max;
-		return nextInt(max-min)+min;				
+		return nextInt((max-min)+1)+min;				
 	}
 	public int generateUniformInteger(int min, int max) {
 		if(max-min<6)
@@ -104,9 +104,8 @@ public class RandomGenerator extends Random {
 		return false;
 		
 	}
-	public boolean generateBoolean(int scale) {
-		if(scale<1||scale>10) return generateBoolean();
-		if (nextInt(10)<scale)
+	public boolean generateBoolean(float scale) {
+		if (nextFloat()<scale)
 			return true;	
 		return false;
 		

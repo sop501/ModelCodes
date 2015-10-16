@@ -1,0 +1,24 @@
+/*
+org.eclipse.epsilon.modelSynthesis
+*/
+
+@lazy
+operation EPackage create(){
+	self.name.println();
+}
+var student: new std !Student;
+//var student: Student!EClass;
+//var prize: new Prize!EClass;
+//var Teacher:EClass;
+//var Prize:EClass;
+
+var seq = Sequence{1..10};
+//seq.uniformRandom.println();
+student.name="Student";
+create(seq);
+create(student);
+operation create(clas:Any){
+	//clas.name.println();
+	clas.uniformRandom.println();
+	
+}

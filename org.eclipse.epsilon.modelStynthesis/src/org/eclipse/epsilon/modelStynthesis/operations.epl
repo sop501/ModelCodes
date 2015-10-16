@@ -372,13 +372,19 @@ operation EAnnotation addDetails(details:Map){
 		self.details.add(detail);
 	}
 }
+operation EObject isUnused(){
+	return self.eContainer.isUndefined();
+}
+operation EObject isUsed(){
+	return self.eContainer.isDefined();
+}
 //@probability 0.5
 pattern package
-pack:EPackage,clas:EClass{
-onmatch{
-pack.eClassifiers.add(clas);
-//pack.linkFeature("eClassifiers",class);
-}
+	pack:EPackage,clas:EClass{
+	onmatch{
+	pack.eClassifiers.add(clas);
+	//pack.linkFeature("eClassifiers",class);
+	}
 }
 $number Sequence{1,EClass.all.select(t|t.isAnnotatedAs("gmf.node")).size()}
 pattern node
@@ -410,34 +416,34 @@ root:EClass,link:EClass{
 	}
 }
 pattern annotation
-root:EAnnotation
-from: getModels("annotation")
-guard:true{
-//guard:root.getAnnotationValue('gmf.node', 'figure')="svg" {
+	com:EAnnotation  //, nonCom:EAnnotation, ref:EReference, conRef:EReference
+	from: getCreatedElements("annotation")
+	guard: true{
+	//guard:com.source="gmf.compartment",
+	//from: EReference.all.select(t|t.eContainer.isUndefined())
+	//guard: conRef.containment=true{
+	//
 	onmatch{
-		if(root.source="gmf.compartment"){
-			EReference.all.select(t|t.containment=true).randomD().eAnnotations.add(root);
+		if(com.source="gmf.compartment"){
+			EReference.all.select(t|t.containment=true).randomD().eAnnotations.add(com);
 		}
 		else{
-			EReference.all.randomD().eAnnotations.add(root);
+			EReference.all.randomD().eAnnotations.add(com);
 		}
-	}
-	do{
-		//root.println();
+		/*
+		conRef.eAnnotations.add(com);
+		ref.eAnnotations.add(nonCom);
+
+		*/
 	}
 }
 
 pattern EStringToMap
-root:EStringToStringMapEntry
-from: getModels("EStringToMap")
-guard:true{
-	onmatch{
-		
-			EAnnotation.all.randomD().details.add(root);
-		
-	}
-	do{
-		
+	map:EStringToStringMapEntry,ann:EAnnotation
+	from: getCreatedElements("EStringToMap")
+	guard:true{
+	onmatch{	
+		EAnnotation.all.randomD().details.add(root);	
 	}
 }
 /*
@@ -477,7 +483,7 @@ root:EAnnotation, test:EAttribute{
 */
 pattern IsValidSvgNode
 root:EClass
-from: getModels("root")
+from: getCreatedElements("root")
 guard:true{
 //guard:root.getAnnotationValue('gmf.node', 'figure')="svg" {
 	onmatch{

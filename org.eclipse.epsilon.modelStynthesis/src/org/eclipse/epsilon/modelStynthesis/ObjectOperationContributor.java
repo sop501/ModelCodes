@@ -46,7 +46,7 @@ public class ObjectOperationContributor extends OperationContributor {
 		//System.out.println(target.toString());
 		
 	}
-	public Collection getModels(String name){
+	public Collection getCreatedElements(String name){
 		if(classGroup.containsKey(name))
 			return classGroup.get(name);
 		return null;

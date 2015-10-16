@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="Package" nsURI="package" nsPrefix="">
+  <eClassifiers xsi:type="ecore:EClass" name="Classifier">
+    <eOperations name="getDiagramClass" eType="#//Classifier"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotated" upperBound="5"
+        eType="#//Annotation" eOpposite="#//Annotation/container"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extends" eType="#//Classifier"
+        eOpposite="#//Classifier/isExtendedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isExtendedBy" upperBound="5"
+        eType="#//Classifier" eOpposite="#//Classifier/extends"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Annotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="container" eType="#//Classifier"
+        eOpposite="#//Classifier/annotated"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="details" lowerBound="1"
+        upperBound="5" eType="#//EStringToMapEntry"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EStringToMapEntry" instanceClassName="java.util.Map$Entry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class" eSuperTypes="#//Classifier">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" lowerBound="1"
+        upperBound="-1" eType="#//Classifier"/>
+  </eClassifiers>
+</ecore:EPackage>

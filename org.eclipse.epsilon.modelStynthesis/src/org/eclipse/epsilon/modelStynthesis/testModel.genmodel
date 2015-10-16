@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="" modelDirectory="/org.eclipse.epsilon.modelStynthesis/src"
+    modelPluginID="org.eclipse.epsilon.modelStynthesis" modelName="Package" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>testModel.ecore</foreignModel>
+  <genPackages prefix="Package" disposableProviderFactory="true" ecorePackage="testModel.ecore#/">
+    <genClasses ecoreClass="testModel.ecore#//Classifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testModel.ecore#//Classifier/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference testModel.ecore#//Classifier/annotated"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference testModel.ecore#//Classifier/extends"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference testModel.ecore#//Classifier/isExtendedBy"/>
+      <genOperations ecoreOperation="testModel.ecore#//Classifier/getDiagramClass"/>
+    </genClasses>
+    <genClasses ecoreClass="testModel.ecore#//Annotation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testModel.ecore#//Annotation/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference testModel.ecore#//Annotation/container"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference testModel.ecore#//Annotation/details"/>
+    </genClasses>
+    <genClasses ecoreClass="testModel.ecore#//EStringToMapEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testModel.ecore#//EStringToMapEntry/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testModel.ecore#//EStringToMapEntry/value"/>
+    </genClasses>
+    <genClasses ecoreClass="testModel.ecore#//Class">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference testModel.ecore#//Class/contents"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

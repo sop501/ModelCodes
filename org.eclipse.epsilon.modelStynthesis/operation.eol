@@ -1,0 +1,45 @@
+
+/*
+org.eclipse.epsilon.modelSynthesis
+*/
+/*@lazy
+operation EPackage create(){
+	self.name.println();
+}*/
+//rand.setSeed(100);
+
+//$instances size * 4
+@annotate gmf.diagram
+operation Student create(){
+	//var names = Sequence{"Tom", "Nick", "Helen", "John"};
+	//setSeed(100);
+	//self.name.println();
+	//self.annotated("going");
+	var test;
+	//test.generateString(5,10).println();
+	var seq = Sequence{1..10};
+	//seq.uniformRandom().println();
+	//seq.generateString(3,9).println();
+	//seq.generateAlphaString(3,11).println();
+	//seq.generateInteger(2,20).println();
+	//seq.generateUniformInteger(2,20).println();
+	//seq.generateUniformInteger(2,20,13,1).println();
+	//seq.generateReal(2,20).println();
+	//seq.generateUniformReal(2,20).println();
+	//seq.generateBoolean().println();
+	//self.name = names.deterministicRandom();
+	//self.name.println();
+}
+/*
+$instances size
+operation Prize create(){
+	//self.student= Student.all.random();
+	self.student=Student.all.deterministicRandom(3,6).deterministicRandom();
+	self.student.name.println();
+}
+
+operation Prize create(){
+	self.student= Student.all.random();
+	self.student.name.println();
+}
+*/

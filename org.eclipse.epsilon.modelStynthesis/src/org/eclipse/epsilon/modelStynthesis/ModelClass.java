@@ -91,7 +91,7 @@ public class ModelClass {
 		//Map operationMap=new HashMap<String,ArrayList<Operation>>();
 		ArrayList create= new ArrayList<Operation>();
 		ArrayList link= new ArrayList<Operation>();
-		ArrayList operate= new ArrayList<>();
+		//ArrayList operate= new ArrayList<>();
 		//operator.generateString(5, 5);
 		//context.getOperationContributorRegistry().add(new EModelElementOperationContributor());
 		context.getOperationContributorRegistry().add(new CollectionOperationContributor(random));
@@ -111,7 +111,7 @@ public class ModelClass {
 								nu=0;
 								pat=pattern;
 								value=1;
-								List vals=pattern.getAnnotationsValues("number", context);
+								List vals=pattern.getAnnotationsValues("number", context);							
 								//System.out.println(vals.get(0)+"");
 								if(vals.size()>1){
 									Object val= vals.get(0);
@@ -136,18 +136,11 @@ public class ModelClass {
 										//value=Integer.parseInt((String) val);
 									}
 								}
-								//System.out.println(value);
 								
-								//pattern.getAnnotationsValues("", context).get(0);
-								//pattern.g
-								//Object val2= pattern.getAnnotationsValues("number", context).get(1);
-								//Object val2=null;
-								//System.out.println(val.);
 								
 							}//end if !pattern	
 							//if(result){
 							if(value>nu){
-								//System.out.println(""+value+"  "+pattern.getName());
 								nu++;
 								return result;
 							}
@@ -183,24 +176,6 @@ public class ModelClass {
 		create.addAll(link);
 		EmfModel model2= executeOperations(create,model1,ecoreN);
 		module.execute();
-		//model2.store(ecoreN.substring(1));
-		//System.out.println(model2.hasType("String"));
-		/*EClassifier eobject;
-		for(EObject eo: model.allContents()){
-			if(eo instanceof EDataType ){
-				classes.put(((EDataType) eo).getName(), (EDataType) eo);
-				//System.out.println(((EDataType) eo).getName());
-			}
-			else if(eo instanceof EClassifier ){
-				classes.put(((EClassifier) eo).getName(), (EClassifier) eo);
-				//System.out.println(((EDataType) eo).getName());
-			}
-				
-				
-		}*/
-		//EClassifier data= model2.classForName("EDataType");
-		//model2.
-		//System.out.println(model.allContents().toString());
 		System.out.println("Model Generation Successful");
 		module.getContext().getModelRepository().dispose();
 		//model2.
@@ -210,28 +185,7 @@ public class ModelClass {
 	protected EmfModel executeOperations(ArrayList<Operation> operationNames,EmfModel model2, String ne) throws EolModelElementTypeNotFoundException, EolRuntimeException{
 		//ArrayList<Operation> operationNames= new ArrayList<Operation>(); //all the operation to be executed
 		AnnotationBlock annotationBlock;
-		//Map<String,EStructuralFeature> referenceMap=new HashMap<String,EStructuralFeature>();//links references to their types
-		//EPackage for new and general
-		//EPackage pack,p;
-		//pack= EcoreFactory.eINSTANCE.createEPackage();
 		String name,operationName,guard;
-		//pack = EcoreFactory.eINSTANCE.createEPackage();
-		//map the original package to the new package
-		/*Map<String,EPackage> packages=new HashMap<String,EPackage>();
-		// get all the root packages and map them to a newly created packages
-		for (EObject eo : model.getResource().getContents()) {
-			//System.out.println();
-			if (eo instanceof EPackage) {
-				p = (EPackage) eo;
-				pack.setNsURI(p.getNsURI());
-				pack.setNsPrefix(p.getNsPrefix());
-				pack.setName(p.getName());
-				//packages.
-				packages.put(p.getName(), pack);
-				//break;
-				
-			}
-		}*/
 		
 		//search through the operations
 		EClass eclass,clasNew;
@@ -242,19 +196,12 @@ public class ModelClass {
 			//System.out.println(eclass.getEPackage().getName());
 			if(eclass.isAbstract() || eclass.equals(null))
 				continue;
-			//factory= eclass.getEPackage().getEFactoryInstance();
-			//clasNew= (EClass) EcoreFactory.eINSTANCE.create(eclass.eClass());
-			//p=eclass.getEPackage();
-			//System.out.println(eclass.getEPackage().getName());
-			//pack=packages.get(p.getName());
-			//clasNew.setName(random.generateString());
-			//System.out.println(random.generateString());
-			//System.out.println(random.generateString());
 			
 			int instances = 1;
 			operationName="";guard="";
 			//get the annotations
 			annotationBlock = operation.getAnnotationBlock();
+
 			if(!(annotationBlock==null)){
 				List<Object> annotationValues;
 				//System.out.println("size"+annotationBlock.getAnnotations().size());
@@ -267,7 +214,7 @@ public class ModelClass {
 					String ann;
 					if(name.equals("instances")){
 						if (!annotationValues.isEmpty()) {
-							System.out.println(annotationValues.size());
+							//System.out.println(annotationValues.size());
 							Object val=annotationValues.get(0);
 							if(val instanceof List){
 								List valC = (List)val;
@@ -295,9 +242,7 @@ public class ModelClass {
 					
 				}//end for loop annotations
 			}
-			//classes.put(clasNew.getName(), clasNew);
-			//bigtest=clasNew.getInstanceClassName();
-			//System.out.println(clasNew.getName());
+
 			// how many instances of the class to create
 			if(operation.getName().equals("create")){
 				ArrayList classes= new ArrayList();
@@ -365,13 +310,6 @@ public class ModelClass {
 						operation.execute(t, null, context);
 				}
 				
-					//cla.
-					//cla.getEStructuralFeatures().add((EStructuralFeature) cla2);
-					//ref.
-				
-				
-				
-				//System.out.println("size "+operation.getFormalParameters().size());
 			}
 				
 		}//end for loop (operations)

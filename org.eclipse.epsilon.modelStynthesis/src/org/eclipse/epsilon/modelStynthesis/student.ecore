@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="Student" nsURI="student" nsPrefix="">
-  <eClassifiers xsi:type="ecore:EClass" name="Student">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="award" upperBound="-1"
-        eType="#//Prize" eOpposite="#//Prize/student"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Prize">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sponsor" lowerBound="1"
-        upperBound="2" eType="#//Sponsor" eOpposite="#//Sponsor/prize"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="student" lowerBound="1"
-        eType="#//Student" eOpposite="#//Student/award"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Sponsor">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="prize" upperBound="-1"
-        eType="#//Prize" eOpposite="#//Prize/sponsor"/>
-  </eClassifiers>
-</ecore:EPackage>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="Student" nsURI="student" nsPrefix="">
+    <eClassifiers xsi:type="ecore:EClass" name="Student">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+        <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="award" upperBound="-1" eType="/0/Prize" eOpposite="/0/Prize/student"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Prize">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+        <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sponsor" lowerBound="1" upperBound="2" eType="/0/Sponsor" eOpposite="/0/Sponsor/prize"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="student" lowerBound="1" eType="/0/Student" eOpposite="/0/Student/award"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Sponsor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+        <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="prize" upperBound="-1" eType="/0/Prize" eOpposite="/0/Prize/sponsor"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

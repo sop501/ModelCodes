@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<School xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns="schoolRoom" name="oghfpw">
+  <room name="vlumau">
+    <buzzer ring="//@clock" name="tcwiao"/>
+  </room>
+  <room name="kagpsbqgt">
+    <buzzer ring="//@clock" name="swgbeehw"/>
+  </room>
+  <room name="warzw">
+    <buzzer ring="//@clock" name="ccpbwd"/>
+  </room>
+  <clock alarm="//@room.0/@buzzer //@room.1/@buzzer //@room.2/@buzzer" name="lkfngvya"/>
+</School>

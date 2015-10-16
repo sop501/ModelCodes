@@ -1,7 +1,12 @@
 package org.eclipse.epsilon.modelStynthesis;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 import org.eclipse.epsilon.eol.execute.context.Variable;
@@ -12,6 +17,19 @@ public class CollectionOperationContributor extends OperationContributor{
 
 	Collection targetCollection;
 	IterableOperationContributor contributor= new IterableOperationContributor();
+	RandomGenerator random;
+	public CollectionOperationContributor(){
+		if(target instanceof Collection<?>){
+			targetCollection = (Collection) target;// change the target to a collection
+		}
+		random= new RandomGenerator();
+	}
+	public CollectionOperationContributor(RandomGenerator rand){ 
+		if(target instanceof Collection<?>){
+			targetCollection = (Collection) target;// change the target to a collection
+		}
+		random= rand;
+	}
 	@Override
 	public boolean contributesTo(Object target) {
 		return target instanceof Collection<?>;
@@ -34,7 +52,7 @@ public class CollectionOperationContributor extends OperationContributor{
 		}*/
 		//global random or local random; performance or high predictability
 		//context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
-		RandomGenerator random= new RandomGenerator();
+		
 		/*String letter = new String("abcdefghijklmnopqrstuvwxyz");
 		String capitalLetter = new String("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 		String alphabet = 
@@ -45,7 +63,7 @@ public class CollectionOperationContributor extends OperationContributor{
 		
 		
 		
-		public Object deterministicRandom() throws EolRuntimeException {
+		public Object randomD() throws EolRuntimeException {
 			//target <- Student.all
 			
 			if(target instanceof Collection<?>){
@@ -56,12 +74,16 @@ public class CollectionOperationContributor extends OperationContributor{
 				return null;
 			}
 			int cSize=targetCollection.size();
+			contributor.setTarget(targetCollection);
+			return contributor.at(random.nextInt(cSize));
+			//targetCollection.
 			
 			//IterableOperationContributor contributor= new IterableOperationContributor(targetCollection);
 			//Collection<Object> out = contributor.createCollection(); // the output collection
 			//Variable seed ;//seed
 			//Variable limit;//limit of the search in the target collection
-			//Variable size;// size of the return collection
+			
+			/*//Variable size;// size of the return collection
 			int seedValue,limitValue,sizeValue;//values of the variables
 
 			
@@ -91,7 +113,7 @@ public class CollectionOperationContributor extends OperationContributor{
 				//context.getFrameStack().put(limit);
 			}
 			
-			/*//check if there is a required size for the output collection
+			//check if there is a required size for the output collection
 			if(context.getFrameStack().contains("sizes")){
 				//size = context.getFrameStack().get("sizes");
 				sizeValue = (int) context.getFrameStack().get("sizes").getValue();
@@ -105,27 +127,29 @@ public class CollectionOperationContributor extends OperationContributor{
 				//context.getFrameStack().put(size);
 			}	*/	
 			
-			contributor.setTarget(targetCollection);
 			//Collection<Object> out = contributor.createCollection(); // the output collection
 			
 			
 			//the if statement ensures the limit is less than the size of the input
 			//its a criteria to see if no deletion has occur
-			if(limitValue<=cSize){
+			/*if(limitValue<=cSize){
 				return contributor.at(random.nextInt(limitValue));
 			}
 			else{
 				//E.g when items have been deleted
 				Random rand = new Random(seedValue);
 				return contributor.at(rand.nextInt(cSize));
-			}
-					
+			}*/
+			
 			//return deterministicRandomBase(sizeValue,seedValue,limitValue);	
 			//return deterministicRandomBase(3,1000,5);	
 			
 		}
-		
-		public Collection<?> deterministicRandom(int size) throws EolRuntimeException {
+		public Object get(int num){
+			return contributor.at(num);
+			//return num;
+		}
+		public Collection<?> randomD(int size) throws EolRuntimeException {
 			//target <- Student.all
 			Collection targetCollection;
 			if(target instanceof Collection<?>){
@@ -167,10 +191,10 @@ public class CollectionOperationContributor extends OperationContributor{
 			
 			
 			
-			return deterministicRandomBase(size,limitValue);				
+			return deterministicRandomBase(size,limitValue);
 			
 		}
-		public Collection<?> deterministicRandom(int minSize,int maxSize) throws EolRuntimeException {
+		public Collection<?> randomD(int minSize,int maxSize) throws EolRuntimeException {
 			
 			if(target instanceof Collection<?>){
 				targetCollection = (Collection) target;// change the target to a collection
@@ -227,7 +251,7 @@ public class CollectionOperationContributor extends OperationContributor{
 			int size;
 			//Random random= new Random(seed);
 			if(maxSize==-1) size=random.nextInt()+minSize;
-			else size=random.nextInt(maxSize-minSize)+minSize;
+			else size=random.nextInt((maxSize-minSize)+1)+minSize;
 							
 			
 			return deterministicRandomBase(size,limit);		
@@ -277,6 +301,69 @@ public class CollectionOperationContributor extends OperationContributor{
 			
 			
 		}
+		public Object uniqueRandom(int size) throws EolRuntimeException {
+			if(target instanceof Collection<?> ){
+				targetCollection = (Collection) target;// change the target to a collection
+				if( size> targetCollection.size()){
+					System.err.println("size is greater than the number of objects!");
+					return null;
+				}
+			}
+			else{
+				System.err.println("only collections are allowed!");
+				return null;
+			}
+			contributor.setTarget(targetCollection);
+			
+			Collection<Object> out = contributor.createCollection(); // the output collection
+			List<Integer> num= new ArrayList<Integer>();
+			int tSize =targetCollection.size();
+			if(tSize < (size*2)){
+				for(int i=0;i<tSize;num.add(i++));
+				Collections.shuffle(num, random);
+				for(int i=0;i<size;i++)
+					out.add(contributor.at(num.get(i)));
+			}
+			else{
+				Set<Integer> numb= new HashSet();
+				while(numb.size()<=size){
+					numb.add(random.nextInt(tSize));
+				}
+				Object[] number;
+				number=numb.toArray();
+				for(int i=0;i<size;i++)
+					out.add(contributor.at((int) number[i]));
+			}
+			//Random random=new Random(seed);
+			//the if statement ensures the limit is less than the size of the input
+			//its a criteria to see if no deletion has occur
+			/*int limit=0;
+			if(limit<=targetCollection.size()){
+				for(int i=0;i<size;i++)
+					out.add(contributor.at(random.nextInt(limit)));
+				//System.out.println(out.toString());
+			}
+			else{
+				//E.g when items have been deleted
+				Random rand = new Random();
+				int temp;
+				int cSize=targetCollection.size();
+				for(int i=0;i<size;i++){
+					temp =random.nextInt(limit);
+					if(temp<=cSize)
+						out.add(contributor.at(temp));
+					else
+						out.add(contributor.at(rand.nextInt(cSize)));
+				}
+					
+				
+			}*/
+			return out;
+			
+		}
+		public Object uniqueInteger(int size,int limit) throws EolRuntimeException {
+			return null;
+		}
 		public Object uniformRandom() throws EolRuntimeException {
 			//target <- Student.all
 			//Collection targetCollection;
@@ -292,7 +379,7 @@ public class CollectionOperationContributor extends OperationContributor{
 				return null;
 			}
 			else if(cSize<5){
-				return deterministicRandom();
+				return randomD();
 			}
 			else{
 				int mean= cSize/2;
@@ -324,6 +411,7 @@ public class CollectionOperationContributor extends OperationContributor{
 			return contributor.at(index);
 			
 		}
+		
 		/*public String generateString(int min,int max) throws EolRuntimeException {
 			if(max<min) return "";
 			String result="";
@@ -411,7 +499,7 @@ public class CollectionOperationContributor extends OperationContributor{
 				return true;	
 			return false;
 			
-		}*/
+		}
 		 
 		/*public Collection<?> deterministicRandomSize(int minSize,int maxSize) throws EolRuntimeException {
 			//target <- Student.all

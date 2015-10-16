@@ -1,0 +1,12 @@
+var lastTree;
+//var names= {}
+$instances trees
+operation Tree create(){
+
+ self.label= "T"+ 1.to(trees).random();
+ self.children.add = Tree.all().random();
+ if(lastTree.isDefined()){
+ //self
+ }
+ lastTree=self;
+}
