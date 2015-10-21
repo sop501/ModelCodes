@@ -5,7 +5,7 @@ import java.util.Random;
 
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 public class RandomGenerator extends Random {
-	protected final long seed = 16758904;
+	protected final long seed = System.currentTimeMillis();
 	String letter = new String("abcdefghijklmnopqrstuvwxyz");
 	String capitalLetter = new String("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	String alphabet = 

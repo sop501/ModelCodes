@@ -28,40 +28,32 @@ import org.eclipse.epsilon.eol.models.IRelativePathResolver;
 import org.eclipse.epsilon.epl.EplModule;
 //import org.eclipse.emf.common.util.URI;
 import org.eclipse.epsilon.epl.dom.Pattern;
+import org.eclipse.epsilon.epl.execute.PatternMatch;
+import org.eclipse.epsilon.epl.execute.PatternMatchModel;
 import org.eclipse.epsilon.epl.parse.EplParser;
 
-//import Eclass;
-
 public class ModelClass {
-	static RandomGenerator random;
+	RandomGenerator random;
 	IEolContext context;
-	EplModule module;
+	CustomEplModule module;
 	EmfModel model;
-	int nu=0; // for number annotations in pattern
-	int value=1; // for number annotations in pattern
-	Pattern pat=null;
+	//int nu=0; // for number annotations in pattern
+	//int value=1; // for number annotations in pattern
+	//Pattern pat=null;
 	//Map<String,EClassifier> classes = new HashMap<String,EClassifier>();//maps created class names to their classifiers
 	Map<String,Collection> classGroup= new HashMap<String,Collection>();//maps create names to collection of models
 	public ModelClass(){
 		//context = new EolContext();
-		module = new EplModule();
-		random= new RandomGenerator();
+		module = new CustomEplModule();
+		random= new RandomGenerator(35467839);
 	}
 	
 	protected void executeModule(File ecoreFile,File eolFile) throws Exception{
 		java.net.URI temp= ecoreFile.toURI();
 		URI ecoreUri= URI.createURI(temp.getPath());
-		//URI ecoreUri= URI.createPlatformResourceURI("org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore", true);
-		//System.out.println(ecoreUri.toString());
 		URI ecoreNew = ecoreUri.trimFileExtension();
-		//System.out.println(ecoreUri.trimSegments(1).appendSegment("EcoreNw.ecore").toString());
-		
-		//URI test = URI.createPlatformResourceURI("C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore",true);
-		
 		String ecoreU= ecoreUri.toString();
 		String ecoreN= ecoreNew.toString()+"epl.ecore";
-		//String te = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore";
-		//String te2 = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/std.ecore";
 		
 		File file= eolFile;
 		boolean me = module.parse(file);
@@ -82,34 +74,34 @@ public class ModelClass {
 		model= createEmfModel("Model", ecoreU,ecoreU, true, false);
 		EmfModel model1= createEmfModel("Model2", ecoreN,ecoreU, false, true);//empty model
 		
-		//context.getModelRepository().addModel(model);
-		//module.setContext(context);
 		module.getContext().getModelRepository().addModel(model1);
 		context=module.getContext();
 		context.setModule(module);
-		//module.
-		//Map operationMap=new HashMap<String,ArrayList<Operation>>();
+		
 		ArrayList create= new ArrayList<Operation>();
 		ArrayList link= new ArrayList<Operation>();
-		//ArrayList operate= new ArrayList<>();
-		//operator.generateString(5, 5);
-		//context.getOperationContributorRegistry().add(new EModelElementOperationContributor());
 		context.getOperationContributorRegistry().add(new CollectionOperationContributor(random));
 		context.getOperationContributorRegistry().add(new ObjectOperationContributor(random,model1,classGroup));
-		module.getContext().setExecutorFactory(new ExecutorFactory() {
+		//context.
+		/*module.getContext().setExecutorFactory(new ExecutorFactory() {
 			@Override
 			public Object executeAST(AST ast, IEolContext context)
 					throws EolRuntimeException {
 				
 				if (ast != null && ast.getParent() != null && ast.getParent().getType() == EplParser.MATCH) {
 					Pattern pattern = (Pattern) ast.getParent().getParent();
+					
+					//System.out.println(pattern.getOnMatchAst().getType());
+					
 					//context.
+					//System.out.println(getExecutorFor(pattern.getOnMatchAst().getType()));
 					Boolean result = (Boolean) super.executeAST(ast, context);
 					if(result){
+						
 						if (pattern.hasAnnotation("number")) {
 							if(!pattern.equals(pat)){
 								nu=0;
-								pat=pattern;
+								pat=pattern;						
 								value=1;
 								List vals=pattern.getAnnotationsValues("number", context);							
 								//System.out.println(vals.get(0)+"");
@@ -165,7 +157,7 @@ public class ModelClass {
 					return Integer.parseInt((String) object);
 				
 			}
-		});
+		});*/
 		for (Operation operation: module.getOperations()){
 			String name = operation.getName();
 			if(name.equals("create"))
@@ -175,6 +167,10 @@ public class ModelClass {
 		}
 		create.addAll(link);
 		EmfModel model2= executeOperations(create,model1,ecoreN);
+		//Object[] pat;
+		//pat=((PatternMatchModel)module.execute()).getMatches().toArray();
+		//PatternMatch tes= (PatternMatch) pat[0];
+		//System.out.println(tes.getRoleBindings());
 		module.execute();
 		System.out.println("Model Generation Successful");
 		module.getContext().getModelRepository().dispose();
@@ -349,258 +345,7 @@ public class ModelClass {
 			e.printStackTrace();
 		}
 	}
-	
-/*	protected static File getFile(String fileName) throws URISyntaxException {
-		
-		URI binUri = ModelClass2.class.
-				getResource(fileName).toURI();
-		URI uri = null;
-		
-		if (binUri.toString().indexOf("bin") > -1) {
-			uri = new URI(binUri.toString().replaceAll("bin", "src"));
-		}
-		else {
-			uri = binUri;
-		}
-		
-		return new File(uri);
-	}
-	public static void writeme(){
-		try{
-			
-		}
-		catch(Exception e){
-			System.out.print(""+ e.getMessage());
-		}
-	}
-	*/
-	//eo = op.execute(module, null, null);
-	
-	/*public static void main(String [] args) throws Exception{
-	String bigtest= "fg";
-	// map of a class name to a list of references
-	File ecoreFile = new File("src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore");
-	java.net.URI temp= ecoreFile.toURI();
-	URI ecoreUri= URI.createURI(temp.getPath());
-	//URI ecoreUri= URI.createPlatformResourceURI("org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore", true);
-	//System.out.println(ecoreUri.toString());
-	URI ecoreNew = ecoreUri.trimFileExtension();
-	//System.out.println(ecoreUri.trimSegments(1).appendSegment("EcoreNw.ecore").toString());
-	
-	//URI test = URI.createPlatformResourceURI("C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore",true);
-	EolContext context = new EolContext();
-	EolModule module = new EolModule();
-	String ecoreU= ecoreUri.toString();
-	String ecoreN= ecoreNew.toString()+"New.ecore";
-	//String te = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/Ecore.ecore";
-	//String te2 = "/C:/Users/Popoola/git/ModelClass/org.eclipse.epsilon.modelStynthesis/src/org/eclipse/epsilon/modelStynthesis/std.ecore";
-	
-	File file= new File("src/org/eclipse/epsilon/modelStynthesis/operations.eol");
-	
-	ArrayList<Operation> operationNames= new ArrayList<Operation>(); //all the operation to be executed
-	AnnotationBlock annotationBlock;
-	Map<String,EStructuralFeature> referenceMap=new HashMap<String,EStructuralFeature>();//links references to their types
-	boolean me = module.parse(file);
-	//check for errors in parsing file
-	if (module.getParseProblems().size() > 0) {
-		System.err.println("Parse errors occured...");
-		for (ParseProblem problem : module.getParseProblems()) {
-			System.err.println(problem.toString());
-		}
-		return;
-	}
-	context.getFrameStack().put(Variable.createReadOnlyVariable("size", 3));
-	context.getFrameStack().put(Variable.createReadOnlyVariable("seed", 1000));
-	
-	
-	
-	//create a new model
-	EmfModel model= createEmfModel("Model", ecoreU,ecoreU, true, false);
-	EmfModel model2= createEmfModel("Model2", ecoreN,ecoreU, false, true);//empty model
-	
-	//EPackage for new and original
-	EPackage pack,p;
-	
-	context.getModelRepository().addModel(model);
-	module.setContext(context);
-	//operator.generateString(5, 5);
-	//context.getOperationContributorRegistry().add(new EModelElementOperationContributor());
-	//context.getOperationContributorRegistry().add(new CollectionOperationContributor());
-	
-	String name;
-	//pack = EcoreFactory.eINSTANCE.createEPackage();
-	//map the original package to the new package
-	Map<String,EPackage> packages=new HashMap<String,EPackage>();
-	
-	// get all the root packages and map them to a newly created packages
-	for (EObject eo : model.getResource().getContents()) {
-		if (eo instanceof EPackage) {
-			pack = EcoreFactory.eINSTANCE.createEPackage();
-			p = (EPackage) eo;
-			pack.setNsURI(p.getNsURI());
-			pack.setNsPrefix(p.getNsPrefix());
-			pack.setName(p.getName());
-			//packages.
-			packages.put(p.getName(), pack);
-			//metaPackag.add(p);
-			
-		}
-	}
-	
-	//search through the operations
-	EClass eclass,clasNew;
-	for (Operation operation: module.getOperations()){
-		//get the class context
-		eclass = model2.classForName(operation.getContextType(context).getName());
-		//System.out.println(eclass.getEPackage().getName());
-		if(eclass.isAbstract() || eclass.equals(null))
-			continue;
-		//factory= eclass.getEPackage().getEFactoryInstance();
-		clasNew= (EClass) EcoreFactory.eINSTANCE.create(eclass.eClass());
-		p=eclass.getEPackage();
-		//System.out.println(eclass.getEPackage().getName());
-		pack=packages.get(p.getName());
-		clasNew.setName(random.generateString());
-		//System.out.println(random.generateString());
-		//System.out.println(random.generateString());
-		
-		
-		//get the annotations
-		annotationBlock = operation.getAnnotationBlock();
-		if(annotationBlock==null)
-			continue;
-		List<Object> annotationValues;
-		int instances = 1;
-		//System.out.println("size"+annotationBlock.getAnnotations().size());
-		for(Annotation annotation:annotationBlock.getAnnotations()){
-			//Annotation annotation= annotationBlock.getAnnotations().get(0);
-			if(!(annotation.hasValue()))
-				continue;	
-			name= annotation.getName();
-			annotationValues = operation.getAnnotationsValues(name, context);
-			String ann;
-			if(name.equals("instances")){
-				if (!annotationValues.isEmpty()) {
-				instances = (Integer) annotationValues.get(0);
-				}
-			}
-			if(name.equals("annotate")){
-				
-				if (!annotationValues.isEmpty()) {
-					ann=(String) annotationValues.get(0);
-					//System.out.println("annotaions before execution: "+eclass.getEAnnotations().size());
-					EAnnotation eAnnotation = getAnnotation(ann);
-					//EcoreFactory.eINSTANCE.createEAnnotation();
-					//EcoreFactory.eINSTANCE.createEPackage()
-					//eAnnotation.setSource(ann);
-					//model.getResource().
-					clasNew.getEAnnotations().add(eAnnotation);
-					//System.out.println("successfully annotated class: "+ eclass.getName() );
-					//annotate(eclass,ann);
-					//annotateRef(eclass,ann);
-					//System.out.println("annotaions after execution: "+eclass.getEAnnotations().size());
-				//eclass.
-				}
-			}
-			if(name.equals("create")){
-				
-				if (!annotationValues.isEmpty()) {
-					ann=(String) annotationValues.get(0);
-					EClass refClas;
-					EStructuralFeature refClass;
-					if(ann.contains("(")){
-						String[] temp2= ann.split("\\(", 2);
-						refClas = model2.classForName(temp2[0].trim());
-						temp2[1]=temp2[1].trim();
-						temp2[1]=temp2[1].substring(0, temp2[1].length()-1);
-						refClass=getFeature(temp2[1]);
-						referenceMap.put(temp2[0].trim(), refClass);
-					}
-					else{
-						refClas = model2.classForName(ann);
-						refClass=getFeature("");
-						referenceMap.put(ann, refClass);
-					}
-					//System.out.println("annotaions before execution: "+eclass.getEAnnotations().size());
-					
-					//refClass= EcoreFactory.eINSTANCE.createEReference();
-					//EStructuralFeature d=EcoreFactory.eINSTANCE.createEAttribute();
-					//refClass.
-					//EcoreFactory.eINSTANCE.createEAttribute();
-					refClass.setEType(refClas);
-					//EcoreFactory.eINSTANCE.createEPackage()
-					//if(!annotationValues.get(1).equals(null))
-						//refClass.setName((String)annotationValues.get(1));
-					//else
-						//refClass.setName(refClas.getName());
-					
-					//model.getResource().
-					clasNew.getEStructuralFeatures().add(refClass);
-					//System.out.println("successfully annotated class: "+ eclass.getName() );
-					//annotate(eclass,ann);
-					//annotateRef(eclass,ann);
-					//System.out.println("annotaions after execution: "+eclass.getEAnnotations().size());
-				//eclass.
-				}
-			}
-			if(name.equals("name")){
-				if (!annotationValues.isEmpty()) {
-					ann=(String) annotationValues.get(0);
-					clasNew.setName(ann);
-					//System.out.println(clasNew.getInstanceClassName());
-					//System.out.println(clasNew.getInstanceTypeName());
-					//model2.classForName(name);
-				}
-			}
-			if(name.equals("annotateRefClass")){
-				
-				if (!annotationValues.isEmpty()) {
-					ann=(String) annotationValues.get(0);
-							
-				}
-			}
-			
-		}
-		//bigtest=clasNew.getInstanceClassName();
-		//System.out.println(clasNew.getName());
-		// how many instances of the class to create
-		if(instances<=1)
-			pack.getEClassifiers().add(clasNew);
-		else{	
-			EClass clas2;
-			for (int i = 0; i<instances; i++) {
-				
-				clas2= (EClass) EcoreUtil.copy(clasNew);
-				clas2.setName(clasNew.getName()+i);
-				
-				pack.getEClassifiers().add(clas2);
-				//EString fg;
-				//System.out.println("name"+ pack.getName());
-				
-			}
-		}
-	}//end for loop (operations)
-	
-	//add the packages to the model
-	
-	for (Entry<String, EPackage> entry : packages.entrySet())
-	{
-		//System.out.println(entry.getValue().getName()+"test");
-		p= entry.getValue();
-		if(p.getEClassifiers().size()>0)
-			model2.getResource().getContents().add(p);		
-	}
-	//model2.store(ecoreN.substring(1));
-	//System.out.println(model2.allContents().toString());
-	System.out.println(bigtest);
-	System.out.println(model2.hasType(bigtest));
-	//model2.classForName("Student");
-	System.out.println("Model Generation Successful");
-	module.getContext().getModelRepository().dispose();
-	
-	
-}//end main class
-*/
+
 	
 		
 }
