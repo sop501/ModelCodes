@@ -1,148 +1,125 @@
 <?xml version="1.0" encoding="ASCII"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
-  <ecore:EPackage name="ecore">
-    <eClassifiers xsi:type="ecore:EClass" name="oghfpwlvl">
-      <eAnnotations source="gmf.diagram">
-        <details key="svg.uri" value="xykpu"/>
-      </eAnnotations>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="yyzmdj" eType="/0/psbqgtj"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="qubvbwejb" eType="/0/lkfngvyaqt"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="dhzcjtmdag" eType="/0/aolswgbee"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="dsvzfsdgv" eType="/0/jpzhvmd"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="sscevim" eType="/0/saqhl">
-        <eAnnotations source="gmf.link">
-          <details key="source.decoration" value="square"/>
-          <details key="target.decoration" value="arrow"/>
-          <details key="source" value="orrxjfn"/>
-          <details key="target" value="wuuevrcc"/>
-        </eAnnotations>
-      </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="xxvwnc" eType="/0/dsypypx"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="yzenys" eType="/0/yhasokfry" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="iqyqo" eType="/0/ttlusrc" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="czifmtjnmf" eType="/0/uwtim" containment="true">
-        <eAnnotations source="gmf.link">
-          <details key="source" value="fqdyddvl"/>
-          <details key="target" value="hrvvaut"/>
-        </eAnnotations>
-      </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="vurft" eType="/0/fwnnpywa" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="xuihbrhceo" eType="/0/vhylzimx" containment="true">
-        <eAnnotations source="gmf.compartment"/>
-      </eStructuralFeatures>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="psbqgtj">
-      <eAnnotations source="gmf.node">
-        <details key="figure" value="polygon"/>
-        <details key="polygon.y" value="15"/>
-        <details key="polygon.x" value="18"/>
-      </eAnnotations>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="lkfngvyaqt">
-      <eAnnotations source="gmf.node"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="aolswgbee">
-      <eAnnotations source="gmf.node">
-        <details key="figure" value="svg"/>
-        <details key="svg.uri" value="ccpbwdve"/>
-      </eAnnotations>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="njsqq" eType="/21"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tmgcntjjaq" eType="/22"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bzbxotdznf" eType="/22"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="jpzhvmd">
-      <eAnnotations source="gmf.node"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="saqhl">
-      <eAnnotations source="gmf.node"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="dsypypx">
-      <eAnnotations source="gmf.node">
-        <details key="figure" value="polygon"/>
-        <details key="polygon.y" value="14"/>
-        <details key="polygon.x" value="14"/>
-      </eAnnotations>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="ryqbsri">
-      <eAnnotations source="gmf.node"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="yhasokfry">
-      <eAnnotations source="gmf.link">
-        <details key="source" value="wdysyn"/>
-        <details key="target" value="jzovur"/>
-      </eAnnotations>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="wdysyn" eType="/0/saqhl"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="jzovur" eType="/0/dsypypx"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="ttlusrc">
-      <eAnnotations source="gmf.link">
-        <details key="source.decoration" value="arrow"/>
-        <details key="target.decoration" value="arrow"/>
-        <details key="source" value="gsqex"/>
-        <details key="target" value="iwupx"/>
-      </eAnnotations>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="gsqex" eType="/0/ttlusrc"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="iwupx" eType="/0/aolswgbee"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="uwtim">
-      <eAnnotations source="gmf.link">
-        <details key="source.decoration" value="closedarrow"/>
-        <details key="target.decoration" value="rhomb"/>
-        <details key="source" value="bmrxztb"/>
-        <details key="target" value="qpangbqh"/>
-      </eAnnotations>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="slnhds" eType="/21"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fnisdpemc" eType="/23"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="eiowmcstm" eType="/24"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="okvgwlxy" eType="/22"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="bmrxztb" eType="/0/uwtim"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="qpangbqh" eType="/0/aolswgbee"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="fwnnpywa">
-      <eAnnotations source="gmf.link">
-        <details key="source.decoration" value="closedarrow"/>
-        <details key="target.decoration" value="rhomb"/>
-        <details key="source" value="pmveykg"/>
-        <details key="target" value="zgodomyk"/>
-      </eAnnotations>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="pmveykg" eType="/0/dsypypx"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="zgodomyk" eType="/0/vhylzimx"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="vhylzimx">
-      <eAnnotations source="gmf.link">
-        <details key="source" value="cemdhiqrt"/>
-        <details key="target" value="kmpvmwf"/>
-      </eAnnotations>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ljodoi" eType="/21"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ykfygmszuv" eType="/22"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="txxgejpjdq" eType="/24"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="cemdhiqrt" eType="/0/ttlusrc"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="kmpvmwf" eType="/0/aolswgbee"/>
-    </eClassifiers>
-  </ecore:EPackage>
-  <ecore:EAttribute name="cotcksdry" eType="/22"/>
-  <ecore:EAttribute name="nlravfq" eType="/24"/>
-  <ecore:EAttribute name="yzkbgnval" eType="/21"/>
-  <ecore:EAttribute name="hwuzbcb" eType="/23"/>
-  <ecore:EAttribute name="xkvczpvzqx" eType="/24"/>
-  <ecore:EAttribute name="zbbyk" eType="/21"/>
-  <ecore:EAttribute name="xskioclgb" eType="/23"/>
-  <ecore:EAttribute name="escknepw" eType="/21"/>
-  <ecore:EAttribute name="njhippeaot" eType="/21"/>
-  <ecore:EAttribute name="xctry" eType="/25"/>
-  <ecore:EStringToStringMapEntry key="ruobeyh" value="mbrjxttw"/>
-  <ecore:EStringToStringMapEntry key="tscgo" value="uxfdzam"/>
-  <ecore:EStringToStringMapEntry key="vehuroe" value="thqamll"/>
-  <ecore:EStringToStringMapEntry key="khxarc" value="rxozo"/>
-  <ecore:EStringToStringMapEntry key="kydzmx" value="rxcxnay"/>
-  <ecore:EStringToStringMapEntry key="hpaskln" value="sznaqr"/>
-  <ecore:EStringToStringMapEntry key="wsaru" value="emnrrjhgg"/>
-  <ecore:EStringToStringMapEntry key="wdpflc" value="xjwbgiuiys"/>
-  <ecore:EStringToStringMapEntry key="nglfdog" value="uvpktd"/>
-  <ecore:EStringToStringMapEntry key="vxvwmhx" value="mucybmvqv"/>
-  <ecore:EDataType name="ayektgbe"/>
-  <ecore:EDataType name="yrrbqtvi"/>
-  <ecore:EDataType name="jpupb"/>
-  <ecore:EDataType name="csyvbco"/>
-  <ecore:EDataType name="uwzkoxvlk"/>
-</xmi:XMI>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ecore">
+  <eClassifiers xsi:type="ecore:EClass" name="kgrxppk">
+    <eAnnotations source="gmf.diagram"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zsxsj" eType="//elbvhg"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ueeugm" eType="//jcrshng"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wrofzk" eType="//rihpilo"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scfdeuo" eType="//abiinqde"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="egpwmwh" eType="//pwoppsckdc"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ogfvaxucuo" eType="//vydhth"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tmiokzefq" eType="//gfwsetkm"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gfplns" eType="//dgjejce"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dvsxckq" eType="//rwuwwvnd"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hjjzhqytgp" eType="//ydsesv" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ewqefkxykd" eType="//hjisn" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ohoexw" eType="//jvqvp" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ornkecyolz" eType="//rqhhcssuym" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="chyhohmrd" eType="//lucvrlv" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="elbvhg">
+    <eAnnotations source="gmf.node">
+      <details key="figure" value="polygon"/>
+      <details key="polygon.y" value="6"/>
+      <details key="polygon.x" value="10"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="erlwwwoa" eType="//dataTypes/modbrboic"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wykkvumzzj" eType="//dataTypes/ilvlvlyl"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="jmfct" eType="//dataTypes/wkbqifizds"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="jcrshng">
+    <eAnnotations source="gmf.node"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="rihpilo">
+    <eAnnotations source="gmf.node">
+      <details key="figure" value="polygon"/>
+      <details key="polygon.y" value="8"/>
+      <details key="polygon.x" value="4"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="zejgdzkwpk" eType="//dataTypes/ilvlvlyl"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bvvwu" eType="//dataTypes/wkbqifizds"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="abiinqde">
+    <eAnnotations source="gmf.node"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="pwoppsckdc">
+    <eAnnotations source="gmf.node">
+      <details key="figure" value="polygon"/>
+      <details key="polygon.y" value="11"/>
+      <details key="polygon.x" value="0"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="vydhth">
+    <eAnnotations source="gmf.node"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="gfwsetkm">
+    <eAnnotations source="gmf.node">
+      <details key="figure" value="polygon"/>
+      <details key="polygon.y" value="0"/>
+      <details key="polygon.x" value="2"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="dgjejce">
+    <eAnnotations source="gmf.node"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="rwuwwvnd">
+    <eAnnotations source="gmf.node">
+      <details key="figure" value="svg"/>
+      <details key="svg.uri" value="lijglm"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ydsesv">
+    <eAnnotations source="gmf.link">
+      <details key="source" value="vblqonlgur"/>
+      <details key="target" value="nyknvsif"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vblqonlgur" eType="//kgrxppk"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nyknvsif" eType="//kgrxppk"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="hjisn">
+    <eAnnotations source="gmf.link">
+      <details key="source.decoration" value="filledrhomb"/>
+      <details key="target.decoration" value="arrow"/>
+      <details key="source" value="vjxqhryz"/>
+      <details key="target" value="bnhlbae"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vjxqhryz" eType="//elbvhg"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bnhlbae" eType="//elbvhg"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="jvqvp">
+    <eAnnotations source="gmf.link">
+      <details key="source.decoration" value="closedarrow"/>
+      <details key="target.decoration" value="arrow"/>
+      <details key="source" value="jmvanux"/>
+      <details key="target" value="mdvwmjyhq"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="glltaxwbz" eType="//dataTypes/xjjqkaywmw"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jmvanux" eType="//jcrshng"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mdvwmjyhq" eType="//jcrshng"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="rqhhcssuym">
+    <eAnnotations source="gmf.link">
+      <details key="source" value="guawoijjz"/>
+      <details key="target" value="eefhqc"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vswlsfwck" eType="//dataTypes/wgfdtnhq"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guawoijjz" eType="//rihpilo"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eefhqc" eType="//rihpilo"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="lucvrlv">
+    <eAnnotations source="gmf.link">
+      <details key="source" value="khpivvwup"/>
+      <details key="target" value="mfsiouzh"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="igkmhlwish" eType="//dataTypes/xjjqkaywmw"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="khpivvwup" eType="//abiinqde"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mfsiouzh" eType="//abiinqde"/>
+  </eClassifiers>
+  <eSubpackages name="dataTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="wgfdtnhq"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="wkbqifizds"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="ilvlvlyl"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="xjjqkaywmw"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="modbrboic"/>
+  </eSubpackages>
+</ecore:EPackage>

@@ -5,16 +5,16 @@ import java.util.Random;
 
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 public class RandomGenerator extends Random {
-	protected final long seed = System.currentTimeMillis();
 	String letter = new String("abcdefghijklmnopqrstuvwxyz");
 	String capitalLetter = new String("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	String alphabet = 
 	        new String("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+	protected final long seed;
 	public RandomGenerator(){
-		super.setSeed(seed);
+		seed = System.currentTimeMillis();
 	}
 	public RandomGenerator(long seeds){
-		//super.
+		seed = seeds;
 		super.setSeed(seeds);
 	}
 	public String generateString() {
@@ -110,6 +110,9 @@ public class RandomGenerator extends Random {
 		return false;
 		
 	}
+	public long getSeed() {
+		return seed;
+	}
 
 	public static void main(String[] args) {
 		RandomGenerator test = new RandomGenerator();
@@ -117,5 +120,5 @@ public class RandomGenerator extends Random {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 }

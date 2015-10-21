@@ -17,6 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.epsilon.erl.engine;bundle-version="1.3.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.epsilon.epl,
+ org.eclipse.epsilon.epl.combinations,
  org.eclipse.epsilon.epl.dom,
+ org.eclipse.epsilon.epl.execute,
  org.eclipse.epsilon.epl.parse,
  org.eclipse.epsilon.eugenia.operationcontributors

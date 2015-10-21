@@ -32,6 +32,8 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.epsilon.eol.engine"/>
+	<classpathentry kind="lib" path="C:/Users/Popoola/Desktop/Eclipse/plugins/org.eclipse.epsilon.eol.engine_1.3.0.201510161242.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Popoola/Desktop/Eclipse/plugins/org.eclipse.epsilon.eol.tools_1.3.0.201510161242.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Popoola/Desktop/Eclipse/plugins/org.eclipse.epsilon.epl.engine_1.3.0.201510161242.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,58 +1,37 @@
 package org.eclipse.epsilon.modelStynthesis;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.epsilon.common.parse.AST;
-import org.eclipse.epsilon.eol.compile.context.EolCompilationContext;
-import org.eclipse.epsilon.eol.dom.AbstractExecutableModuleElement;
-import org.eclipse.epsilon.eol.dom.ExecutableBlock;
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
-import org.eclipse.epsilon.eol.execute.ExecutorFactory;
-import org.eclipse.epsilon.eol.execute.context.FrameType;
-import org.eclipse.epsilon.eol.execute.context.IEolContext;
-import org.eclipse.epsilon.eol.execute.context.Variable;
-import org.eclipse.epsilon.eol.models.java.JavaModel;
 import org.eclipse.epsilon.epl.EplModule;
-import org.eclipse.epsilon.epl.dom.Pattern;
-import org.eclipse.epsilon.epl.parse.EplParser;
+import org.eclipse.epsilon.epl.execute.PatternMatchModel;
 
 public class CustomEplModule extends EplModule {
-	
-	public static void main(String[] args) throws Exception {
+	@Override
+	public Object execute() throws EolRuntimeException {
 		
-		List<Object> objects = new ArrayList<Object>();
-		objects.add("foo");
-		objects.add("bar");
-		
-		List<Class<?>> classes = new ArrayList<Class<?>>();
-		classes.add(String.class);
-		
-		JavaModel model = new JavaModel(objects, classes);
-		
-		CustomEplModule module = new CustomEplModule();
-		module.parse("@negate\npattern P1 s : String { match : false  onmatch { s.println(); } }");
-		module.getContext().getModelRepository().addModel(model);
-		
-		module.getContext().setExecutorFactory(new ExecutorFactory() {
-			@Override
-			public Object executeAST(AST ast, IEolContext context)
-					throws EolRuntimeException {
-				
-				if (ast != null && ast.getParent() != null && ast.getParent().getType() == EplParser.MATCH) {
-					Pattern pattern = (Pattern) ast.getParent().getParent();
-					if (pattern.hasAnnotation("negate")) {
-						Boolean result = (Boolean) super.executeAST(ast, context);
-						return !result;
+			prepareContext(context);
+			execute(getPre(), context);
+			
+			CustomPatternMatcher patternMatcher = new CustomPatternMatcher();
+			PatternMatchModel matchModel = null;
+			try {
+				int loops = 1;
+				matchModel = patternMatcher.match(this);
+				if (repeatWhileMatchesFound) {
+					
+					while (!matchModel.allContents().isEmpty()) {
+						if (maxLoops != INFINITE) {
+							if (loops == maxLoops) break;
+						}
+						matchModel = patternMatcher.match(this);
+						loops++;
 					}
 				}
-				
-				return super.executeAST(ast, context);
 			}
-		});
-		
-		module.execute();
+			catch (Exception ex) {
+				EolRuntimeException.propagate(ex);
+			}	
+			execute(getPost(), context);	
+			return matchModel;
 		
 	}
-	
 }

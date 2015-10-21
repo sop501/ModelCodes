@@ -91,40 +91,6 @@ operation EDataType create(){
 	self.name=randomString();
 }
 
-/*
-$instances 2
-@name annotation
-operation EAnnotation create(){
-	var type = Sequence{'source','target'};
-	var sequence= Sequence{'none', 'arrow', 'rhomb', 'filledrhomb','square', 'filledsquare', 'closedarrow', 'filledclosedarrow'};
-	var detail:Map= new Map;
-	detail.put('source', randomString());
-	detail.put('target', randomString());
-	if(randomBoolean()==true){
-		detail.put("source.decoration",sequence.randomD());
-		detail.put("target.decoration",sequence.randomD());
-	}
-	self.source="gmf.link";
-	self.addDetails(detail);
-	//self.name=randomString();
-}
-@name annotation
-operation EAnnotation create(){
-	self.source="gmf.compartment";
-	var detail:Map= new Map;
-	var layout= Sequence{"list","free"};
-	var collapsible=Sequence{"true","false"};
-	if(randomBoolean()){
-		detail.put("layout", layout.randomD());
-	}
-	if(randomBoolean()){
-		detail.put("collapsible", collapsible.randomD());
-	}
-	self.addDetails(detail);
-	
-}
-
-*/
 operation EClass isAnnotatedAs(source:String){
 	//self.println();
 	return self.getEAnnotation(source).isDefined();
@@ -176,21 +142,6 @@ pattern package
 	}
 }
 
-/*
-what if there is no matching reference, the annotation is still useless
-@noRepeat
-pattern compartment
-ann:EAnnotation
-from: getCreatedElement("annotation")
-guard:ann.source="gmf.compartment",
-ref:EReference
-from: EReference.all.select(t|t.containment=true)
-guard:ref.eContainer.getAnnotation("gmf.diagram").isUndefined(){
-onmatch{
-ref.eAnnotations.add(ann);
-}
-}
-*/
 pattern attribute
 	attr:EAttribute
 	from: EAttribute.all()
@@ -255,7 +206,6 @@ pattern linkSource
 pattern linkTarget
 	class1:EClass
 	from: EClass.all.select(t|t.getAnnotationValue("gmf.link","target").isDefined())
-	//guard:class1.eStructuralFeatures.select(t|t.name="wdysyn").size()<1,
 	guard:true,
 	class3:EClass
 	from:EClass.all()
