@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hu.bme.mit.trainbenchmark="http://www.semanticweb.org/ontologies/2015/trainbenchmark">
+  <hu.bme.mit.trainbenchmark:RailwayContainer>
+    <semaphores/>
+    <semaphores/>
+    <semaphores/>
+    <semaphores/>
+    <routes>
+      <follows id="462010" switch="/1/@elements.5"/>
+      <follows id="152932" switch="/1/@elements.5"/>
+      <follows id="173719" switch="/1/@elements.5"/>
+      <follows id="280322" switch="/1/@elements.5"/>
+      <follows id="393151" switch="/1/@elements.5"/>
+      <follows id="340904" switch="/1/@elements.5"/>
+      <follows id="372277" switch="/1/@elements.5"/>
+    </routes>
+  </hu.bme.mit.trainbenchmark:RailwayContainer>
+  <hu.bme.mit.trainbenchmark:Sensor>
+    <elements xsi:type="hu.bme.mit.trainbenchmark:Segment" length="131392"/>
+    <elements xsi:type="hu.bme.mit.trainbenchmark:Segment" length="301606"/>
+    <elements xsi:type="hu.bme.mit.trainbenchmark:Segment" length="381085"/>
+    <elements xsi:type="hu.bme.mit.trainbenchmark:Segment" length="100952"/>
+    <elements xsi:type="hu.bme.mit.trainbenchmark:Segment" length="239809"/>
+    <elements xsi:type="hu.bme.mit.trainbenchmark:Switch" positions="/0/@routes.0/@follows.0 /0/@routes.0/@follows.1 /0/@routes.0/@follows.2 /0/@routes.0/@follows.3 /0/@routes.0/@follows.4 /0/@routes.0/@follows.5 /0/@routes.0/@follows.6"/>
+  </hu.bme.mit.trainbenchmark:Sensor>
+  <hu.bme.mit.trainbenchmark:Segment length="75804"/>
+  <hu.bme.mit.trainbenchmark:Segment length="145207"/>
+</xmi:XMI>
