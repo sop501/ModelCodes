@@ -1,5 +1,6 @@
 package org.eclipse.epsilon.emg;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.epsilon.common.module.IModule;
+import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.emc.emf.EmfModel;
 import org.eclipse.epsilon.emg.operationContributors.CollectionOperationContributor;
 import org.eclipse.epsilon.emg.operationContributors.ObjectOperationContributor;
@@ -20,49 +22,53 @@ import org.eclipse.epsilon.eol.dom.AnnotationBlock;
 import org.eclipse.epsilon.eol.dom.Operation;
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 import org.eclipse.epsilon.eol.exceptions.models.EolModelElementTypeNotFoundException;
+import org.eclipse.epsilon.eol.exceptions.models.EolModelLoadingException;
+import org.eclipse.epsilon.eol.execute.context.Variable;
 import org.eclipse.epsilon.eol.models.IModel;
+import org.eclipse.epsilon.eol.models.IRelativePathResolver;
 import org.eclipse.epsilon.epl.EplModule;
 import org.eclipse.epsilon.epl.execute.PatternMatchModel;
 
 public class EmgModule extends EplModule implements IModule, IEolExecutableModule {
 	ModelGenerator mod;
 	RandomGenerator random;
-	EmfModel model;
-	protected long seed;
+	protected int seed;
 	Map<String,Collection> classGroup= new HashMap<String,Collection>();//maps create names to collection of models
-	int i=0;
 	public EmgModule(){
 		reset();
 		random= new RandomGenerator();
-		
 	}
-	protected void preload(){
+	protected void preload() throws Exception{
 		context.setModule(this);
-		model= getModel();
+		if(context.getFrameStack().contains("seed")){
+			seed= (int) context.getFrameStack().get("seed").getValue();
+		}
+			
+		else{
+			seed=(int) System.currentTimeMillis();
+		}
+			
+		random.setSeed(seed);
+		EmfModel model= getModel();
 		ArrayList operation= new ArrayList<Operation>();
 		context.getOperationContributorRegistry().add(new CollectionOperationContributor(random));
 		context.getOperationContributorRegistry().add(new ObjectOperationContributor(random,model,classGroup));
+		String newFile=getFilePath(model.getModelFile())+"test.ecore";
+		EmfModel model1= createEmfModel(model.getName()+"New", newFile,model.getModelFile(), false, true);//empty model
+		context.getModelRepository().removeModel(model);
+		context.getModelRepository().addModel(model1);
 		for (Operation op: getOperations()){
 			String name = op.getName();
 			if(name.equals("create"))
 				operation.add(op);
 		}
-		try {
-			executeOperations(operation,getFilePath(model.getModelFile())+"test.ecore");
-		} catch (EolModelElementTypeNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (EolRuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		executeOperations(operation,model1,newFile);
 	}
 	@Override
 	public String getMainRule() {
 		return "eplModule";
 		
-	}
-		
+	}	
 	@Override
 	public HashMap<String, Class<?>> getImportConfiguration() {
 		HashMap<String, Class<?>> importConfiguration = super.getImportConfiguration();
@@ -71,7 +77,12 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	}
 	@Override
 	public Object execute() throws EolRuntimeException {	
-		preload();
+		try {
+			preload();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		prepareContext(context);
 		execute(getPre(), context);
@@ -96,10 +107,12 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 			EolRuntimeException.propagate(ex);
 		}	
 		execute(getPost(), context);	
+		System.out.println("model generation successful, seed used is "+seed);
+		context.getModelRepository().dispose();
 		return matchModel;
 		
 	}
-	protected EmfModel executeOperations(ArrayList<Operation> operationNames, String ne) throws EolModelElementTypeNotFoundException, EolRuntimeException{
+	protected EmfModel executeOperations(ArrayList<Operation> operationNames,EmfModel model, String ne) throws EolModelElementTypeNotFoundException, EolRuntimeException{
 		long time=System.currentTimeMillis();
 		AnnotationBlock annotationBlock;
 		String name,operationName,guard;
@@ -165,23 +178,38 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 					}
 					else
 						classGroup.put(operationName, classes);
-				}
-					
+				}				
 			}
 				
 		}//end for loop (operations)
 		model.store(ne);
 		System.out.println("generation time is: "+(System.currentTimeMillis()-time));
-		return model;
-		
+		return model;	
 	}
-	protected EmfModel getModel(){
+	protected static EmfModel createEmfModel(String name, String model, 
+			String metamodel, boolean readOnLoad, boolean storeOnDisposal) 
+					throws EolModelLoadingException, URISyntaxException {
+		EmfModel emfModel = new EmfModel();
+		StringProperties properties = new StringProperties();
+		properties.put(EmfModel.PROPERTY_NAME, name);
+		properties.put(EmfModel.PROPERTY_FILE_BASED_METAMODEL_URI,
+				metamodel);
+		properties.put(EmfModel.PROPERTY_MODEL_URI, 
+				model);
+		properties.put(EmfModel.PROPERTY_READONLOAD, readOnLoad + "");
+		properties.put(EmfModel.PROPERTY_STOREONDISPOSAL, 
+				storeOnDisposal + "");
+		emfModel.load(properties, (IRelativePathResolver) null);	
+		return emfModel;
+	}
+	protected EmfModel getModel() throws Exception{
 		for(IModel mod:context.getModelRepository().getModels()){
 			if (mod instanceof EmfModel){
 				return (EmfModel) mod;
 			}
-		}	
-		return null;
+		}
+		System.out.println("No EmfModel found");
+		throw new Exception();
 	}
 	protected int getInt(Object object){
 		if(object instanceof Integer)

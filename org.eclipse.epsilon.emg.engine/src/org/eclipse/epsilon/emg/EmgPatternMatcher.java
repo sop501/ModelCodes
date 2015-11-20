@@ -33,7 +33,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 
 	@Override
 	public List<PatternMatch> match(final Pattern pattern, final IEolContext context) throws Exception {
-		//System.out.println("running pattern "+pattern.getName());
+		System.out.println("running pattern "+pattern.getName());
 		long time= System.currentTimeMillis();
 		List<PatternMatch> patternMatches = new ArrayList<PatternMatch>();
 		
