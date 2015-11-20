@@ -48,6 +48,11 @@ public class ModelGenerator {
 		module = new EmgModule();
 		random= new RandomGenerator(seed);
 	}
+	public ModelGenerator(EmgModule mod,long seed){
+		this.seed=seed;
+		module = mod;
+		random= new RandomGenerator(seed);
+	}
 	
 	protected void executeModule(File ecoreFile,File eolFile) throws Exception{
 		java.net.URI temp= ecoreFile.toURI();
@@ -194,7 +199,7 @@ public class ModelGenerator {
 		else
 			return Integer.parseInt((String) object);	
 	}
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		ModelGenerator model= new ModelGenerator(35467839);
 		File ecoreFile = new File("src/model/Ecore.ecore");
 		File eolFile= new File("src/org/eclipse/epsilon/emg/sampleGenerator/Eugenia.epl");
@@ -207,6 +212,6 @@ public class ModelGenerator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 }

@@ -24,7 +24,7 @@
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="org.epsilon.emg.eclipse.dt.launching.EmgLaunchConfigurationDelegate"
+            delegate="org.eclipse.epsilon.emg.dt.launching.EmgLaunchConfigurationDelegate"
             id="org.epsilon.emg.eclipse.dt.launching.EmgLaunchConfigurationDelegate"
             modes="run, debug"
             name="EMG Program">
