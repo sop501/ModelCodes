@@ -31,6 +31,7 @@ import org.eclipse.epsilon.eol.exceptions.models.EolModelLoadingException;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
 import org.eclipse.epsilon.eol.models.IRelativePathResolver;
 
+@Deprecated
 public class ModelGenerator {
 	RandomGenerator random;
 	protected final long seed;

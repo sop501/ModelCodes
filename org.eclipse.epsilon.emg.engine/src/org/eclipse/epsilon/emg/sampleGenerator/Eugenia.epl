@@ -144,7 +144,6 @@ pattern package
 
 pattern attribute
 	attr:EAttribute
-	from: EAttribute.all()
 	guard: attr.etype.isUndefined(){
 		onmatch{
 			attr.eType=EDataType.all.randomD();
@@ -189,10 +188,8 @@ root:EClass,link:EClass{
 @noRepeat
 pattern linkSource
 	class1:EClass
-	from: EClass.all.select(t|t.getAnnotationValue("gmf.link","source").isDefined())
-	guard: true,
+	from: EClass.all.select(t|t.getAnnotationValue("gmf.link","source").isDefined()),
 	class3:EClass
-	from:EClass.all()
 	guard: class1<>class3{
 		onmatch{
 			var r =EReference.createInstance();
@@ -205,10 +202,8 @@ pattern linkSource
 @noRepeat
 pattern linkTarget
 	class1:EClass
-	from: EClass.all.select(t|t.getAnnotationValue("gmf.link","target").isDefined())
-	guard:true,
+	from: EClass.all.select(t|t.getAnnotationValue("gmf.link","target").isDefined()),
 	class3:EClass
-	from:EClass.all()
 	guard: class1<>class3{
 		onmatch{
 			var r =EReference.createInstance();

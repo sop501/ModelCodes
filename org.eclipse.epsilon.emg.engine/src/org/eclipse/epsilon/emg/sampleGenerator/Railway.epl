@@ -29,13 +29,9 @@ operation SwitchPosition create(){
 operation createRandom(){
 
 }
-pattern sensor
-	segment:Segment
-	from: Segment.all.select(s|s.sensor.isUndefined())
-	guard:true,
-	sensor:Sensor
-	from: Sensor.all()
-	guard:sensor.elements.select(s|s.isTypeOf(Segment)).size()<5{
+pattern ConnectedSegment
+	segment:Segment,sensor:Sensor
+	guard:segment.sensor.isUndefined() and sensor.elements.select(s|s.isTypeOf(Segment)).size()<5{
 		onmatch{
 		sensor.elements.add(segment);
 		//segment.sensor=sensor;
@@ -44,7 +40,6 @@ pattern sensor
 
 pattern SwitchSensor
 	switc:Switch
-	from: Switch.all()
 	guard: switc.sensor.isUndefined(){
 		onmatch{
 			switc.sensor=Sensor.all.randomD();
@@ -53,8 +48,7 @@ pattern SwitchSensor
 
 pattern switchPosition
 	sw:SwitchPosition
-	from:SwitchPosition.all()
-	guard:true{
+	{
 		onmatch{
 			sw.`switch`=Switch.all.randomD();
 			sw.route= Route.all.randomD();
@@ -65,7 +59,6 @@ pattern RouteSensor
 	from:Switch.all.select(s|s.sensor.isDefined())
 	guard: sw.route.isDefined(),
 	sensor:Sensor
-	from: Sensor.all()
 	guard: sensor.elements.includes(sw.sensor){
 		onmatch{
 			sw.route.definedBy.add(s);

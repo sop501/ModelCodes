@@ -33,26 +33,24 @@ public class EmgPatternMatcher extends PatternMatcher {
 
 	@Override
 	public List<PatternMatch> match(final Pattern pattern, final IEolContext context) throws Exception {
-		System.out.println("running pattern "+pattern.getName());
 		long time= System.currentTimeMillis();
 		List<PatternMatch> patternMatches = new ArrayList<PatternMatch>();
 		
 		context.getFrameStack().enterLocal(FrameType.PROTECTED, pattern);
 		boolean noRepeat= pattern.hasAnnotation("noRepeat");
+		if(noRepeat){
+			if(pattern.getAnnotationsValues("noRepeat", context) != null){
+				noRepeat=false;
+			}
+		}
 		boolean probability= pattern.hasAnnotation("probability");
 		boolean number= pattern.hasAnnotation("number");
 		boolean annotationChange;
 		int num=0, value=1;
 		List<Object> matchList= new ArrayList<Object>();
 		CompositeCombinationGenerator<Object> generator = new CompositeCombinationGenerator<Object>();
-		
-		//Collections.shuffle(generator., random);
-		
-		//Stack<Object> st;
-		//st.
 		for (Role role : pattern.getRoles()) {	
 			generator.addCombinationGenerator(createCombinationGenerator(role, context));
-			//System.out.println("s "+role.getInstances(context).get(0)+role.getInstances(context).get(1) );
 		}
 		
 		//System.out.println("genrator  "+ generator.getNext());
@@ -60,9 +58,6 @@ public class EmgPatternMatcher extends PatternMatcher {
 			
 			@Override
 			public boolean isValid(List<List<Object>> combination) throws Exception {
-				//System.out.println(combination);
-				//Stack<List<Object>> t=generator.getStack();
-				//System.out.println("t  "+t.toString());
 				for (Object o : combination.get(combination.size()-1)) {
 					if (o instanceof NoMatch) return true;
 				}
@@ -111,17 +106,16 @@ public class EmgPatternMatcher extends PatternMatcher {
 				}
 			}	
 		}//end annotation number
-		//generator.
 		while (generator.hasMore()) {
 			
 			List<List<Object>> candidate = generator.getNext();
-			//System.out.println("df");
-			//System.out.println(candidate);
+			
 			boolean test=false;
 			if(number && value<=num)
 				break;
 			if(noRepeat){		
 				for(Object temp:candidate){
+					//System.out.println(temp);
 					if(matchList.contains(temp)){
 						test=true;
 						break;
@@ -161,7 +155,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 				if(noRepeat){
 					matchList.addAll(candidate);
 							
-				}//end annotation noRepeat		
+				}//end annotation noRepeat
 				//annotation number
 				if(number){	
 					num++;		
@@ -192,7 +186,6 @@ public class EmgPatternMatcher extends PatternMatcher {
 		}
 		
 		context.getFrameStack().leaveLocal(pattern);
-		//System.out.println("time is: "+(System.currentTimeMillis()-time));
 		return patternMatches;
 	}
 	protected int getInt(Object object){
@@ -206,5 +199,12 @@ public class EmgPatternMatcher extends PatternMatcher {
 			return (float)object;
 		else
 			return Float.parseFloat((String) object);	
+	}
+	protected boolean containAny(Collection first,Collection last){
+		for(Object o:first){
+			if(last.contains(o))
+				return true;
+		}
+		return false;
 	}
 }

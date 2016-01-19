@@ -3,6 +3,7 @@ package org.eclipse.epsilon.emg.operationContributors;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.epsilon.eol.exceptions.models.EolModelElementTypeNotFoundException;
@@ -19,7 +20,7 @@ public class ModelOperationContributor extends OperationContributor {
 	@Override
 	public boolean contributesTo(Object target) {
 		// TODO Auto-generated method stub
-		return true;
+		return target instanceof EModelElement;
 	}
 	public Object createInstance() throws EolModelElementTypeNotFoundException, EolNotInstantiableModelElementTypeException{
 		return model.createInstance(target.toString());

@@ -34,7 +34,7 @@ public class CollectionOperationContributor extends OperationContributor{
 	@Override
 	public boolean contributesTo(Object target) {
 		return target instanceof Collection<?>;
-		//return true;
+		
 	}
 	public Object randomD() throws EolRuntimeException {
 		
@@ -52,10 +52,9 @@ public class CollectionOperationContributor extends OperationContributor{
 	}
 	public Object get(int num){
 		return contributor.at(num);
-		//return num;
+		
 	}
 	public Collection<?> randomD(int size) throws EolRuntimeException {
-		//target <- Student.all
 		Collection targetCollection;
 		if(target instanceof Collection<?>){
 			targetCollection = (Collection) target;// change the target to a collection
@@ -72,7 +71,6 @@ public class CollectionOperationContributor extends OperationContributor{
 
 		//check if there is a limit
 		if(context.getFrameStack().contains("limit")){
-			//limit = context.getFrameStack().get("limit");
 			limitValue=(int) context.getFrameStack().get("limit").getValue();
 		}
 		else{
@@ -97,7 +95,6 @@ public class CollectionOperationContributor extends OperationContributor{
 				seed = (int) context.getFrameStack().get("seed").getValue();
 			}
 			else{
-				//Random random = new Random(seed);
 				//we create a new seed and add it to the context
 				seed = (int) System.currentTimeMillis();
 				context.getFrameStack().put(Variable.createReadOnlyVariable("seed", seed));
