@@ -1,0 +1,12 @@
+WORD=6
+T__11=11
+T__10=10
+NUMBER=5
+WHITESPACE=8
+DIGIT=7
+RANDOM=4
+T__9=9
+'}'=11
+','=10
+'{'=9
+'random'=4
