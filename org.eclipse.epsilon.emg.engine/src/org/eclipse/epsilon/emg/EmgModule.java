@@ -51,18 +51,11 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	private RandomGenerator random;
 	
 	/** The seed used for random generation. */
-	protected int seed;
+	private int seed;
 	
-	/**
-	 * @param seed the seed to set
-	 */
-	public void setSeed(int seed) {
-		this.seed = seed;
-	}
+	private boolean useSeed;
 
-	/** The output. */
-	//private String output;
-	
+
 	/** A maps to keep track of objects created by operations */
 	private Map<String, Collection<Object>> classGroup= new HashMap<String, Collection<Object>>(); //
 
@@ -74,6 +67,21 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	public EmgModule(){
 		reset();
 		random= new RandomGenerator();
+	}
+	
+	/**
+	 * @param seed the seed to set
+	 */
+	public void setSeed(int seed) {
+		this.seed = seed;
+	}
+	
+	
+	/**
+	 * @param useSeed the useSeed to set
+	 */
+	public void setUseSeed(boolean useSeed) {
+		this.useSeed = useSeed;
 	}
 	
 	/**

@@ -23,4 +23,8 @@ public class EmgPlugin extends EplPlugin {
 	     return (EmgPlugin) plugins.get(EmgPlugin.class);
 	}
 	
+	public static int getRandomSeed() {
+		return (int) (System.currentTimeMillis() + System.identityHashCode(EmgPlugin.class));
+	}
+	
 }

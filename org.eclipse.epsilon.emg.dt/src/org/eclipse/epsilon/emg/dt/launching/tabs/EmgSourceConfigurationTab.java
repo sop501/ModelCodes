@@ -140,8 +140,9 @@ public class EmgSourceConfigurationTab extends EplSourceConfigurationTab {
 			
 			@Override
 			public void handleEvent(Event event) {
-				seedValueText.setText(String.valueOf((int) (System.currentTimeMillis() + System.identityHashCode(this))));
+				seedValueText.setText(String.valueOf(EmgPlugin.getRandomSeed()));
 			}
+
 		});
 		
 	}
@@ -163,7 +164,7 @@ public class EmgSourceConfigurationTab extends EplSourceConfigurationTab {
 		super.performApply(configuration);
 		if (useSeed.getSelection())
 			configuration.setAttribute(EmgLaunchConfigurationAttributes.SEED, Integer.parseInt(seedValueText.getText()));
-		configuration.setAttribute(EmgLaunchConfigurationAttributes.NO_SEED, useSeed.getSelection());
+		configuration.setAttribute(EmgLaunchConfigurationAttributes.USE_SEED, useSeed.getSelection());
 	}
 	
 	/* (non-Javadoc)
@@ -174,14 +175,14 @@ public class EmgSourceConfigurationTab extends EplSourceConfigurationTab {
 		
 		super.initializeFrom(configuration);
 		try {
-			useSeed.setSelection(configuration.getAttribute(EmgLaunchConfigurationAttributes.NO_SEED, false));
+			useSeed.setSelection(configuration.getAttribute(EmgLaunchConfigurationAttributes.USE_SEED, false));
 		}
 		catch (Exception ex) {
 			LogUtil.log(ex);
 			useSeed.setSelection(false);
 		}
 		try {
-			seedValueText.setText(String.valueOf(configuration.getAttribute(EmgLaunchConfigurationAttributes.SEED, (int) System.currentTimeMillis())));
+			seedValueText.setText(String.valueOf(configuration.getAttribute(EmgLaunchConfigurationAttributes.SEED, EmgPlugin.getRandomSeed())));
 		}
 		catch (Exception ex) {
 			LogUtil.log(ex);
