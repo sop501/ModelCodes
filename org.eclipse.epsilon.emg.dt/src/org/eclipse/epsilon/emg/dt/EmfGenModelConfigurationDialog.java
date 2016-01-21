@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2012 The University of York.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Dimitrios Kolovos - initial API and implementation
+ *     Saheed Popoola - aditional functionality
+ *     Horacio Hoyos - aditional functionality
+ ******************************************************************************/
 package org.eclipse.epsilon.emg.dt;
 
 import org.eclipse.emf.common.util.URI;
@@ -6,11 +18,23 @@ import org.eclipse.epsilon.emc.emf.EmfModel;
 import org.eclipse.epsilon.emc.emf.dt.EmfModelConfigurationDialog;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * The Class EmfGenModelConfigurationDialog provides a stripped version of the 
+ * EmfModelConfigurationDialog. The model name and alias, the cached options and
+ * the load/store options are hidden. 
+ * 
+ */
 public class EmfGenModelConfigurationDialog extends EmfModelConfigurationDialog {
 	
+	/** The Constant MODEL_TYPE, to distinguish this as a generator model. */
 	private static final String MODEL_TYPE = "EMF_GEN";
+	
+	/** The Constant DEFAULT_MODEL_NAME. */
 	private static final Object DEFAULT_MODEL_NAME = "Generator Model";
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emc.emf.dt.EmfModelConfigurationDialog#createGroups(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	protected void createGroups(Composite control) {
 		//super.createGroups(control);
@@ -20,11 +44,17 @@ public class EmfGenModelConfigurationDialog extends EmfModelConfigurationDialog 
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emc.emf.dt.EmfModelConfigurationDialog#getModelType()
+	 */
 	@Override
 	protected String getModelType() {
 		return MODEL_TYPE;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emc.emf.dt.EmfModelConfigurationDialog#loadProperties()
+	 */
 	@Override
 	protected void loadProperties(){
 		//super.loadProperties();
@@ -53,6 +83,9 @@ public class EmfGenModelConfigurationDialog extends EmfModelConfigurationDialog 
 		metamodelList.refresh();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emc.emf.dt.EmfModelConfigurationDialog#storeProperties()
+	 */
 	@Override
 	protected void storeProperties(){
 		//super.storeProperties();  We only need the metamodel info
