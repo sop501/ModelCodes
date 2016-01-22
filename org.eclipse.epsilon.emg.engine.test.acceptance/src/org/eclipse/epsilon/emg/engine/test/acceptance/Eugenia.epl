@@ -7,7 +7,7 @@ operation EClass create(){
 	self.name= nextString("UPPER_NUM", 8);	
 }
 
-$instances Sequence{5,10}
+$instances Sequence{5,Nodes}
 operation EClass create(){
 	self.name=nextFromList("names") + "_N";	
 	var detail:Map= new Map;

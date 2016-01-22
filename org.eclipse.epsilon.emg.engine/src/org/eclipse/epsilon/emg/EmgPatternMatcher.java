@@ -38,11 +38,11 @@ public class EmgPatternMatcher extends PatternMatcher {
 		
 		context.getFrameStack().enterLocal(FrameType.PROTECTED, pattern);
 		boolean noRepeat= pattern.hasAnnotation("noRepeat");
-		if(noRepeat){
-			if(pattern.getAnnotationsValues("noRepeat", context) != null){
-				noRepeat=false;
-			}
-		}
+//		if(noRepeat){
+//			if(pattern.getAnnotationsValues("noRepeat", context) != null){
+//				noRepeat=false;
+//			}
+//		}
 		boolean probability= pattern.hasAnnotation("probability");
 		boolean number= pattern.hasAnnotation("number");
 		boolean annotationChange;

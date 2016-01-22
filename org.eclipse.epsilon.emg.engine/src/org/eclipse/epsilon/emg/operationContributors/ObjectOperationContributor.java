@@ -45,6 +45,12 @@ public class ObjectOperationContributor extends OperationContributor {
 		return model.createInstance(target.toString());
 		
 	}
+	/**
+	 * Gets the elements from create rules with the @name annotation with the
+	 * given name parameter 
+	 * @param name
+	 * @return
+	 */
 	public Collection getCreatedElements(String name){
 		if(classGroup.containsKey(name)){
 			return classGroup.get(name);
