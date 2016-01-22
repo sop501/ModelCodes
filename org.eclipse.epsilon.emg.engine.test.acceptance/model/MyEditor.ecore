@@ -1,9 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
-  <ecore:EPackage name="ecore"/>
-  <ecore:EPackage name="dataTypes"/>
-  <ecore:EClass name="ndogim">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="MyEcore">
+  <eClassifiers xsi:type="ecore:EClass" name="0PCJWYCQ">
     <eAnnotations source="gmf.diagram"/>
-  </ecore:EClass>
-  <ecore:EClass name="siadxvnhtf"/>
-</xmi:XMI>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pkwsskk" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cknnxhh" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="kwiodqs" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qbvtafq" eType="#//Electabuzz_L"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jjheemg" eType="#//Wartortle_L"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vtzvtab" eType="#//Omastar_L"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gtzxbjn" eType="#//Nidorino_L"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dhuhwdy" eType="#//Magmar_L"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="2H1vVLm"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="CRb8q6y"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="OmWX3cT"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="dACH2AX"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="9qlhhp3"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Tangela_N">
+    <eAnnotations source="gmf.node"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Aerodactyl_N">
+    <eAnnotations source="gmf.node"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Icelandic Sheepdog" eType="#//CRb8q6y"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Basset Hound" eType="#//9qlhhp3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Briard" eType="#//OmWX3cT"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Raticate_N">
+    <eAnnotations source="gmf.node"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Cardigan Welsh Corgi" eType="#//OmWX3cT"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Redbone Coonhound" eType="#//2H1vVLm"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Dodrio_N">
+    <eAnnotations source="gmf.node"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Brussels Griffon" eType="#//9qlhhp3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="American Eskimo Dog (Miniature)"
+        eType="#//2H1vVLm"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Irish Setter" eType="#//2H1vVLm"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Bouvier des Flandres" eType="#//2H1vVLm"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Farfetch'd_N">
+    <eAnnotations source="gmf.node"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Electabuzz_L">
+    <eAnnotations source="gmf.link">
+      <details key="source.decoration" value="arrow"/>
+      <details key="target.decoration" value="square"/>
+      <details key="source" value="rm0Dpvx"/>
+      <details key="target" value="zqZngq4"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Skye Terrier" eType="#//CRb8q6y"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Siberian Husky" eType="#//CRb8q6y"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Portuguese Water Dog" eType="#//dACH2AX"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Nidorino_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rm0Dpvx" eType="#//Magmar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Nidorino_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zqZngq4" eType="#//Magmar_L"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Wartortle_L">
+    <eAnnotations source="gmf.link">
+      <details key="source.decoration" value="filledrhomb"/>
+      <details key="target.decoration" value="filledrhomb"/>
+      <details key="source" value="YEsr4tH"/>
+      <details key="target" value="mbTge0s"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Nidorino_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="YEsr4tH" eType="#//Magmar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Nidorino_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mbTge0s" eType="#//Magmar_L"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Omastar_L">
+    <eAnnotations source="gmf.link">
+      <details key="source" value="l2zI6f8"/>
+      <details key="target" value="dMcixjZ"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Dandie Dinmont Terrier"
+        eType="#//OmWX3cT"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Siberian Husky" eType="#//OmWX3cT"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Dalmatian" eType="#//dACH2AX"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Manchester Terrier" eType="#//9qlhhp3"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Nidorino_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="l2zI6f8" eType="#//Magmar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Nidorino_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dMcixjZ" eType="#//Magmar_L"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Nidorino_L">
+    <eAnnotations source="gmf.link">
+      <details key="source.decoration" value="none"/>
+      <details key="target.decoration" value="filledsquare"/>
+      <details key="source" value="jtOJatO"/>
+      <details key="target" value="bOKjhIs"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jtOJatO" eType="#//Magmar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bOKjhIs" eType="#//Magmar_L"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Magmar_L">
+    <eAnnotations source="gmf.link">
+      <details key="source.decoration" value="filledrhomb"/>
+      <details key="target.decoration" value="square"/>
+      <details key="source" value="6qxoYwf"/>
+      <details key="target" value="sPwDFNA"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="6qxoYwf" eType="#//Nidorino_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//0PCJWYCQ"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Tangela_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Aerodactyl_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Raticate_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Dodrio_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Farfetch%27d_N"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Electabuzz_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Wartortle_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Omastar_L"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sPwDFNA" eType="#//Nidorino_L"/>
+  </eClassifiers>
+</ecore:EPackage>
