@@ -26,6 +26,7 @@ import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.emc.emf.EmfModel;
 import org.eclipse.epsilon.emg.operationContributors.CollectionOperationContributor;
 import org.eclipse.epsilon.emg.operationContributors.ObjectOperationContributor;
+import org.eclipse.epsilon.emg.random.SimpleAttributeGenerator;
 //import org.eclipse.epsilon.emg.operationContributors.ObjectOperationContributor;
 import org.eclipse.epsilon.eol.IEolExecutableModule;
 import org.eclipse.epsilon.eol.dom.Annotation;
@@ -90,15 +91,23 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	private void preload() {
 		context.setModule(this);
 //		if(context.getFrameStack().contains("seed")){
-//			seed= (int) context.getFrameStack().get("seed").getValue();
+			//seed= (int) context.getFrameStack().get("seed").getValue();
 //		}
 //		else{
 //			seed=(int) System.currentTimeMillis();
 //		}
-		random.setSeed(seed);
-		context.getOperationContributorRegistry().add(new CollectionOperationContributor(random));
+		//random.setSeed(seed);
+		//context.getOperationContributorRegistry().add(new CollectionOperationContributor(random));
+		SimpleAttributeGenerator generator;
+		if (useSeed) {
+			generator = new SimpleAttributeGenerator(context, seed);
+		}
+		else {
+			generator = new SimpleAttributeGenerator(context);
+		}
+		context.getOperationContributorRegistry().add(generator);
 		//EmfModel model= getModel();
-		context.getOperationContributorRegistry().add(new ObjectOperationContributor(random, getModel(), classGroup));
+		//context.getOperationContributorRegistry().add(new ObjectOperationContributor(random, getModel(), classGroup));
 	}
 	
 //	/**
@@ -342,7 +351,7 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	 */
 	protected int getInt(Object object){
 		if(object instanceof Integer)
-			return (int)object;
+			return (Integer)object;
 		else
 			return Integer.parseInt((String) object);	
 	}
