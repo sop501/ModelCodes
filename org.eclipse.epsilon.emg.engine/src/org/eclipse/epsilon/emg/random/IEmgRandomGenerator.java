@@ -13,6 +13,7 @@
 package org.eclipse.epsilon.emg.random;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 
@@ -21,7 +22,7 @@ import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
  * @author Goblin
  *
  */
-public interface RandomAttributeGenerator<K extends CharacterSet> {
+public interface IEmgRandomGenerator<K extends CharacterSet> {
 	
 	public enum DefaultCharacterSet implements CharacterSet {
 		ID("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"), 
@@ -64,25 +65,98 @@ public interface RandomAttributeGenerator<K extends CharacterSet> {
 		Zipf
 	}
 	
-	
+	/**
+	 * Returns the next pseudorandom, uniformly distributed boolean value from
+	 * this random number generator's sequence.
+	 * @return
+	 * @throws EolRuntimeException
+	 */
 	public boolean nextBoolean() throws EolRuntimeException;
 	
-	public int nextIngeter(int upper) throws EolRuntimeException;
+	/**
+	 * Returns a pseudorandom, uniformly distributed int value between 0
+	 * (inclusive) and the specified value (exclusive), drawn from this random
+	 * attribute generator's sequence.
+	 * @param upper
+	 * @return
+	 * @throws EolRuntimeException
+	 */
+	public int nextInteger(int upper) throws EolRuntimeException;
+	
+	/**
+	 * Returns a pseudorandom, uniformly distributed long value between 0
+	 * (inclusive) and the specified value (exclusive), drawn from this random
+	 * attribute generator's sequence.
+	 * @param upper
+	 * @return
+	 * @throws EolRuntimeException
+	 */
 	public long nextLong(long upper) throws EolRuntimeException;
+	
+	/**
+	 * Returns a pseudorandom, uniformly distributed double value between 0
+	 * (inclusive) and the specified value (exclusive), drawn from this random
+	 * attribute generator's sequence.
+	 * @param upper
+	 * @return
+	 * @throws EolRuntimeException
+	 */
 	public double nextDobule(double upper) throws EolRuntimeException;
 	
-	public int nextIngeter(int lower, int upper) throws EolRuntimeException;
+	
+	/**
+	 * Returns a pseudorandom, uniformly distributed int value between lower and
+	 * upper (endpoints included), drawn from this random attribute generator's
+	 * sequence.
+	 * @param lower
+	 * @param upper
+	 * @return
+	 * @throws EolRuntimeException
+	 */
+	public int nextInteger(int lower, int upper) throws EolRuntimeException;
+	
+	/**
+	 * Returns a pseudorandom, uniformly distributed long value between lower and
+	 * upper (endpoints included), drawn from this random attribute generator's
+	 * sequence.
+	 * @param lower
+	 * @param upper
+	 * @return
+	 * @throws EolRuntimeException
+	 */
 	public long nextLong(long lower, long upper) throws EolRuntimeException;
+	
+	/**
+	 * Returns a pseudorandom, uniformly distributed double value between lower and
+	 * upper (endpoints included), drawn from this random attribute generator's
+	 * sequence.
+	 * @param lower
+	 * @param upper
+	 * @return
+	 * @throws EolRuntimeException
+	 */
 	public double nextDobule(double lower, double upper) throws EolRuntimeException;
 	
 	/**
-	 * Generates a value using the configured distribution
+	 * Returns the next pseudorandom, value from this random attribute
+	 * generator's sequence. The value is picked from the defined distribution.
 	 * @param Distribution
 	 * @return
 	 */
 	public double nextValue() throws EolRuntimeException;
 	
+	/**
+	 * Generates a random value from the Binomial Distribution.
+	 * @param Distribution
+	 * @return
+	 */
 	public double nextBinomialValue(int numberOfTrials, double probabilityOfSuccess) throws EolRuntimeException;
+	
+	/**
+	 *Generates a random value from the Exponential Distribution.
+	 * @param Distribution
+	 * @return
+	 */
 	public double nextExponentialValue(double mean) throws EolRuntimeException;
 	// TODO add more methods for other distributions
 	
@@ -95,6 +169,15 @@ public interface RandomAttributeGenerator<K extends CharacterSet> {
 	 * @return
 	 */
 	public String nextString(String charSet, int length);
+	
+	/**
+	 * Next capitalised string.
+	 *
+	 * @param charSet the char set
+	 * @param length the length
+	 * @return the string
+	 */
+	public String nextCapitalisedString(String charSet, int length);
 	
 	/**
 	 * Generates a random string of the given length using the specified 
@@ -155,61 +238,58 @@ public interface RandomAttributeGenerator<K extends CharacterSet> {
 	 * @param list the list
 	 * @return the t
 	 */
-	//public String nextFromCollection(Collection<String> c) throws EolRuntimeException;
-	
 	public Object nextFromCollection(Collection<?> c);
 	
 	/**
 	 * Returns a single objects selected randomly from the list using 
-	 * a uniform distribution. The listID must be the name of a parameter in the
-	 * launch configuration. The value of the parameter can be either a CSV list
-	 * of strings or the name of a file. The name of the file should be full
-	 * path and each line in the file is considered a separate item. All items
-	 * are treated as strings, it is the responsibility of the caller to do the
-	 * appropriate cast.
+	 * a uniform distribution. Particular implementations need to define
+	 * what a valid listID is and how the data associated with it will be 
+	 * retrieved.
 	 *   
 	 * @param listID the listID
 	 * @return the t
 	 */
-	public String nextFromList(String listID) throws EolRuntimeException;
+	public Object nextFromList(String listID) throws EolRuntimeException;
 	
 	/**
 	 * The list is treated as a sample without replacement, i.e. each call
 	 * will return a unique member of the list. Throws an exception if list is
 	 * empty or if the method is invoked more times than the number of items
-	 * in the list.
+	 * in the list. Particular implementations need to define what a valid
+	 * listID is and how the data associated with it will be retrieved.
+	 * 
 	 * @param listID
 	 * @return
 	 * @throws EolRuntimeException
 	 */
-	public String nextFromListAsSample(String listID) throws EolRuntimeException;
-	
+	public Object nextFromListAsSample(String listID) throws EolRuntimeException;
 	
 	/**
 	 * Returns an array of k objects selected randomly from the Collection c
-	 * using a uniform distribution.
+	 * using a uniform distribution. Particular implementations need to define
+	 * what a valid listID is and how the data associated with it will be 
+	 * retrieved.
 	 *
 	 * Sampling from c is without replacement; but if c contains identical
 	 * objects, the sample may include repeats. If all elements of c are
 	 * distinct, the resulting object collection represents a Simple Random
 	 * Sample of size k from the elements of c.
 	 */
-	public Object[] nextSample(Collection<?> c, int k) throws EolRuntimeException;
+	public List<Object> nextSample(Collection<?> c, int k) throws EolRuntimeException;
 	
 	/**
 	 * Returns an array of k objects selected randomly from the list using a
-	 * uniform distribution.
-	 * 
-	 * The listID must be the name of a parameter in the launch configuration.
-	 * The value of the parameter can be either a CSV list of strings or the
-	 * name of a file. The name of the file should be full path and each line in
-	 * the file is considered a separate item.
+	 * uniform distribution. Particular implementations need to define
+	 * what a valid listID is and how the data associated with it will be 
+	 * retrieved.
 	 *
 	 * Sampling from the list is without replacement; but if the list contains
 	 * identical objects, the sample may include repeats. If all elements of the
 	 * list are distinct, the resulting object collection represents a Simple
 	 * Random Sample of size k from the elements of c.
 	 */
-	public String[] nextSample(String listID, int k) throws EolRuntimeException;
+	public List<Object> nextSample(String listID, int k) throws EolRuntimeException;
+
+	
 	
 }

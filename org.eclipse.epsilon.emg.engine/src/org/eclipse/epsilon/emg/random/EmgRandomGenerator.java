@@ -28,8 +28,8 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 import org.apache.commons.math3.random.RandomGeneratorFactory;
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
-import org.eclipse.epsilon.eol.execute.operations.contributors.OperationContributor;
 
+// TODO: Auto-generated Javadoc
 /**
  * The simplest implementation of the RandomAttributeGenerator interface.
  * All attributes are generated as strings. It is the responsibility of the 
@@ -37,27 +37,54 @@ import org.eclipse.epsilon.eol.execute.operations.contributors.OperationContribu
  * the Apache Commons Math RandomDataGenerator.
  *
  */
-public class SimpleAttributeGenerator extends OperationContributor
-		implements RandomAttributeGenerator<RandomAttributeGenerator.DefaultCharacterSet> {
+public class EmgRandomGenerator
+		implements IEmgRandomGenerator<IEmgRandomGenerator.DefaultCharacterSet> {
 			
-			
-	/**
-	 * Be default we use a normal distribution
-	 */
-	private Distribution globalDistribution = Distribution.Uniform;
+	
+	/** The uri scheme. */
+	private final String[] URI_SCHEME = {"http", "ssh", "ftp"};
+	
+	/** The uri domain. */
+	private final String[] URI_DOMAIN = {".com", ".org", ".net", ".int", ".edu", ".gov", ".mil"};
+	
+	/** The generator. */
 	private final RandomDataGenerator generator = new RandomDataGenerator();
-	private double firstArg;
-	private double secondArg;
+	
+
+	/** The context. */
 	private final IEolContext context;
+	
+	
+	/** Be default we use a normal distribution. */
+	private Distribution globalDistribution = Distribution.Uniform;
+	
+	/** The lower bound of the distribution is 0. */
+	private double firstArg = 0;
+	
+	/** The upper bound of the distribution is 1 so probability tests will work */
+	private double secondArg = 1;
+	
+	/** The list samples. */
 	private Map<String, List<Integer>> listSamples;
 	
 
-	public SimpleAttributeGenerator(IEolContext context) {
+	/**
+	 * Instantiates a new emg random generator.
+	 *
+	 * @param context the context
+	 */
+	public EmgRandomGenerator(IEolContext context) {
 		super();
 		this.context = context;
 	}
 	
-	public SimpleAttributeGenerator(IEolContext context, int seed) {
+	/**
+	 * Instantiates a new emg random generator.
+	 *
+	 * @param context the context
+	 * @param seed the seed
+	 */
+	public EmgRandomGenerator(IEolContext context, int seed) {
 		super();
 		int[] seeds = new int[1];
 		seeds[0] = seed;
@@ -65,39 +92,62 @@ public class SimpleAttributeGenerator extends OperationContributor
 		this.generator.reSeed(RandomGeneratorFactory.convertToLong(seeds));
 	}
 	
-	@Override
-	public boolean contributesTo(Object target) {
-		return target instanceof Object;
-	}
+//	@Override
+//	public boolean contributesTo(Object target) {
+//		return target instanceof Object;
+//	}
 
+	/**
+	 * Use binomial distribution.
+	 *
+	 * @param numberOfTrials the number of trials
+	 * @param probabilityOfSuccess the probability of success
+	 */
 	public void useBinomialDistribution(int numberOfTrials, double probabilityOfSuccess) {
 		this.globalDistribution = Distribution.Binomial;
 		this.firstArg = numberOfTrials;
 		this.secondArg = probabilityOfSuccess;
 	}
 	
+	/**
+	 * Use exponential distribution.
+	 *
+	 * @param mean the mean
+	 */
 	public void useExponentialDistribution(double mean) {
 		this.globalDistribution = Distribution.Exponential;
 		this.firstArg = mean;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextBoolean()
+	 */
 	@Override
 	public boolean nextBoolean() throws EolRuntimeException {
 		return generator.getRandomGenerator().nextBoolean();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextIngeter(int)
+	 */
 	@Override
-	public int nextIngeter(int upper) throws EolRuntimeException {
+	public int nextInteger(int upper) throws EolRuntimeException {
 		
-		return nextIngeter(0, upper);
+		return nextInteger(0, upper);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextLong(long)
+	 */
 	@Override
 	public long nextLong(long upper) throws EolRuntimeException {
 
 		return nextLong(0, upper);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextDobule(double)
+	 */
 	@Override
 	public double nextDobule(double upper) throws EolRuntimeException {
 
@@ -105,8 +155,11 @@ public class SimpleAttributeGenerator extends OperationContributor
 	}
 
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextIngeter(int, int)
+	 */
 	@Override
-	public int nextIngeter(int lower, int upper) throws EolRuntimeException {
+	public int nextInteger(int lower, int upper) throws EolRuntimeException {
 		
 		int value = 0;
 		try {
@@ -117,6 +170,9 @@ public class SimpleAttributeGenerator extends OperationContributor
 		return value;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextLong(long, long)
+	 */
 	@Override
 	public long nextLong(long lower, long upper) throws EolRuntimeException {
 		
@@ -129,6 +185,9 @@ public class SimpleAttributeGenerator extends OperationContributor
 		return value;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextDobule(double, double)
+	 */
 	@Override
 	public double nextDobule(double lower, double upper) {
 		
@@ -143,6 +202,9 @@ public class SimpleAttributeGenerator extends OperationContributor
 	}
 
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextValue()
+	 */
 	@Override
 	public double nextValue() {
 		switch(globalDistribution) {
@@ -157,17 +219,26 @@ public class SimpleAttributeGenerator extends OperationContributor
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextBinomialValue(int, double)
+	 */
 	@Override
 	public double nextBinomialValue(int numberOfTrials, double probabilityOfSuccess) {
 		return generator.nextBinomial((int) firstArg, secondArg);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextExponentialValue(double)
+	 */
 	@Override
 	public double nextExponentialValue(double mean) {
 		return generator.nextExponential(firstArg);
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextString(java.lang.String, int)
+	 */
 	@Override
 	public String nextString(String charSet, int length) {
 		String chars = "";
@@ -185,6 +256,20 @@ public class SimpleAttributeGenerator extends OperationContributor
 	}
 	
 	@Override
+	public String nextCapitalisedString(String charSet, int length) {
+		String lower = nextString(charSet, length);
+		if (length > 1) {
+			return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
+		}
+		else { 
+			return Character.toString(lower.charAt(0)).toUpperCase();
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextCamelCaseString(int, int)
+	 */
+	@Override
 	public String nextCamelCaseString(int length, int minWordLength) throws EolRuntimeException {
 		
 		StringBuilder sb = new StringBuilder();
@@ -193,23 +278,26 @@ public class SimpleAttributeGenerator extends OperationContributor
 		// Pick the first word length
 		int remaning = length;
 		do {
-			sb.append(upper.charAt(nextIngeter(upperLenght)));
-			int lastLength = nextIngeter(minWordLength, remaning-minWordLength) + 1; // +1 for the Capital
+			sb.append(upper.charAt(nextInteger(upperLenght)));
+			int lastLength = nextInteger(minWordLength, remaning-minWordLength) + 1; // +1 for the Capital
 			sb.append(nextString("LETTER_LOWER", lastLength));
 			remaning -= lastLength;
 		} while (remaning > minWordLength);
-		sb.append(upper.charAt(nextIngeter(upperLenght)));
+		sb.append(upper.charAt(nextInteger(upperLenght)));
 		sb.append(nextString("LETTER_LOWER", remaning-1));
 		return sb.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextFromCollection(java.util.Collection)
+	 */
 	@Override
 	public Object nextFromCollection(Collection<?> c) {
 		
 		int upper = c.size()-1;
 		int index = 0;
 		try {
-			index = nextIngeter(0, upper);
+			index = nextInteger(0, upper);
 		} catch (NumberFormatException | EolRuntimeException e) {
 			// Should never get here
 			e.printStackTrace();
@@ -219,18 +307,32 @@ public class SimpleAttributeGenerator extends OperationContributor
 		return objects[index];
 	}
 
+	/**
+	 * The listID must be the name of a parameter in the launch configuration.
+	 * The value of the parameter can be either a CSV list of strings or the
+	 * name of a file. The name of the file should be full path and each line in
+	 * the file is considered a separate item.
+	 * 
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextFromList(java.lang.String)
+	 */
 	@Override
-	public String nextFromList(String listID) throws EolRuntimeException {
+	public Object nextFromList(String listID) throws EolRuntimeException {
 		// Get the list from the context
 		String list = (String) context.getFrameStack().get(listID).getValue();
 		List<String> valuesList = getValuesFromList(list);
 		return (String) nextFromCollection(valuesList);
 	}
-
 	
-	
+	/**
+	 * The listID must be the name of a parameter in the launch configuration.
+	 * The value of the parameter can be either a CSV list of strings or the
+	 * name of a file. The name of the file should be full path and each line in
+	 * the file is considered a separate item.
+	 * 
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextSampleFromList(java.lang.String)
+	 */
 	@Override
-	public String nextFromListAsSample(String listID) throws EolRuntimeException {
+	public Object nextFromListAsSample(String listID) throws EolRuntimeException {
 		// Get the list from the context
 		String list = (String) context.getFrameStack().get(listID).getValue();		
 		List<String> valuesList = getValuesFromList(list);
@@ -238,51 +340,84 @@ public class SimpleAttributeGenerator extends OperationContributor
 		String[] values = new String[size];
 		values = valuesList.toArray(values); 
 		Map<String, List<Integer>> sampleList = getListSamples();
+		List<Integer> index = getIndex(listID, size, sampleList);
+        String result = null;
+		try {
+			result = valuesList.get(index.remove(0));
+		} catch (IndexOutOfBoundsException e) {
+			// TODO An additional configuration parameter could be used to generate a new index array
+			System.out.println("No more elements to pick from the list, " + listID);
+			//EolRuntimeException.propagate(e);
+		}
+        return result;
+	}
+
+	public List<Integer> getIndex(String listID, int size, Map<String, List<Integer>> sampleList)
+			throws EolRuntimeException {
 		List<Integer> index;
 		if (sampleList.containsKey(listID)) {
 			index = sampleList.get(listID);	
 		} else {
+			index = new ArrayList<Integer>();
+			sampleList.put(listID, index);
 			int[] indexArray = null;
 			try {
 				indexArray = generator.nextPermutation(size, size);
 			} catch (NotStrictlyPositiveException | NumberIsTooLargeException e) {
 				EolRuntimeException.propagate(e);
 			}
-			index = new ArrayList<Integer>();
 			for (int i = 0; i < indexArray.length; i++) {
 				index.add(indexArray[i]);
 			}
 		}
-        String result = null;
-		try {
-			result = valuesList.get(index.remove(0));
-		} catch (IndexOutOfBoundsException e) {
-			EolRuntimeException.propagate(e);
-		}
-        return result;
+		return index;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextSample(java.util.Collection, int)
+	 */
 	@Override
-	public Object[] nextSample(Collection<?> c, int k) throws EolRuntimeException {
+	public List<Object> nextSample(Collection<?> c, int k) throws EolRuntimeException {
 
-		Object[] sample = null;
+		List<Object> sample = null;
 		try {
-			sample = generator.nextSample(c, k);
+			Object[] result = generator.nextSample(c, k);
+			sample = new ArrayList<Object>(Arrays.asList(result));
 		} catch (NotStrictlyPositiveException | NumberIsTooLargeException e) {
 			EolRuntimeException.propagate(e);
 		}
 		return sample;
 	}
 
+	/**
+	 * The listID must be the name of a parameter in the launch configuration.
+	 * The value of the parameter can be either a CSV list of strings or the
+	 * name of a file. The name of the file should be full path and each line in
+	 * the file is considered a separate item.
+	 * 
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextSample(java.lang.String, int)
+	 */
 	@Override
-	public String[] nextSample(String listID, int k) throws EolRuntimeException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Object> nextSample(String listID, int k) throws EolRuntimeException {
+		// Get the list from the context
+		String list = (String) context.getFrameStack().get(listID).getValue();
+		List<String> valuesList = getValuesFromList(list);
+		List<Object> sample = null;
+		try {
+			Object[] result = generator.nextSample(valuesList, k);
+			sample = new ArrayList<Object>(result.length);
+			for (int i=0; i < result.length; i++)
+				sample.add((String) result[i]);
+		} catch (NotStrictlyPositiveException | NumberIsTooLargeException e) {
+			EolRuntimeException.propagate(e);
+		}
+		return sample;
 	}
 	
-	private final String[] scheme = {"http", "ssh", "ftp"};
-	private final String[] domain = {".com", ".org", ".net", ".int", ".edu", ".gov", ".mil"};
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextURI(boolean, boolean, boolean, boolean)
+	 */
 	@Override
 	public String nextURI(boolean addPort, boolean addPath, boolean addQuery, boolean addFragment) throws EolRuntimeException {
 		
@@ -294,52 +429,58 @@ public class SimpleAttributeGenerator extends OperationContributor
 		// user:password
 		if (!uriScheme.equals("http")) {
 			if (nextBoolean()) {
-				sb.append(nextString("LETTER_LOWER", nextIngeter(6, 10)));
+				sb.append(nextString("LETTER_LOWER", nextInteger(6, 10)));
 				if (nextBoolean()) {
 					sb.append(":");
-					sb.append(generator.nextSecureHexString(nextIngeter(6, 10)));
+					sb.append(generator.nextSecureHexString(nextInteger(6, 10)));
 				}
 				sb.append("@");
 			}
 		}
 		// Host
 		sb.append("www.");
-		sb.append(nextString("LETTER", nextIngeter(6, 10)));
+		sb.append(nextString("LETTER", nextInteger(6, 10)));
 		sb.append(getRandomUriDomain());
 		if (addPort) {
 			sb.append(":");
-			sb.append(nextIngeter(9999));
+			sb.append(nextInteger(9999));
 		}
 		sb.append("/");
 		if (addPath) {
-			for (int i = 0; i < nextIngeter(1, 4); i++) {
-				sb.append(nextString("LETTER_LOWER", nextIngeter(3, 6)));
+			for (int i = 0; i < nextInteger(1, 4); i++) {
+				sb.append(nextString("LETTER_LOWER", nextInteger(3, 6)));
 				sb.append("/");
 			}
 		}
 		if (addQuery) {
 			String separator = "?";
-			for (int i = 0; i < nextIngeter(1, 4); i++) {
+			for (int i = 0; i < nextInteger(1, 4); i++) {
 				sb.append(separator);
-				sb.append(nextString("LETTER_LOWER", nextIngeter(3, 5)));
+				sb.append(nextString("LETTER_LOWER", nextInteger(3, 5)));
 				sb.append("=");
-				sb.append(nextString("NUMERIC", nextIngeter(5, 8)));
+				sb.append(nextString("NUMERIC", nextInteger(5, 8)));
 				separator = "&";
 			}
 		}
 		if (addFragment) {
 			sb.append("#");
-			sb.append(nextString("ID_SYMBOL", nextIngeter(1, 15)));
+			sb.append(nextString("ID_SYMBOL", nextInteger(1, 15)));
 		}
 		return sb.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextURI()
+	 */
 	@Override
 	public String nextURI() throws EolRuntimeException {
 		
 		return nextURI(nextBoolean(), nextBoolean(), nextBoolean(), nextBoolean());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextHttpURI(boolean, boolean, boolean, boolean)
+	 */
 	@Override
 	public String nextHttpURI(boolean addPort, boolean addPath, 
 			boolean addQuery, boolean addFragment) throws EolRuntimeException {
@@ -350,48 +491,60 @@ public class SimpleAttributeGenerator extends OperationContributor
 		sb.append("://");
 		// Host
 		sb.append("www.");
-		sb.append(nextString("LETTER", nextIngeter(6, 10)));
+		sb.append(nextString("LETTER", nextInteger(6, 10)));
 		sb.append(getRandomUriDomain());
 		if (addPort) {
 			sb.append(":");
-			sb.append(nextIngeter(9999));
+			sb.append(nextInteger(9999));
 		}
 		sb.append("/");
 		if (addPath) {
-			for (int i = 0; i < nextIngeter(1, 4); i++) {
-				sb.append(nextString("LETTER_LOWER", nextIngeter(3, 6)));
+			for (int i = 0; i < nextInteger(1, 4); i++) {
+				sb.append(nextString("LETTER_LOWER", nextInteger(3, 6)));
 				sb.append("/");
 			}
 		}
 		if (addQuery) {
 			String separator = "?";
-			for (int i = 0; i < nextIngeter(1, 4); i++) {
+			for (int i = 0; i < nextInteger(1, 4); i++) {
 				sb.append(separator);
-				sb.append(nextString("LETTER_LOWER", nextIngeter(3, 5)));
+				sb.append(nextString("LETTER_LOWER", nextInteger(3, 5)));
 				sb.append("=");
-				sb.append(nextString("NUMERIC", nextIngeter(5, 8)));
+				sb.append(nextString("NUMERIC", nextInteger(5, 8)));
 				separator = "&";
 			}
 		}
 		if (addFragment) {
 			sb.append("#");
-			sb.append(nextString("ID_SYMBOL", nextIngeter(1, 15)));
+			sb.append(nextString("ID_SYMBOL", nextInteger(1, 15)));
 		}
 		return sb.toString();
 	}
 
 
 	
+	/**
+	 * Gets the random uri scheme.
+	 *
+	 * @return the random uri scheme
+	 */
 	private String getRandomUriScheme() {
-		return (String) nextFromCollection(Arrays.asList(scheme));
+		return (String) nextFromCollection(Arrays.asList(URI_SCHEME));
 	}
 	
+	/**
+	 * Gets the random uri domain.
+	 *
+	 * @return the random uri domain
+	 */
 	private String getRandomUriDomain() {
-		return (String) nextFromCollection(Arrays.asList(domain));
+		return (String) nextFromCollection(Arrays.asList(URI_DOMAIN));
 	}
 
 	
 	/**
+	 * Gets the list samples.
+	 *
 	 * @return the listSamples
 	 */
 	private Map<String, List<Integer>> getListSamples() {
@@ -401,7 +554,14 @@ public class SimpleAttributeGenerator extends OperationContributor
 		return listSamples;
 	}
 	
-	private List<String> getValuesFromList(String list) throws EolRuntimeException {
+	/**
+	 * Gets the values from list.
+	 *
+	 * @param list the list
+	 * @return the values from list
+	 * @throws EolRuntimeException the eol runtime exception
+	 */
+	protected List<String> getValuesFromList(String list) throws EolRuntimeException {
 		// TODO We asume URI/paths don't have commas
 		String[] values = list.split(",");
 		List<String> valuesList = null;
@@ -432,7 +592,12 @@ public class SimpleAttributeGenerator extends OperationContributor
 		}
 		return valuesList;
 	}
-
-
+	
+	/**
+	 * @return the generator
+	 */
+	public RandomDataGenerator getGenerator() {
+		return generator;
+	}
 	
 }
