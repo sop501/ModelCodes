@@ -1,51 +1,82 @@
+/*******************************************************************************
+ * Copyright (c) 2012 The University of York.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Dimitrios Kolovos - initial API and implementation
+ *     Saheed Popoola - aditional functionality
+ *     Horacio Hoyos - aditional functionality
+ ******************************************************************************/
 package org.eclipse.epsilon.emg;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
-import org.eclipse.epsilon.common.parse.AST;
+import org.eclipse.epsilon.emg.random.CharacterSet;
+import org.eclipse.epsilon.emg.random.IEmgRandomGenerator;
 import org.eclipse.epsilon.eol.exceptions.EolIllegalReturnException;
-import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 import org.eclipse.epsilon.eol.execute.Return;
 import org.eclipse.epsilon.eol.execute.context.FrameType;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
 import org.eclipse.epsilon.eol.execute.context.Variable;
-import org.eclipse.epsilon.epl.EplModule;
-import org.eclipse.epsilon.epl.combinations.CombinationGenerator;
-import org.eclipse.epsilon.epl.combinations.CombinationGeneratorListener;
 import org.eclipse.epsilon.epl.combinations.CompositeCombinationGenerator;
 import org.eclipse.epsilon.epl.combinations.CompositeCombinationValidator;
 import org.eclipse.epsilon.epl.dom.NoMatch;
 import org.eclipse.epsilon.epl.dom.Pattern;
 import org.eclipse.epsilon.epl.dom.Role;
-import org.eclipse.epsilon.epl.execute.*;
+import org.eclipse.epsilon.epl.execute.PatternMatch;
+import org.eclipse.epsilon.epl.execute.PatternMatcher;
 
+/**
+ * The Class EmgPatternMatcher extends the EPL pattern matcher to provide
+ * EMG specific functionality. 
+ */
 public class EmgPatternMatcher extends PatternMatcher {
-	RandomGenerator random;
-	public EmgPatternMatcher(){
-		random= new RandomGenerator();
-	}
-	public EmgPatternMatcher(RandomGenerator rand){
-		random=rand;
+	
+	/**
+	 * How many matches should the pattern find
+	 */
+	private static final String NUMBER_ANNOTATION = "number";
+	
+	/**
+	 * What is the probability of executing the pattern
+	 */
+	private static final String PROBABILITY_ANNOTATION = "probability";
+	
+	/**
+	 * Don't re-execute the pattern for the same set of input elements 
+	 */
+	private static final String NO_REPEAT_ANNOTATION = "noRepeat";
+	
+	/** The random generator. */
+	IEmgRandomGenerator<? extends CharacterSet> randomGenerator;
+	
+	/**
+	 * Instantiates a new EMG pattern matcher.
+	 *
+	 * @param rand the EmgRandomGenerator
+	 */
+	public EmgPatternMatcher(IEmgRandomGenerator<? extends CharacterSet> rand){
+		randomGenerator=rand;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.epsilon.epl.execute.PatternMatcher#match(org.eclipse.epsilon.epl.dom.Pattern, org.eclipse.epsilon.eol.execute.context.IEolContext)
+	 */
 	@Override
 	public List<PatternMatch> match(final Pattern pattern, final IEolContext context) throws Exception {
-		long time= System.currentTimeMillis();
-		List<PatternMatch> patternMatches = new ArrayList<PatternMatch>();
 		
+		List<PatternMatch> patternMatches = new ArrayList<PatternMatch>();
 		context.getFrameStack().enterLocal(FrameType.PROTECTED, pattern);
-		boolean noRepeat= pattern.hasAnnotation("noRepeat");
-//		if(noRepeat){
-//			if(pattern.getAnnotationsValues("noRepeat", context) != null){
-//				noRepeat=false;
-//			}
-//		}
-		boolean probability= pattern.hasAnnotation("probability");
-		boolean number= pattern.hasAnnotation("number");
+		boolean noRepeat= pattern.hasAnnotation(NO_REPEAT_ANNOTATION);
+		boolean probability= pattern.hasAnnotation(PROBABILITY_ANNOTATION);
+		boolean number= pattern.hasAnnotation(NUMBER_ANNOTATION);
 		boolean annotationChange;
+		
 		int num=0, value=1;
 		List<Object> matchList= new ArrayList<Object>();
 		CompositeCombinationGenerator<Object> generator = new CompositeCombinationGenerator<Object>();
@@ -83,21 +114,21 @@ public class EmgPatternMatcher extends PatternMatcher {
 		
 		//annotation number 
 		if(number){
-			List vals=pattern.getAnnotationsValues("number", context);							
+			List<Object> vals=pattern.getAnnotationsValues(NUMBER_ANNOTATION, context);							
 			if(vals.size()>1){
 				Object val= vals.get(0);
 				Object val2= vals.get(1);
 				if(!(val.equals(null) || (val2.equals(null)))){
-					value = random.generateInteger(getInt( val),getInt( val2));									
+					value = randomGenerator.nextInteger(getInt( val),getInt( val2));									
 				}
 			}
 			else if(vals.size()>0){
 				Object val= vals.get(0);
 				if(!(val.equals(null))){
 					if(val instanceof Collection){
-						List valC= (List)val;
+						List<Object> valC= (List<Object>)val;
 						if(valC.size()>1)
-							value = random.generateInteger(getInt(valC.get(0)),getInt(valC.get(1)));
+							value = randomGenerator.nextInteger(getInt(valC.get(0)),getInt(valC.get(1)));
 						else
 							value = getInt(valC.get(0));
 						}
@@ -107,12 +138,9 @@ public class EmgPatternMatcher extends PatternMatcher {
 			}	
 		}//end annotation number
 		while (generator.hasMore()) {
-			
 			List<List<Object>> candidate = generator.getNext();
-			
-			boolean test=false;
-			if(number && value<=num)
-				break;
+			boolean test = false;
+			// Don't repeat
 			if(noRepeat){		
 				for(Object temp:candidate){
 					//System.out.println(temp);
@@ -125,8 +153,6 @@ public class EmgPatternMatcher extends PatternMatcher {
 					continue;
 				}
 			}//end annotation noRepeat
-						
-		
 			boolean matches = true;
 			annotationChange=true;
 			
@@ -156,22 +182,19 @@ public class EmgPatternMatcher extends PatternMatcher {
 					matchList.addAll(candidate);
 							
 				}//end annotation noRepeat
-				//annotation number
-				if(number){	
-					num++;		
-				}//end annotation number
+				
 				
 				//annotation probability
 				if (probability) {
 					Object val=1;
-					if(pattern.getAnnotationsValues("probability", context).size()>0)
-						val= pattern.getAnnotationsValues("probability", context).get(0);
+					if(pattern.getAnnotationsValues(PROBABILITY_ANNOTATION, context).size() > 0)
+						val = pattern.getAnnotationsValues(PROBABILITY_ANNOTATION, context).get(0);
 					float value2=1;
 					if((!val.equals(null))){
-						value2=getFloat(val);
+						value2 = getFloat(val);
 					}
 					
-					if(!random.generateBoolean(value2)){
+					if(!(randomGenerator.nextValue() < value2) ){
 						annotationChange=false;
 					}
 			
@@ -180,7 +203,19 @@ public class EmgPatternMatcher extends PatternMatcher {
 					context.getExecutorFactory().executeAST(pattern.getOnMatchAst(), context);
 					patternMatches.add(createPatternMatch(pattern, candidate));
 				}
-				else context.getFrameStack().leaveLocal(pattern);
+				else {
+					context.getFrameStack().leaveLocal(pattern);
+				}
+				//annotation number
+				
+				// If there was a match and the pattern has a number annotation
+				// keep track
+				if(number) {	
+					num++;		
+					if(num == value)
+						break;
+				}
+				//end annotation number
 			}
 			else context.getExecutorFactory().executeAST(pattern.getNoMatchAst(), context);	
 		}
@@ -188,20 +223,42 @@ public class EmgPatternMatcher extends PatternMatcher {
 		context.getFrameStack().leaveLocal(pattern);
 		return patternMatches;
 	}
+	
+	/**
+	 * Gets the int.
+	 *
+	 * @param object the object
+	 * @return the int
+	 */
 	protected int getInt(Object object){
 		if(object instanceof Integer)
 			return (int)object;
 		else
 			return Integer.parseInt((String) object);	
 	}
+	
+	/**
+	 * Gets the float.
+	 *
+	 * @param object the object
+	 * @return the float
+	 */
 	protected float getFloat(Object object){
 		if(object instanceof Float || object instanceof Integer)
 			return (float)object;
 		else
 			return Float.parseFloat((String) object);	
 	}
-	protected boolean containAny(Collection first,Collection last){
-		for(Object o:first){
+	
+	/**
+	 * Contain any.
+	 *
+	 * @param first the first
+	 * @param last the last
+	 * @return true, if successful
+	 */
+	protected boolean containAny(Collection<Object> first, Collection<Object> last){
+		for(Object o : first){
 			if(last.contains(o))
 				return true;
 		}

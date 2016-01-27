@@ -159,20 +159,11 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	 */
 	@Override
 	public Object execute() throws EolRuntimeException {	
-		//long time= System.currentTimeMillis();
 		preload();
-//		try {
-//			instantiateModel();
-//		} catch (URISyntaxException e) {
-//			// TODO Auto-generated catch block
-//			EolRuntimeException.propagate(e);
-//		}
-//		if (outputModel != null) {
+		execute(getPre(), context);
 			executeOperations();
 			prepareContext(context);
-			execute(getPre(), context);
-		
-			EmgPatternMatcher patternMatcher = new EmgPatternMatcher();
+		EmgPatternMatcher patternMatcher = new EmgPatternMatcher(randomGenerator);
 			PatternMatchModel matchModel = null;
 			try {
 				int loops = 1;
