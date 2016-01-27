@@ -1,0 +1,94 @@
+pre {
+	var cNodes =  (pC * n).floor();
+	var cEdges = ((cNodes-1)*(cNodes-2)/2 + 1); // (n-1)(n-2)/2 + 1 for a fully connected graph
+	cEdges.println("cEdges ");
+	var dEdges =  max - cEdges - 2 - n; // We have two graphs, we want max elements in total
+	dEdges.println("dEdges ");
+}
+
+
+// Graph0 is connected
+operation Graph create() 
+{	
+	self.name = "Connected";
+}
+// Graph1 is disconnected
+operation Graph create() 
+{	
+	self.name = "Disconnected";
+}
+
+$instances n
+operation Node create() {
+	self.label=nextCapitalisedString("LETTER_LOWER", 5);
+}
+
+// (n-1)(n-2)/2 + 1 edges to connect a 30 nodes graph
+$instances cEdges
+@list connected
+operation Edge create() {
+}
+
+$instances dEdges
+@list disconnected
+operation Edge create() {
+}
+
+$probability pC
+pattern G0Nodes
+	g:Graph
+	  guard : g.name="Connected",
+    n:Node
+{
+	onmatch {
+		g.element.add(n);	
+	}
+}
+
+pattern G1Nodes
+	g:Graph
+	  guard : g.name == "Disconnected",
+	n:Node
+	  guard: n.graph == null
+{
+	onmatch {
+		g.element.add(n);	
+	}
+}
+
+$number cEdges
+pattern ConnectedGraph
+	g:Graph
+	  guard: g.name == "Connected",
+	sn:Node
+	  from: g.element.select(n:Node | true),
+	tn:Node
+	  from: g.element.select(n:Node | true).excluding(sn),
+	e:Edge
+	  from: nextFromListAsSample("connected")
+{
+	onmatch {
+		e.source = sn;
+		e.target = tn;
+		e.graph = g;
+	}
+}
+
+$number dEdges
+pattern DisconnectedGraph
+	g:Graph
+	  guard: g.name == "Disconnected",
+	sn:Node
+	  from: g.element.select(n:Node | true),
+	tn:Node
+		from: g.element.select(n:Node | true).excluding(sn),
+	e:Edge
+	  from: nextFromListAsSample("disconnected")
+{
+	onmatch {
+		e.source = sn;
+		e.target = tn;
+		e.graph = g;
+	}
+}
+
