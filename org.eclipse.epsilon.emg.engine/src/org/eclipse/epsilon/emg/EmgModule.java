@@ -14,7 +14,6 @@ package org.eclipse.epsilon.emg;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +23,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.epsilon.common.module.IModule;
 import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.emc.emf.EmfModel;
-import org.eclipse.epsilon.emg.operationContributors.CollectionOperationContributor;
 import org.eclipse.epsilon.emg.operationContributors.ObjectOperationContributor;
-import org.eclipse.epsilon.emg.random.SimpleAttributeGenerator;
-//import org.eclipse.epsilon.emg.operationContributors.ObjectOperationContributor;
 import org.eclipse.epsilon.eol.IEolExecutableModule;
 import org.eclipse.epsilon.eol.dom.Annotation;
 import org.eclipse.epsilon.eol.dom.AnnotationBlock;
@@ -45,11 +41,23 @@ import org.eclipse.epsilon.epl.execute.PatternMatchModel;
  */
 public class EmgModule extends EplModule implements IModule, IEolExecutableModule {
 	
-	/** The model generator. */
-	//private ModelGenerator mod;
+	/**
+	 * Assign the created elements to a list
+	 */
+	private static final String LIST_ID_ANNOTATION = "list";
+
+	/**
+	 * How many instances must be created
+	 */
+	private static final String NUMBER_OF_INSTANCES_ANNOTATION = "instances";
 	
+	/**
+	 * The name of the create operation
+	 */
+	private static final String CREATE_OPERATION = "create";
+
 	/** The random generator */
-	private RandomGenerator random;
+	private ObjectOperationContributor randomGenerator;
 	
 	/** The seed used for random generation. */
 	private int seed;
@@ -57,17 +65,17 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	private boolean useSeed;
 
 
-	/** A maps to keep track of objects created by operations */
-	private Map<String, Collection<Object>> classGroup= new HashMap<String, Collection<Object>>(); //
+	/** A maps to keep track of objects created by create operations that
+	 * us the @name annotation. The key of the map is the value of the
+	 * annotation.
+	 */
+	private Map<String, List<Object>> namedCreatedObjects= new HashMap<String, List<Object>>(); //	
 
-	//private EmfModel outputModel;
-	
 	/**
 	 * Instantiates a new emg module.
 	 */
 	public EmgModule(){
 		reset();
-		random= new RandomGenerator();
 	}
 	
 	/**
@@ -86,55 +94,27 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	}
 	
 	/**
+	 * @return the namedCreatedObjects
+	 */
+	public Map<String, List<Object>> getNamedCreatedObjects() {
+		return namedCreatedObjects;
+	}
+
+	
+	/**
 	 * Initialise the contributors
 	 */
 	private void preload() {
 		context.setModule(this);
-//		if(context.getFrameStack().contains("seed")){
-			//seed= (int) context.getFrameStack().get("seed").getValue();
-//		}
-//		else{
-//			seed=(int) System.currentTimeMillis();
-//		}
-		//random.setSeed(seed);
-		//context.getOperationContributorRegistry().add(new CollectionOperationContributor(random));
-		SimpleAttributeGenerator generator;
 		if (useSeed) {
-			generator = new SimpleAttributeGenerator(context, seed);
+			randomGenerator = new ObjectOperationContributor(this, seed);
 		}
 		else {
-			generator = new SimpleAttributeGenerator(context);
+			randomGenerator = new ObjectOperationContributor(this);
 		}
-		context.getOperationContributorRegistry().add(generator);
-		//EmfModel model= getModel();
-		//context.getOperationContributorRegistry().add(new ObjectOperationContributor(random, getModel(), classGroup));
+		context.getOperationContributorRegistry().add(randomGenerator);
 	}
-	
-//	/**
-//	 * Instantiate the generated model
-//	 * @throws URISyntaxException If the generated model URI is incorrect
-//	 * @throws EolModelLoadingException If the model can not be instantiated
-//	 */
-//	private void instantiateModel() throws EolModelLoadingException, URISyntaxException {
-//		
-//		EmfModel model= getModel();
-//		String newFile;
-//		if(context.getFrameStack().contains("output")){
-//			newFile = getNewFilePath(model.getModelFile(), (String) context.getFrameStack().get("output").getValue());
-//		}
-//		else {
-//			newFile=getFilePath(model.getModelFile())+ "New.ecore";
-//		}
-//		output = newFile;
-//		outputModel = createEmfModel(model.getName()+"New", newFile,model.getModelFile(), false, true);
-//		context.getModelRepository().removeModel(model);		// Delete a spurious model loaded by the launch configuration? 
-//		context.getModelRepository().addModel(outputModel);
-//		context.getOperationContributorRegistry().add(new ObjectOperationContributor(random, model, classGroup));
-//	}
-	
-	
-	
-	
+		
 	/* (non-Javadoc)
 	 * @see org.eclipse.epsilon.epl.EplModule#getMainRule()
 	 */
@@ -161,36 +141,34 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	public Object execute() throws EolRuntimeException {	
 		preload();
 		execute(getPre(), context);
-			executeOperations();
-			prepareContext(context);
+		executeOperations();
+		prepareContext(context);
 		EmgPatternMatcher patternMatcher = new EmgPatternMatcher(randomGenerator);
-			PatternMatchModel matchModel = null;
-			try {
-				int loops = 1;
-				matchModel = patternMatcher.match(this);
-				if (repeatWhileMatchesFound) {
-						
-					while (!matchModel.allContents().isEmpty()) {
-						if (maxLoops != INFINITE) {
-							if (loops == maxLoops) break;
-						}
-						matchModel = patternMatcher.match(this);
-						loops++;
+		PatternMatchModel matchModel = null;
+		try {
+			int loops = 1;
+			matchModel = patternMatcher.match(this);
+			if (repeatWhileMatchesFound) {
+					
+				while (!matchModel.allContents().isEmpty()) {
+					if (maxLoops != INFINITE) {
+						if (loops == maxLoops) break;
 					}
+					matchModel = patternMatcher.match(this);
+					loops++;
 				}
 			}
-			catch (Exception ex) {
-				EolRuntimeException.propagate(ex);
-			}	
-			execute(getPost(), context);	
-			//System.out.println("total time is: "+ (System.currentTimeMillis()-time));
-			//System.out.println("model generation successful, seed used is "+seed);
-			context.getModelRepository().getModels().get(0).store();
-			System.out.println(getModel().getModelFile());
-			context.getModelRepository().dispose();
-			return matchModel;
-//		}
-//		return null;
+		}
+		catch (Exception ex) {
+			EolRuntimeException.propagate(ex);
+		}	
+		execute(getPost(), context);	
+		//System.out.println("total time is: "+ (System.currentTimeMillis()-time));
+		//System.out.println("model generation successful, seed used is "+seed);
+		context.getModelRepository().getModels().get(0).store();
+		System.out.println(getModel().getModelFile());
+		context.getModelRepository().dispose();
+		return matchModel;
 	}
 	
 	/**
@@ -207,10 +185,10 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 		
 		//long time=System.currentTimeMillis();
 		AnnotationBlock annotationBlock;
-		String annotationName,operationName, guard;
+		String annotationName,operationName;//, guard;
 		EClass eclass;
 		for (Operation operation: getOperations()){
-			if(operation.getName().equals("create")) {
+			if(operation.getName().equals(CREATE_OPERATION)) {
 				//get the class context
 				eclass = getModel().classForName(operation.getContextType(context).getName());
 				if(eclass.isAbstract() || eclass.equals(null))	{
@@ -218,7 +196,7 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 				}
 				int instances = 1;
 				operationName="";
-				guard="";
+				//guard="";
 				//get the annotations
 				annotationBlock = operation.getAnnotationBlock();
 				if(!(annotationBlock==null)){
@@ -229,13 +207,13 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 						annotationName = annotation.getName();
 						annotationValues = operation.getAnnotationsValues(annotationName, context);
 						//search for instances to be created
-						if(annotationName.equals("instances")){
+						if(annotationName.equals(NUMBER_OF_INSTANCES_ANNOTATION)){
 							if (!annotationValues.isEmpty()) {
 								Object val=annotationValues.get(0);
 								if(val instanceof List){
-									List valC = (List)val;
+									List<?> valC = (List<?>)val;
 									if(valC.size()>1)
-										instances = random.generateInteger(getInt(valC.get(0)), getInt(valC.get(1)));
+										instances = randomGenerator.nextInteger(getInt(valC.get(0)), getInt(valC.get(1)));
 									else
 										instances= getInt(valC.get(0));
 								}
@@ -245,34 +223,32 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 							if(instances<1)
 								instances=1;
 						}
-						else if(annotationName.equals("name")){
+						else if(annotationName.equals(LIST_ID_ANNOTATION)){
 							if (!annotationValues.isEmpty()) {
 								operationName = (String) annotationValues.get(0);
 							}
 						}
-						else if(annotationName.equals("guard")){
-							if (!annotationValues.isEmpty()) {
-								guard = (String) annotationValues.get(0);
-							}
-						}
+//						else if(annotationName.equals("guard")){
+//							if (!annotationValues.isEmpty()) {
+//								guard = (String) annotationValues.get(0);
+//							}
+//						}
 					}//end for loop annotations
 				}
 				// how many instances of the class to create
-				if(operation.getName().equals("create")){
-					ArrayList classes= new ArrayList();
+				if(operation.getName().equals(CREATE_OPERATION)){
+					ArrayList<Object> classes= new ArrayList<Object>();
 					for(int i=0;i<instances;i++){		
 						Object modelObject = getModel().createInstance(operation.getContextType(context).getName());
 						operation.execute(modelObject, null, context);
 						classes.add(modelObject);
-						
-						
 					}
 					if(!operationName.isEmpty()) {
-						if(classGroup.containsKey(operationName)){
-							classGroup.get(operationName).addAll(classes);
+						if(namedCreatedObjects.containsKey(operationName)){
+							namedCreatedObjects.get(operationName).addAll(classes);
 						}
 						else
-							classGroup.put(operationName, classes);
+							namedCreatedObjects.put(operationName, classes);
 					}
 					operationName="";			
 				}
