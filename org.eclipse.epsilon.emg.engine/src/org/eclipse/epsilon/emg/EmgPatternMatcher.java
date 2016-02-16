@@ -189,7 +189,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 					Object val=1;
 					if(pattern.getAnnotationsValues(PROBABILITY_ANNOTATION, context).size() > 0)
 						val = pattern.getAnnotationsValues(PROBABILITY_ANNOTATION, context).get(0);
-					float value2=1;
+					double value2=1;
 					if((!val.equals(null))){
 						value2 = getFloat(val);
 					}
@@ -243,9 +243,9 @@ public class EmgPatternMatcher extends PatternMatcher {
 	 * @param object the object
 	 * @return the float
 	 */
-	protected float getFloat(Object object){
-		if(object instanceof Float || object instanceof Integer)
-			return (float)object;
+	protected double getFloat(Object object){
+		if(object instanceof Float || object instanceof Double)
+			return (double)object;
 		else
 			return Float.parseFloat((String) object);	
 	}

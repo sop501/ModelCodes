@@ -1,9 +1,17 @@
 pre {
-	var cNodes =  (pC * n).floor();
+	// Make sure we have less edges in the connected graph than the total of nodes.
+	var p = (3+(8*max-3).pow(0.5))/(2.5*max);
+	p.println("p ");
+	var cNodes =  (p * max).floor();
+	cNodes.println("cNodes ");
 	var cEdges = ((cNodes-1)*(cNodes-2)/2 + 1); // (n-1)(n-2)/2 + 1 for a fully connected graph
 	cEdges.println("cEdges ");
-	var dEdges =  max - cEdges - 2 - n; // We have two graphs, we want max elements in total
+	var free = max-cNodes-cEdges-2; // We have two graphs, we want max elements in total
+	var dEdges =  free/2; 
 	dEdges.println("dEdges ");
+	// Total nodes =
+	var n = cNodes + free - dEdges;
+	n.println("n ");
 }
 
 
@@ -34,7 +42,7 @@ $instances dEdges
 operation Edge create() {
 }
 
-$probability pC
+$number cNodes
 pattern G0Nodes
 	g:Graph
 	  guard : g.name="Connected",
