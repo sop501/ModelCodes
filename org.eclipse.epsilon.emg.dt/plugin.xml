@@ -2,6 +2,18 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         id="emf"
+         name="emf"
+         point="org.eclipse.epsilon.common.dt.modelType">
+      <modelType
+            class="org.eclipse.epsilon.emc.emf.EmfModel"
+            dialog="org.eclipse.epsilon.emg.dt.EmfGenModelConfigurationDialog"
+            icon="icons/emf.gif"
+            label="EMG EMF Model"
+            stable="true"
+            type="EMF_GEN"/>
+   </extension>
+   <extension
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.epsilon.emg.dt.editor.EmgEditor"
