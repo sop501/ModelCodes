@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.epsilon.common.module.IModule;
 import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.emc.emf.EmfModel;
@@ -33,11 +32,12 @@ import org.eclipse.epsilon.eol.exceptions.models.EolModelElementTypeNotFoundExce
 import org.eclipse.epsilon.eol.exceptions.models.EolModelLoadingException;
 import org.eclipse.epsilon.eol.models.IModel;
 import org.eclipse.epsilon.eol.models.IRelativePathResolver;
+import org.eclipse.epsilon.eol.types.EolModelElementType;
 import org.eclipse.epsilon.epl.EplModule;
 import org.eclipse.epsilon.epl.execute.PatternMatchModel;
 
 /**
- * The Emg Module is responsible for execution emg scripts. Emg scripts are used to generate EMF models.
+ * The Emg Module is responsible for execution emg scripts. Emg scripts are used to generate models.
  */
 public class EmgModule extends EplModule implements IModule, IEolExecutableModule {
 	
@@ -50,6 +50,11 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	 * How many instances must be created
 	 */
 	private static final String NUMBER_OF_INSTANCES_ANNOTATION = "instances";
+	
+	/**
+	 * Parameters to pass for instance craetion
+	 */
+	private static final String PARAMETERS_ANNOTATION = "parameters";
 	
 	/**
 	 * The name of the create operation
@@ -141,7 +146,7 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	public Object execute() throws EolRuntimeException {	
 		preload();
 		execute(getPre(), context);
-		executeOperations();
+		executeCreateOperations();
 		prepareContext(context);
 		EmgPatternMatcher patternMatcher = new EmgPatternMatcher(randomGenerator);
 		PatternMatchModel matchModel = null;
@@ -164,38 +169,32 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 		}	
 		execute(getPost(), context);	
 		//System.out.println("total time is: "+ (System.currentTimeMillis()-time));
-		//System.out.println("model generation successful, seed used is "+seed);
+		System.out.println("model generation finished");
 		context.getModelRepository().getModels().get(0).store();
-		System.out.println(getModel().getModelFile());
 		context.getModelRepository().dispose();
 		return matchModel;
 	}
 	
 	/**
-	 * Execute operations.
+	 * Execute the create operations in the EMG script.
 	 *
-	 * @param operationNames the operation names
-	 * @param outputModel the model
-	 * @param ne the ne
-	 * @return the emf model
 	 * @throws EolModelElementTypeNotFoundException the eol model element type not found exception
-	 * @throws EolRuntimeException the eol runtime exception
+	 * @throws EolRuntimeException If the type to be instantiated can't be found or any of the random functions fails.
 	 */
-	protected void executeOperations() throws EolModelElementTypeNotFoundException, EolRuntimeException{
+	protected void executeCreateOperations() throws EolRuntimeException  {
 		
-		//long time=System.currentTimeMillis();
 		AnnotationBlock annotationBlock;
-		String annotationName,operationName;//, guard;
-		EClass eclass;
+		String annotationName,instancesListName;
+		String parameters = null;
 		for (Operation operation: getOperations()){
 			if(operation.getName().equals(CREATE_OPERATION)) {
 				//get the class context
-				eclass = getModel().classForName(operation.getContextType(context).getName());
-				if(eclass.isAbstract() || eclass.equals(null))	{
-					continue;	// Can't instantiate null or abstract classes
+				EolModelElementType instancesType = (EolModelElementType) operation.getContextType(context);
+				if (!instancesType.isInstantiable()) {
+					continue;
 				}
 				int instances = 1;
-				operationName="";
+				instancesListName="";
 				//guard="";
 				//get the annotations
 				annotationBlock = operation.getAnnotationBlock();
@@ -225,9 +224,17 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 						}
 						else if(annotationName.equals(LIST_ID_ANNOTATION)){
 							if (!annotationValues.isEmpty()) {
-								operationName = (String) annotationValues.get(0);
+								instancesListName = (String) annotationValues.get(0);
 							}
 						}
+						// Parameters for element initialization
+						else if(annotationName.equals(PARAMETERS_ANNOTATION)){
+							if (!annotationValues.isEmpty()) {
+								//parameters = (List<Object>) annotationValues.get(0);
+								parameters = annotationName;
+							}
+						}
+						
 //						else if(annotationName.equals("guard")){
 //							if (!annotationValues.isEmpty()) {
 //								guard = (String) annotationValues.get(0);
@@ -235,30 +242,50 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 //						}
 					}//end for loop annotations
 				}
-				// how many instances of the class to create
-				if(operation.getName().equals(CREATE_OPERATION)){
-					ArrayList<Object> classes= new ArrayList<Object>();
-					for(int i=0;i<instances;i++){		
-						Object modelObject = getModel().createInstance(operation.getContextType(context).getName());
-						operation.execute(modelObject, null, context);
-						classes.add(modelObject);
-					}
-					if(!operationName.isEmpty()) {
-						if(namedCreatedObjects.containsKey(operationName)){
-							namedCreatedObjects.get(operationName).addAll(classes);
-						}
-						else
-							namedCreatedObjects.put(operationName, classes);
-					}
-					operationName="";			
-				}
-					
+				// Create the instances
+				createInstances(instancesListName, operation, instancesType, instances, parameters);
+				parameters = null;
 			}
 			
 		}//end for loop (operations)
 		//System.out.println(ne);
 		//model.store(ne.substring(1));
 		//System.out.println("generation time is: "+(System.currentTimeMillis()-time));
+	}
+
+	/**
+	 * @param instancesListName
+	 * @param operation
+	 * @param instancesType
+	 * @param instances
+	 * @param paramAnotation 
+	 * @return
+	 * @throws EolRuntimeException
+	 */
+	@SuppressWarnings("unchecked")
+	private void createInstances(String instancesListName, Operation operation,
+			EolModelElementType instancesType, int instances, String paramAnotation) throws EolRuntimeException {
+		ArrayList<Object> classes= new ArrayList<Object>();
+		// Add the list to the context first so previous instances can be used for attribute assignment
+		if(!instancesListName.isEmpty()) {
+			if(namedCreatedObjects.containsKey(instancesListName)){
+				namedCreatedObjects.get(instancesListName).addAll(classes);
+			}
+			else
+				namedCreatedObjects.put(instancesListName, classes);
+		}
+		for(int i=0;i<instances;i++){
+			List<Object> paramObj = null;
+			if (paramAnotation != null) {
+				List<Object> annotationValues = operation.getAnnotationsValues(paramAnotation, context);
+				paramObj = (List<Object>) annotationValues.get(0);
+				assert paramObj instanceof List;
+			}
+			Object modelObject = instancesType.createInstance(paramObj);
+			// Execute statements in the operation to initialise object attributes
+			operation.execute(modelObject, null, context);
+			classes.add(modelObject);
+		}
 	}
 	
 	/**
@@ -294,7 +321,9 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	 * Gets the model.
 	 *
 	 * @return the model
+	 * @deprecated EMG can use any type of model
 	 */
+	@Deprecated
 	protected EmfModel getModel() {
 		for(IModel mod:context.getModelRepository().getModels()){
 			if (mod instanceof EmfModel){
@@ -350,13 +379,4 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 		return filePath.toString();
 	}
 	
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String [] args){
-		//System.out.println(getNewFilePath("C:/Users/Popoola/git/latex/test.pdf","me.ade"));
-		
-	}
 }
