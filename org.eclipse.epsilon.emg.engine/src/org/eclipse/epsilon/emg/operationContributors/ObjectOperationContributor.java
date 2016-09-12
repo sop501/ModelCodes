@@ -60,7 +60,7 @@ public class ObjectOperationContributor
 	 * @param name
 	 * @return
 	 */
-	private Collection<Object> getCreatedElements(String name) {
+	public Collection<Object> getNamedList(String name) {
 		Map<String, List<Object>> existing = module.getNamedCreatedObjects();
 		if(existing.containsKey(name)){
 			return existing.get(name);
@@ -217,7 +217,7 @@ public class ObjectOperationContributor
 	 * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextFromList(java.lang.String)
 	 */
 	public Object nextFromList(String listID) throws EolRuntimeException {
-		Collection<Object> existing = getCreatedElements(listID);
+		Collection<Object> existing = getNamedList(listID);
 		if (existing == null) {
 			return delegate.nextFromList(listID);
 		}
@@ -235,7 +235,7 @@ public class ObjectOperationContributor
 	 * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextSampleFromList(java.lang.String)
 	 */
 	public Object nextFromListAsSample(String listID) throws EolRuntimeException {
-		List<Object> existing = (List<Object>) getCreatedElements(listID);
+		List<Object> existing = (List<Object>) getNamedList(listID);
 		if (existing == null) {
 			return delegate.nextFromListAsSample(listID);
 		}
@@ -275,7 +275,7 @@ public class ObjectOperationContributor
 	 * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextSample(java.lang.String, int)
 	 */
 	public List<Object> nextSample(String listID, int k) throws EolRuntimeException {
-		List<Object> existing = (List<Object>) getCreatedElements(listID);
+		List<Object> existing = (List<Object>) getNamedList(listID);
 		if (existing == null) {
 			return delegate.nextSample(listID, k);
 		}

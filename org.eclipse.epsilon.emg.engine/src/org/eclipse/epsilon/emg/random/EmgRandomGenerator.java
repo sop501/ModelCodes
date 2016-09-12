@@ -279,7 +279,14 @@ public class EmgRandomGenerator
 		int remaning = length;
 		do {
 			sb.append(upper.charAt(nextInteger(upperLenght)));
-			int lastLength = nextInteger(minWordLength, remaning-minWordLength) + 1; // +1 for the Capital
+			int missing = remaning-minWordLength;
+			int lastLength;
+			if (missing > minWordLength) {
+				lastLength = nextInteger(minWordLength, missing) + 1; // +1 for the Capital
+			}
+			else {
+				lastLength = minWordLength;
+			}
 			sb.append(nextString("LETTER_LOWER", lastLength));
 			remaning -= lastLength;
 		} while (remaning > minWordLength);
