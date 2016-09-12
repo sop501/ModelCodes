@@ -158,7 +158,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 			
 			frame = context.getFrameStack().enterLocal(FrameType.PROTECTED, pattern);
 			
-			if (pattern.getMatchAst() != null || pattern.getNoMatchAst() != null || pattern.getOnMatchAst() != null) {
+			if (pattern.getMatch() != null || pattern.getNoMatch() != null || pattern.getOnMatch() != null) {
 				int i = 0;
 				for (Role role : pattern.getRoles()) {
 					for (Variable variable : getVariables(candidate.get(i), role)) {
@@ -168,13 +168,13 @@ public class EmgPatternMatcher extends PatternMatcher {
 				}
 			}
 			
-			if (pattern.getMatchAst() != null) {
-				Object result = context.getExecutorFactory().executeAST(pattern.getMatchAst(), context);
+			if (pattern.getMatch() != null) {
+				Object result = context.getExecutorFactory().executeAST(pattern.getMatch(), context);
 				if (result instanceof Return) result = ((Return) result).getValue();
 				if (result instanceof Boolean) {
 					matches = (Boolean) result;
 				}
-				else throw new EolIllegalReturnException("Boolean", result, pattern.getMatchAst(), context);
+				else throw new EolIllegalReturnException("Boolean", result, pattern.getMatch(), context);
 			}
 			
 			if (matches) { 
@@ -200,7 +200,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 			
 				}//end annotation probability
 				if(annotationChange){
-					context.getExecutorFactory().executeAST(pattern.getOnMatchAst(), context);
+					context.getExecutorFactory().executeAST(pattern.getOnMatch(), context);
 					patternMatches.add(createPatternMatch(pattern, candidate));
 				}
 				else {
@@ -217,7 +217,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 				}
 				//end annotation number
 			}
-			else context.getExecutorFactory().executeAST(pattern.getNoMatchAst(), context);	
+			else context.getExecutorFactory().executeAST(pattern.getNoMatch(), context);	
 		}
 		
 		context.getFrameStack().leaveLocal(pattern);
