@@ -4,6 +4,6 @@
 	<classpathentry excluding="src/" kind="src" path=""/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.epsilon.emg.engine"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
