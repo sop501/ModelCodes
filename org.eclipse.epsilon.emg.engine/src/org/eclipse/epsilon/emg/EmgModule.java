@@ -22,7 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.epsilon.common.module.IModule;
 import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.emc.emf.EmfModel;
-import org.eclipse.epsilon.emg.operationContributors.ObjectOperationContributor;
+import org.eclipse.epsilon.emg.operationContributors.EmgOperationContributor;
 import org.eclipse.epsilon.eol.IEolExecutableModule;
 import org.eclipse.epsilon.eol.dom.Annotation;
 import org.eclipse.epsilon.eol.dom.AnnotationBlock;
@@ -62,7 +62,7 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	private static final String CREATE_OPERATION = "create";
 
 	/** The random generator */
-	private ObjectOperationContributor randomGenerator;
+	private EmgOperationContributor randomGenerator;
 	
 	/** The seed used for random generation. */
 	private int seed;
@@ -112,10 +112,10 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	private void preload() {
 		context.setModule(this);
 		if (useSeed) {
-			randomGenerator = new ObjectOperationContributor(this, seed);
+			randomGenerator = new EmgOperationContributor(this, seed);
 		}
 		else {
-			randomGenerator = new ObjectOperationContributor(this);
+			randomGenerator = new EmgOperationContributor(this);
 		}
 		context.getOperationContributorRegistry().add(randomGenerator);
 	}

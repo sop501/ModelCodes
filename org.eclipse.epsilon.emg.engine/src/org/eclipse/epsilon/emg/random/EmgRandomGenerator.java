@@ -241,16 +241,20 @@ public class EmgRandomGenerator
 	 */
 	@Override
 	public String nextString(String charSet, int length) {
-		String chars = "";
+		DefaultCharacterSet cSet = null;
 		for (DefaultCharacterSet cs : DefaultCharacterSet.values()) {
 	        if (cs.name().equals(charSet)) {
-	        	chars = cs.getCharacters();
+	        	cSet = cs;
+	        	break;
 	        }
 	    }
-		int upper = chars.length();
+		if (cSet == null) {
+			cSet = DefaultCharacterSet.ID;
+		}
 		StringBuilder sb = new StringBuilder();
+		char[] chars = cSet.getCharacters();
 		for (int i = 0; i < length; i++) {
-			sb.append(chars.charAt(generator.nextInt(0, upper-1)));
+			sb.append(chars[generator.nextInt(0, chars.length-1)]);
 		}
 		return sb.toString();
 	}
@@ -273,25 +277,43 @@ public class EmgRandomGenerator
 	public String nextCamelCaseString(int length, int minWordLength) throws EolRuntimeException {
 		
 		StringBuilder sb = new StringBuilder();
-		String upper = DefaultCharacterSet.LETTER_UPPER.getCharacters();
-		int upperLenght = upper.length() -1;
-		// Pick the first word length
-		int remaning = length;
+		String base = nextString("LETTER_LOWER", length);
+		int[] chunks = new int[length/minWordLength +1];
+		int remaining = length;
+		int nextWord = 0;
+		chunks[0] = 0;
+		int i = 1;
 		do {
-			sb.append(upper.charAt(nextInteger(upperLenght)));
-			int missing = remaning-minWordLength;
-			int lastLength;
-			if (missing > minWordLength) {
-				lastLength = nextInteger(minWordLength, missing) + 1; // +1 for the Capital
+			if (remaining > minWordLength) {
+				nextWord += nextInteger(minWordLength, remaining);
+				remaining -= nextWord;
 			}
 			else {
-				lastLength = minWordLength;
+				nextWord = 1;	// So chunks[i++] is 0
+				remaining = 0;
 			}
-			sb.append(nextString("LETTER_LOWER", lastLength));
-			remaning -= lastLength;
-		} while (remaning > minWordLength);
-		sb.append(upper.charAt(nextInteger(upperLenght)));
-		sb.append(nextString("LETTER_LOWER", remaning-1));
+			chunks[i++] = nextWord-1;
+		} while(remaining > 0);
+		//chunks[i] = length;
+		int index = 0;
+		for (int j = 0; j < chunks.length-1; j++) {
+			if ((j>0) && (chunks[j] == 0)) {
+				break;
+			}
+			index = chunks[j];
+			try {
+				String capital = base.substring(index, index+1).toUpperCase();
+				int endIndex = chunks[j+1];
+				if (endIndex == 0) {
+					endIndex = length;
+				}
+				sb.append(capital);
+				sb.append(base.substring(index+1, endIndex));
+			} catch (StringIndexOutOfBoundsException ex) {
+				System.out.println(ex);
+			}
+			
+		}
 		return sb.toString();
 	}
 

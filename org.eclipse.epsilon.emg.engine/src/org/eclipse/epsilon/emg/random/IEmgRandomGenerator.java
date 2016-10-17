@@ -17,9 +17,13 @@ import java.util.List;
 
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 
+import sun.security.util.Length;
+
 /**
- * The Random Attribute Generator interface defines the different 
- * @author Goblin
+ * The Random Attribute Generator interface defines the different available methods
+ * to generate random data. This can be boolean values, numbers and strings, or
+ * more specialized data as names, cities, emails, phone numbers, etc.
+ * @author Hoacio Hoyos
  *
  */
 public interface IEmgRandomGenerator<K extends CharacterSet> {
@@ -35,15 +39,22 @@ public interface IEmgRandomGenerator<K extends CharacterSet> {
 		ID_SYMBOL("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890~!@#$%^&*()_+-=[]\\{}|;':\"<>?,./"), 
 		HEX_LOWER("abcdef1234567890"),
 		HEX_UPPER("ABCDEF1234567890"); 
-		private String characters;
+		private char[] characters;
+		private int lenght;
 
 		private DefaultCharacterSet(String characters) {
-			this.characters = characters;
+			this.characters = characters.toCharArray();
+			this.lenght = characters.length();
 		}
 
-		public String getCharacters() {
+		public char[] getCharacters() {
 			return characters;
 		}
+
+		protected int getLenght() {
+			return lenght;
+		}
+		
 
 	}
 	

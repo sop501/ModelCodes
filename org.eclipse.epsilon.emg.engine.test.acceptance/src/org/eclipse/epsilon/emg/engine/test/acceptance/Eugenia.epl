@@ -1,42 +1,45 @@
 operation EPackage create(){
-	self.name="MyEcore";
+	self.name="ecore";
+}
+operation EPackage create(){
+	self.name="dataTypes";
 }
 
 operation EClass create(){
 	self.annotate("gmf.diagram");
-	self.name= nextString("UPPER_NUM", 8);	
+	self.name=randomString();	
 }
 
-$instances Sequence{5,Nodes}
+$instances Sequence{5,10}
 operation EClass create(){
-	self.name=nextFromListAsSample("names") + "_N";	
+	self.name=randomString();
 	var detail:Map= new Map;
 	//polygon
-	if(nextBoolean()){
+	if(randomBoolean()){
 		var sequence= Sequence{'rectangle', 'ellipse', 'rounded', 'svg','polygon'};
 		var seq= Sequence{'polygon','svg'};
-		var type = nextFromCollection(seq);
-		detail.put("figure",type);
-		if(type='polygon'){
-			detail.put("polygon.x",nextInteger(20)+"");
-			detail.put("polygon.y",nextInteger(20)+"");	
+		var string:String =seq.randomD();
+		detail.put("figure",string);
+		if(string='polygon'){
+			detail.put("polygon.x",randomInteger(20)+"");
+			detail.put("polygon.y",randomInteger(20)+"");	
 		}
-		else if(type='svg'){
-			detail.put("svg.uri",nextURI());
+		else if(string='svg'){
+			detail.put("svg.uri",randomString());
 		}
 	}
 
 	//label
-	if(nextBoolean()){
+	if(randomBoolean()){
 		var sequence1= Sequence{'internal', 'external', 'none'};
-		var string:String = nextFromCollection(sequence1);	
+		var string:String = sequence1.randomD();	
 		var detail:Map= new Map;
 		detail.put("label.placement",string);
 		if(string<>'none'){
 			var label:String= "";
-			for(n in Sequence{1..nextInteger(1,4)}){
+			for(n in Sequence{1..randomInteger(1,4)}){
 				var r:EAttribute = new EAttribute;
-				r.name= nextFromList("breeds");
+				r.name= randomString();
 				label=label+","+ r.name;
 				self.eStructuralFeatures.add(r);
 			}
@@ -48,27 +51,27 @@ operation EClass create(){
 
 $instances 5
 operation EClass create(){
-	self.name=nextFromListAsSample("names") + "_L";	
+	self.name=randomString();
 	var type = Sequence{'source','target'};
 	var sequence= Sequence{'none', 'arrow', 'rhomb', 'filledrhomb','square', 'filledsquare', 'closedarrow', 'filledclosedarrow'};
 	var detail:Map= new Map;
-	detail.put('source', nextString("ID", 7));
-	detail.put('target', nextString("ID", 7));
-	if(nextBoolean()==true){
-		detail.put("source.decoration",nextFromCollection(sequence));
-		detail.put("target.decoration",nextFromCollection(sequence));
+	detail.put('source', randomString());
+	detail.put('target', randomString());
+	if(randomBoolean()==true){
+		detail.put("source.decoration",sequence.randomD());
+		detail.put("target.decoration",sequence.randomD());
 	}
 	//label
-	if(nextBoolean()){
+	if(randomBoolean()){
 		var sequence1= Sequence{'internal', 'external', 'none'};
-		var string:String = nextFromCollection(sequence1);	
+		var string:String = sequence1.randomD();	
 		var detail:Map= new Map;
 		detail.put("label.placement",string);
 		if(string<>'none'){
 			var label:String= "";
-			for(n in Sequence{1..nextInteger(1,4)}){
+			for(n in Sequence{1..randomInteger(1,4)}){
 				var r:EAttribute = new EAttribute;
-				r.name= nextFromList("breeds");
+				r.name= randomString();
 				label=label+","+ r.name;
 				self.eStructuralFeatures.add(r);
 			}
@@ -77,23 +80,21 @@ operation EClass create(){
 	}
 	self.annotate("gmf.link",detail);
 }
-
 @name attribute
 $instances Sequence{2,5}
 operation EAttribute create(){
-	self.name= nextFromList("breeds");
+	self.name= randomString();
 }
 
 $instances 5
 operation EDataType create(){
-	self.name=nextString("ID", 7);
+	self.name=randomString();
 }
 
 operation EClass isAnnotatedAs(source:String){
 	//self.println();
 	return self.getEAnnotation(source).isDefined();
 }
-
 operation EClass getAnnotationValue(source:String,key:String){
 	if(self.getEAnnotation(source).isDefined()){
 		var detail:EStringToStringMapEntry= self.getEAnnotation(source).details.selectOne(k|k.key=key);
@@ -110,7 +111,6 @@ operation EClass getAnnotationValue(source:String,key:String){
 operation EClass annotate(string:String){
 	self.annotate(string, new Map);
 }
-
 operation EClass annotate(string:String, details:Map){
 	var ann: new EAnnotation;
 	ann.source=string;
@@ -132,21 +132,13 @@ operation EAnnotation addDetails(details:Map){
 }
 
 //@probability 0.5
-pattern packageClasses
-	pack:EPackage, c:EClass
-	guard : pack.name="MyEcore"
-{
-	onmatch {
-		pack.eClassifiers.add(c);	
-	}
-}
-
-pattern packageDataTypes
-	pack:EPackage, dt:EDataType
-	guard : pack.name="MyEcore"
-{
-	onmatch {
-		pack.eClassifiers.add(dt);
+pattern package
+	pack:EPackage,pack2:EPackage,clas:EClass,clas2:EDataType
+	guard:pack.name="ecore" and pack<>pack2{
+	onmatch{
+		pack.eClassifiers.add(clas);	
+		pack2.eClassifiers.add(clas2);
+		pack.eSubpackages.add(pack2);
 	}
 }
 
@@ -154,43 +146,39 @@ pattern attribute
 	attr:EAttribute
 	guard: attr.etype.isUndefined(){
 		onmatch{
-			attr.eType = nextFromCollection(EDataType.all);
+			attr.eType=EDataType.all.randomD();
 		}
 	}
-	
 pattern attribute2
 	attr:EAttribute
 	from: getCreatedElements("attribute")
-	guard: attr.eContainer.isUndefined() {
+	guard: attr.eContainer.isUndefined(){
 		onmatch{
-			nextFromCollection(EClass.all).eStructuralFeatures.add(attr);
+			EClass.all.randomD().eStructuralFeatures.add(attr);
 		}
 	}
-
 $number Sequence{1,EClass.all.select(t|t.isAnnotatedAs("gmf.node")).size()}
-// Add nodes to the gmf diagram
 pattern node
-root:EClass, node:EClass {
+root:EClass,node:EClass {
 	match : root.isAnnotatedAs("gmf.diagram") and
-		node.isAnnotatedAs("gmf.node")
+	node.isAnnotatedAs("gmf.node")
 	onmatch
 	{
 		var r= EReference.createInstance();
-		r.name=nextString("LETTER_LOWER", 7);
+		r.name=randomString();
 		r.eType=node;
 		root.eStructuralFeatures.add(r);
 	}
 }
 
-// Add links to the gmf diagram
 pattern link
-root:EClass, link:EClass{
+root:EClass,link:EClass{
 	match : root.isAnnotatedAs("gmf.diagram") and
 		link.isAnnotatedAs("gmf.link")	
 	onmatch
 	{
 		var r= EReference.createInstance();
-		r.name=nextString("LETTER_LOWER", 7);
+		r.name=randomString();
 		r.eType=link;
 		r.containment=true;
 		root.eStructuralFeatures.add(r);
@@ -201,8 +189,8 @@ root:EClass, link:EClass{
 pattern linkSource
 	class1:EClass
 	from: EClass.all.select(t|t.getAnnotationValue("gmf.link","source").isDefined()),
-		class3:EClass
-	guard: class1<>class3 {
+	class3:EClass
+	guard: class1<>class3{
 		onmatch{
 			var r =EReference.createInstance();
 			r.name= class1.getAnnotationValue("gmf.link","source");
