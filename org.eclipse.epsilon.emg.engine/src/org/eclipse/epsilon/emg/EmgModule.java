@@ -19,11 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.epsilon.common.module.IModule;
 import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.emc.emf.EmfModel;
 import org.eclipse.epsilon.emg.operationContributors.EmgOperationContributor;
-import org.eclipse.epsilon.eol.IEolExecutableModule;
 import org.eclipse.epsilon.eol.dom.Annotation;
 import org.eclipse.epsilon.eol.dom.AnnotationBlock;
 import org.eclipse.epsilon.eol.dom.Operation;
@@ -39,7 +37,7 @@ import org.eclipse.epsilon.epl.execute.PatternMatchModel;
 /**
  * The Emg Module is responsible for execution emg scripts. Emg scripts are used to generate models.
  */
-public class EmgModule extends EplModule implements IModule, IEolExecutableModule {
+public class EmgModule extends EplModule {
 	
 	/**
 	 * Assign the created elements to a list
@@ -76,12 +74,6 @@ public class EmgModule extends EplModule implements IModule, IEolExecutableModul
 	 */
 	private Map<String, List<Object>> namedCreatedObjects= new HashMap<String, List<Object>>(); //	
 
-	/**
-	 * Instantiates a new emg module.
-	 */
-	public EmgModule(){
-		reset();
-	}
 	
 	/**
 	 * @param seed the seed to set

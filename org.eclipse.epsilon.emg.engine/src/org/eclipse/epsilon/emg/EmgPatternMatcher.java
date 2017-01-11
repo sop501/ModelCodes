@@ -169,7 +169,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 			}
 			
 			if (pattern.getMatch() != null) {
-				Object result = context.getExecutorFactory().executeAST(pattern.getMatch(), context);
+				Object result = context.getExecutorFactory().execute(pattern.getMatch(), context);
 				if (result instanceof Return) result = ((Return) result).getValue();
 				if (result instanceof Boolean) {
 					matches = (Boolean) result;
@@ -200,7 +200,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 			
 				}//end annotation probability
 				if(annotationChange){
-					context.getExecutorFactory().executeAST(pattern.getOnMatch(), context);
+					context.getExecutorFactory().execute(pattern.getOnMatch(), context);
 					patternMatches.add(createPatternMatch(pattern, candidate));
 				}
 				else {
@@ -217,7 +217,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 				}
 				//end annotation number
 			}
-			else context.getExecutorFactory().executeAST(pattern.getNoMatch(), context);	
+			else context.getExecutorFactory().execute(pattern.getNoMatch(), context);	
 		}
 		
 		context.getFrameStack().leaveLocal(pattern);
