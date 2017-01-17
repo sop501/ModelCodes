@@ -73,7 +73,7 @@ public class EmgPatternMatcher extends PatternMatcher {
         List<PatternMatch> patternMatches = new ArrayList<PatternMatch>();
         context.getFrameStack().enterLocal(FrameType.PROTECTED, pattern);
         boolean noRepeat= pattern.hasAnnotation(NO_REPEAT_ANNOTATION);
-        boolean probability= pattern.hasAnnotation(PROBABILITY_ANNOTATION);
+        boolean withProbability= pattern.hasAnnotation(PROBABILITY_ANNOTATION);
         boolean number= pattern.hasAnnotation(NUMBER_ANNOTATION);
         boolean annotationChange;
 
@@ -185,7 +185,7 @@ public class EmgPatternMatcher extends PatternMatcher {
 
 
                 //annotation probability
-                if (probability) {
+                if (withProbability) {
                     Object val = 1.0;
                     if(pattern.getAnnotationsValues(PROBABILITY_ANNOTATION, context).size() > 0) {
                         val = pattern.getAnnotationsValues(PROBABILITY_ANNOTATION, context).get(0);

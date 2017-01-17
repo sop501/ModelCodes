@@ -294,7 +294,11 @@ public class EmgRandomGenerator
                 nextWord = 1;	// So chunks[i++] is 0
                 remaining = 0;
             }
-            chunks[i++] = nextWord-1;
+            try {
+            	chunks[i++] = nextWord-1;
+            } catch (ArrayIndexOutOfBoundsException ex) {
+            	break;
+            }
         } while(remaining > 0);
         //chunks[i] = length;
         int index = 0;
@@ -593,7 +597,7 @@ public class EmgRandomGenerator
      * @throws EolRuntimeException the eol runtime exception
      */
     protected List<String> getValuesFromList(String list) throws EolRuntimeException {
-        // TODO We asume URI/paths don't have commas
+        // TODO We assume URI/paths don't have commas
         String[] values = list.split(",");
         List<String> valuesList = null;
         if (values.length == 1) {
