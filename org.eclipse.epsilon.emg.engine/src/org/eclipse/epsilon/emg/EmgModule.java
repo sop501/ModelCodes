@@ -63,9 +63,10 @@ public class EmgModule extends EplModule {
     private EmgOperationContributor randomGenerator;
 
     /** The seed used for random generation. */
-    private int seed;
+    private long seed;
 
     private boolean useSeed;
+
 
 
     /** A maps to keep track of objects created by create operations that
@@ -78,7 +79,7 @@ public class EmgModule extends EplModule {
     /**
      * @param seed the seed to set
      */
-    public void setSeed(int seed) {
+    public void setSeed(long seed) {
         this.seed = seed;
     }
 

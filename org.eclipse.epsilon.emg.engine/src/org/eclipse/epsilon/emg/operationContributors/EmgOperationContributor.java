@@ -7,8 +7,8 @@
  *
  * Contributors:
  *     Dimitrios Kolovos - initial API and implementation
- *     Saheed Popoola - aditional functionality
- *     Horacio Hoyos - aditional functionality
+ *     Saheed Popoola - additional functionality
+ *     Horacio Hoyos - additional functionality
  ******************************************************************************/
 package org.eclipse.epsilon.emg.operationContributors;
 
@@ -22,6 +22,8 @@ import org.eclipse.epsilon.emg.random.EmgRandomGenerator;
 import org.eclipse.epsilon.emg.random.IEmgRandomGenerator;
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 import org.eclipse.epsilon.eol.execute.operations.contributors.OperationContributor;
+import org.hashids.Hashids;
+
 
 /**
  * The Class ObjectOperationContributor delegates all the random generating
@@ -32,33 +34,90 @@ public class EmgOperationContributor
         extends OperationContributor
         implements IEmgRandomGenerator<IEmgRandomGenerator.DefaultCharacterSet> {
 
+    /** The delegate. */
     private final EmgRandomGenerator delegate;
+
+    /** The module. */
     private final EmgModule module;
     /** The list samples. */
     private Map<String, List<Integer>> listSamples;
 
+    /** The hasids salt. */
+    private String hasids_salt = "Epsilon EMG";
 
+    /** The hashid. */
+    private Hashids hashid;
+
+    /**
+     * Instantiates a new emg operation contributor.
+     *
+     * @param module the module
+     */
     public EmgOperationContributor(EmgModule module) {
         delegate = new EmgRandomGenerator(module.getContext());
         this.module = module;
     }
 
-    public EmgOperationContributor(EmgModule module, int seed) {
+    /**
+     * Instantiates a new emg operation contributor.
+     *
+     * @param module the module
+     * @param seed the seed
+     */
+    public EmgOperationContributor(EmgModule module, long seed) {
         delegate = new EmgRandomGenerator(module.getContext(), seed);
         this.module = module;
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.epsilon.eol.execute.operations.contributors.OperationContributor#contributesTo(java.lang.Object)
+     */
     @Override
     public boolean contributesTo(Object target) {
         return target instanceof Object;
     }
 
+    /**
+     * Decode string to numbers.
+     *
+     * @param hash the encrypt string
+     * @return decoded numbers
+     */
+    public long[] decode(String hash) {
+        if (hashid == null) {
+            hashid = new Hashids(hasids_salt);
+        }
+        return hashid.decode(hash);
+    }
+
+    /**
+     * Encrypt numbers to string.
+     *
+     * @param number the number
+     * @return the encrypt string
+     */
+    public String encode(int number) {
+        if (hashid == null) {
+            hashid = new Hashids(hasids_salt);
+        }
+        return hashid.encode(number);
+    }
+
+    /**
+     * Gets the hasids salt.
+     *
+     * @return the hasids_salt
+     */
+    public String getHasids_salt() {
+        return hasids_salt;
+    }
 
     /**
      * Gets the elements from create rules with the @list annotation with the
-     * given name parameter
-     * @param name
-     * @return
+     * given name parameter.
+     *
+     * @param name the name
+     * @return the named list
      */
     public Collection<Object> getNamedList(String name) {
         Map<String, List<Object>> existing = module.getNamedCreatedObjects();
@@ -67,122 +126,61 @@ public class EmgOperationContributor
         }
         return null;
     }
-    /**
-     * @param numberOfTrials
-     * @param probabilityOfSuccess
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#useBinomialDistribution(int, double)
+
+    /* (non-Javadoc)
+     * @see org.eclipse.epsilon.emg.random.IEmgRandomGenerator#nextAddTo(int, int)
      */
-    public void useBinomialDistribution(int numberOfTrials, double probabilityOfSuccess) {
-        delegate.useBinomialDistribution(numberOfTrials, probabilityOfSuccess);
+    public List<Integer> nextAddTo(int n, int m) throws EolRuntimeException {
+        return delegate.nextAddTo(n, m);
     }
+
     /**
-     * @param mean
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#useExponentialDistribution(double)
-     */
-    public void useExponentialDistribution(double mean) {
-        delegate.useExponentialDistribution(mean);
-    }
-    /**
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextBoolean()
-     */
-    public boolean nextBoolean() throws EolRuntimeException {
-        return delegate.nextBoolean();
-    }
-    /**
-     * @param upper
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextInteger(int)
-     */
-    public int nextInteger(int upper) throws EolRuntimeException {
-        return delegate.nextInteger(upper);
-    }
-    /**
-     * @param upper
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextLong(long)
-     */
-    public long nextLong(long upper) throws EolRuntimeException {
-        return delegate.nextLong(upper);
-    }
-    /**
-     * @param upper
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextDobule(double)
-     */
-    public double nextDobule(double upper) throws EolRuntimeException {
-        return delegate.nextDobule(upper);
-    }
-    /**
-     * @param lower
-     * @param upper
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextInteger(int, int)
-     */
-    public int nextInteger(int lower, int upper) throws EolRuntimeException {
-        return delegate.nextInteger(lower, upper);
-    }
-    /**
-     * @param lower
-     * @param upper
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextLong(long, long)
-     */
-    public long nextLong(long lower, long upper) throws EolRuntimeException {
-        return delegate.nextLong(lower, upper);
-    }
-    /**
-     * @param lower
-     * @param upper
-     * @return
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextDobule(double, double)
-     */
-    public double nextDobule(double lower, double upper) {
-        return delegate.nextDobule(lower, upper);
-    }
-    /**
-     * @return
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextValue()
-     */
-    public double nextValue() {
-        return delegate.nextValue();
-    }
-    /**
-     * @param numberOfTrials
-     * @param probabilityOfSuccess
-     * @return
+     * Next binomial value.
+     *
+     * @param numberOfTrials the number of trials
+     * @param probabilityOfSuccess the probability of success
+     * @return the double
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextBinomialValue(int, double)
      */
     public double nextBinomialValue(int numberOfTrials, double probabilityOfSuccess) {
         return delegate.nextBinomialValue(numberOfTrials, probabilityOfSuccess);
     }
+
     /**
-     * @param mean
      * @return
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextExponentialValue(double)
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextBoolean()
      */
-    public double nextExponentialValue(double mean) {
-        return delegate.nextExponentialValue(mean);
+    public boolean nextBoolean() {
+        return delegate.nextBoolean();
     }
+
     /**
-     * @param charSet
-     * @param length
-     * @return
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextString(java.lang.String, int)
+     * @param bytes
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextBytes(byte[])
      */
-    public String nextString(String charSet, int length) {
-        return delegate.nextString(charSet, length);
+    public void nextBytes(byte[] bytes) {
+        delegate.nextBytes(bytes);
     }
+
     /**
-     * @param charSet
-     * @param length
-     * @return
+     * Next camel case string.
+     *
+     * @param length the length
+     * @param minWordLength the min word length
+     * @return the string
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextCamelCaseString(int, int)
+     */
+    public String nextCamelCaseString(int length, int minWordLength) throws EolRuntimeException {
+        return delegate.nextCamelCaseString(length, minWordLength);
+    }
+
+    /**
+     * Next capitalised string.
+     *
+     * @param charSet the char set
+     * @param length the length
+     * @return the string
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextCapitalisedString(java.lang.String, int)
      */
     public String nextCapitalisedString(String charSet, int length) {
@@ -190,30 +188,76 @@ public class EmgOperationContributor
     }
 
     /**
-     * @param length
-     * @param minWordLength
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextCamelCaseString(int, int)
+     * Next dobule.
+     *
+     * @param upper the upper
+     * @return the double
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextDobule(double)
      */
-    public String nextCamelCaseString(int length, int minWordLength) throws EolRuntimeException {
-        return delegate.nextCamelCaseString(length, minWordLength);
+    public double nextDobule(double upper) throws EolRuntimeException {
+        return delegate.nextDobule(upper);
     }
+
     /**
-     * @param c
+     * Next dobule.
+     *
+     * @param lower the lower
+     * @param upper the upper
+     * @return the double
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextDobule(double, double)
+     */
+    public double nextDobule(double lower, double upper) {
+        return delegate.nextDobule(lower, upper);
+    }
+
+    /**
      * @return
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextDouble()
+     */
+    public double nextDouble() {
+        return delegate.nextDouble();
+    }
+
+    /**
+     * Next exponential value.
+     *
+     * @param mean the mean
+     * @return the double
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextExponentialValue(double)
+     */
+    public double nextExponentialValue(double mean) {
+        return delegate.nextExponentialValue(mean);
+    }
+
+    /**
+     * @return
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextFloat()
+     */
+    public float nextFloat() {
+        return delegate.nextFloat();
+    }
+
+
+    /**
+     * Next from collection.
+     *
+     * @param c the c
+     * @return the object
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextFromCollection(java.util.Collection)
      */
     public Object nextFromCollection(Collection<?> c) {
         return delegate.nextFromCollection(c);
     }
+
     /**
      * The listID is the value of a @list annotation of a create operation. If
      * no create operation with that @list annotation value is found, the
      * operation is delegated to the underlying {@link EmgRandomGenerator}.
-     * @param listID
-     * @return
-     * @throws EolRuntimeException
+     *
+     * @param listID the list ID
+     * @return the object
+     * @throws EolRuntimeException the eol runtime exception
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextFromList(java.lang.String)
      */
     public Object nextFromList(String listID) throws EolRuntimeException {
@@ -225,13 +269,15 @@ public class EmgOperationContributor
             return delegate.nextFromCollection(existing);
         }
     }
+
     /**
      * The listID is the value of a @list annotation of a create operation. If
      * no create operation with that @list annotation value is found, the
      * operation is delegated to the underlying {@link EmgRandomGenerator}.
-     * @param listID
-     * @return
-     * @throws EolRuntimeException
+     *
+     * @param listID the list ID
+     * @return the object
+     * @throws EolRuntimeException the eol runtime exception
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextSampleFromList(java.lang.String)
      */
     public Object nextFromListAsSample(String listID) throws EolRuntimeException {
@@ -254,24 +300,128 @@ public class EmgOperationContributor
             return result;
         }
     }
+
     /**
-     * @param c
-     * @param k
      * @return
-     * @throws EolRuntimeException
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextGaussian()
+     */
+    public double nextGaussian() {
+        return delegate.nextGaussian();
+    }
+
+    /**
+     * Next http URI.
+     *
+     * @param addPort the add port
+     * @param addPath the add path
+     * @param addQuery the add query
+     * @param addFragment the add fragment
+     * @return the string
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextHttpURI(boolean, boolean, boolean, boolean)
+     */
+    public String nextHttpURI(boolean addPort, boolean addPath, boolean addQuery, boolean addFragment)
+            throws EolRuntimeException {
+        return delegate.nextHttpURI(addPort, addPath, addQuery, addFragment);
+    }
+
+    /**
+     * @return
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextInt()
+     */
+    public int nextInt() {
+        return delegate.nextInt();
+    }
+
+    /**
+     * @param n
+     * @return
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextInt(int)
+     */
+    public int nextInt(int n) {
+        return delegate.nextInt(n);
+    }
+
+    /**
+     * Next integer.
+     *
+     * @param upper the upper
+     * @return the int
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextInteger(int)
+     */
+    public int nextInteger(int upper) throws EolRuntimeException {
+        return delegate.nextInteger(upper);
+    }
+
+    /**
+     * Next integer.
+     *
+     * @param lower the lower
+     * @param upper the upper
+     * @return the int
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextInteger(int, int)
+     */
+    public int nextInteger(int lower, int upper) throws EolRuntimeException {
+        return delegate.nextInteger(lower, upper);
+    }
+
+    /**
+     * @return
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextLong()
+     */
+    public long nextLong() {
+        return delegate.nextLong();
+    }
+
+    /**
+     * Next long.
+     *
+     * @param upper the upper
+     * @return the long
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextLong(long)
+     */
+    public long nextLong(long upper) throws EolRuntimeException {
+        return delegate.nextLong(upper);
+    }
+
+    /**
+     * Next long.
+     *
+     * @param lower the lower
+     * @param upper the upper
+     * @return the long
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextLong(long, long)
+     */
+    public long nextLong(long lower, long upper) throws EolRuntimeException {
+        return delegate.nextLong(lower, upper);
+    }
+
+    /**
+     * Next sample.
+     *
+     * @param c the c
+     * @param k the k
+     * @return the list
+     * @throws EolRuntimeException the eol runtime exception
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextSample(java.util.Collection, int)
      */
     public List<Object> nextSample(Collection<?> c, int k) throws EolRuntimeException {
         return delegate.nextSample(c, k);
     }
+
     /**
      * The listID is the value of a @list annotation of a create operation. If
      * no create operation with that @list annotation value is found, the
      * operation is delegated to the underlying {@link EmgRandomGenerator}.
-     * @param listID
-     * @param k
-     * @return
-     * @throws EolRuntimeException
+     *
+     * @param listID the list ID
+     * @param k the k
+     * @return the list
+     * @throws EolRuntimeException the eol runtime exception
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextSample(java.lang.String, int)
      */
     public List<Object> nextSample(String listID, int k) throws EolRuntimeException {
@@ -285,39 +435,109 @@ public class EmgOperationContributor
     }
 
     /**
-     * @param addPort
-     * @param addPath
-     * @param addQuery
-     * @param addFragment
-     * @return
-     * @throws EolRuntimeException
+     * Next string.
+     *
+     * @param charSet the char set
+     * @param length the length
+     * @return the string
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextString(java.lang.String, int)
+     */
+    public String nextString(String charSet, int length) {
+        return delegate.nextString(charSet, length);
+    }
+
+    /**
+     * Next URI.
+     *
+     * @return the string
+     * @throws EolRuntimeException the eol runtime exception
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextURI()
+     */
+    public String nextURI() throws EolRuntimeException {
+        return delegate.nextURI();
+    }
+
+    /**
+     * Next URI.
+     *
+     * @param addPort the add port
+     * @param addPath the add path
+     * @param addQuery the add query
+     * @param addFragment the add fragment
+     * @return the string
+     * @throws EolRuntimeException the eol runtime exception
      * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextURI(boolean, boolean, boolean, boolean)
      */
     public String nextURI(boolean addPort, boolean addPath, boolean addQuery, boolean addFragment)
             throws EolRuntimeException {
         return delegate.nextURI(addPort, addPath, addQuery, addFragment);
     }
+
     /**
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextURI()
+     * Next value.
+     *
+     * @return the double
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextValue()
      */
-    public String nextURI() throws EolRuntimeException {
-        return delegate.nextURI();
+    public double nextValue() {
+        return delegate.nextValue();
     }
+
+
     /**
-     * @param addPort
-     * @param addPath
-     * @param addQuery
-     * @param addFragment
-     * @return
-     * @throws EolRuntimeException
-     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#nextHttpURI(boolean, boolean, boolean, boolean)
+     * Sets the hasids salt.
+     *
+     * @param hasids_salt the hasids_salt to set
      */
-    public String nextHttpURI(boolean addPort, boolean addPath, boolean addQuery, boolean addFragment)
-            throws EolRuntimeException {
-        return delegate.nextHttpURI(addPort, addPath, addQuery, addFragment);
+    public void setHasids_salt(String hasids_salt) {
+        this.hasids_salt = hasids_salt;
     }
+
+    /**
+     * @param seed
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#setSeed(int)
+     */
+    public void setSeed(int seed) {
+        delegate.setSeed(seed);
+    }
+
+    /**
+     * @param seed
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#setSeed(int[])
+     */
+    public void setSeed(int[] seed) {
+        delegate.setSeed(seed);
+    }
+
+    /**
+     * @param seed
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#setSeed(long)
+     */
+    public void setSeed(long seed) {
+        delegate.setSeed(seed);
+    }
+
+    /**
+     * Use binomial distribution.
+     *
+     * @param numberOfTrials the number of trials
+     * @param probabilityOfSuccess the probability of success
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#useBinomialDistribution(int, double)
+     */
+    public void useBinomialDistribution(int numberOfTrials, double probabilityOfSuccess) {
+        delegate.useBinomialDistribution(numberOfTrials, probabilityOfSuccess);
+    }
+
+    /**
+     * Use exponential distribution.
+     *
+     * @param mean the mean
+     * @see org.eclipse.epsilon.emg.random.EmgRandomGenerator#useExponentialDistribution(double)
+     */
+    public void useExponentialDistribution(double mean) {
+        delegate.useExponentialDistribution(mean);
+    }
+
 
     /**
      * Gets the list samples.
@@ -330,12 +550,6 @@ public class EmgOperationContributor
         }
         return listSamples;
     }
-
-
-    public List<Integer> nextAddTo(int n, int m) throws EolRuntimeException {
-        return delegate.nextAddTo(n, m);
-    }
-
 }
 
 

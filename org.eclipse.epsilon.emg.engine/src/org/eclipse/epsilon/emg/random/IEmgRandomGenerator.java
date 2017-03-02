@@ -15,6 +15,7 @@ package org.eclipse.epsilon.emg.random;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.math3.random.RandomGenerator;
 import org.eclipse.epsilon.eol.exceptions.EolRuntimeException;
 
 import sun.security.util.Length;
@@ -26,7 +27,7 @@ import sun.security.util.Length;
  * @author Hoacio Hoyos
  *
  */
-public interface IEmgRandomGenerator<K extends CharacterSet> {
+public interface IEmgRandomGenerator<K extends CharacterSet> extends RandomGenerator {
 
     /**
      * Returns an array of n integers that addvar to m.
@@ -44,13 +45,6 @@ public interface IEmgRandomGenerator<K extends CharacterSet> {
      */
     public double nextBinomialValue(int numberOfTrials, double probabilityOfSuccess) throws EolRuntimeException;
 
-    /**
-     * Returns the next pseudorandom, uniformly distributed boolean value from
-     * this random number generator's sequence.
-     * @return
-     * @throws EolRuntimeException
-     */
-    public boolean nextBoolean() throws EolRuntimeException;
 
     /**
      * Generates a random string of the given length using the specified

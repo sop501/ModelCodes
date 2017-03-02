@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Hashids 1.0.2
+Bundle-SymbolicName: org.hashids_1.0.2
+Bundle-Version: 1.0.2
+Bundle-Vendor: org.hashids
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: .
+Export-Package: org.hashids
