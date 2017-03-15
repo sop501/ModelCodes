@@ -162,7 +162,9 @@ public class EmgModule extends EplModule {
         }
         execute(getPost(), context);
         context.getModelRepository().getModels().get(0).store();
-        return matchModel;
+//        return matchModel;
+        // Is the total size more important than the matches?
+        return context.getModelRepository().getModels().get(0).allContents().size();
     }
 
     /**
