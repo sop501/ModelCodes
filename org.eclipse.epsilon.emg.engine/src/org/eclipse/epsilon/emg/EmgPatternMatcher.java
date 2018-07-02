@@ -138,6 +138,8 @@ public class EmgPatternMatcher extends PatternMatcher {
             }
         }//end annotation number
         while (generator.hasMore()) {
+            if (value==0)
+                break;
             List<List<Object>> candidate = generator.getNext();
             boolean test = false;
             // Don't repeat
